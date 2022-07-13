@@ -1,0 +1,151 @@
+@import "../../../variables.module";
+
+.UpdateTaskPriority {
+  background: rgb(226, 245, 226);
+  padding: 0 20px 20px 20px;
+  font-family: $serifFont2;
+
+  h2 {
+    font-family: $serifFont1;
+    font-size: 37px;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  fieldset {
+    margin: 0 auto;
+    margin-bottom: 20px;
+    border-color: #e2f5e2;
+
+    legend {
+      font-size: 19px;
+      padding: 0 5px;
+      font-style: italic;
+    }
+
+    .inputWrap {
+      margin: 10px;
+      display: flex;
+      align-items: center;
+
+      input[type=radio] {
+        margin-right: 12px;
+        transform: scale(1.25);
+        cursor: pointer;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #7d7d7d;
+        transition: 0.2s all linear;
+        background: #fff;
+
+       &:focus-visible {
+          background-color: $highlightColor;
+          outline: 3px solid $accentColor;
+        }
+        
+        &:checked {
+          border: 8px solid $accentColor;
+        }
+      }
+
+      label {
+        font-size: 24px;
+        display: inline-flex;
+        align-items: center;
+        font-weight: bold;
+        line-height: 1;
+
+        span {
+          font-size: 19px;
+          margin-left: 10px;
+          font-weight: 400;
+        }
+
+        img {
+          margin-left: 10px;
+          position: absolute;
+          right: 0;
+        }
+      }
+    }
+    input[type=number] {
+      font-size: 24px;
+      width: 60px;
+
+      &:focus-visible {
+        background-color: $highlightColor;
+        outline: 3px solid $accentColor;
+      }
+    }
+  }
+
+  .preview {
+    text-align: center;
+    font-size: 45px;
+    height: 52px;
+  }
+
+  button {
+    margin: 10px auto;
+    display: block;
+    width: 50%;
+    font-size: 21px;
+
+    &:focus-visible {
+      outline: 3px solid $accentColor;
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .UpdateTaskPriority {
+    padding: 0 10px 10px 10px;
+
+    h2 {
+      font-size: 21px;
+      margin-top: 30px;
+    }
+
+    fieldset {
+      display: block;
+      grid-template-columns: initial;
+      padding: 0.35em 0.35em 0.625em;
+
+      .inputWrap {
+        input[type=radio] {
+          width: 12px;
+          height: 12px;
+
+          &:checked {
+            border: 6px solid $accentColor;
+          }
+        }
+
+        label {
+          font-size: 21px;
+          
+          span {
+            font-size: 16px;
+          }
+        }
+      }
+      input[type=number] {
+        font-size: 21px;
+      }
+    }
+    .preview {
+      font-size: 30px;
+      height: 37px;
+    }
+    button {
+      width: 100%;
+      max-width: 220px;
+      white-space: nowrap;
+    }
+  }
+}

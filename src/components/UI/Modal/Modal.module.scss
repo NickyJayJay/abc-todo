@@ -1,0 +1,45 @@
+@import "../../../variables.module";
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.75);
+  cursor: pointer;
+}
+
+.modal {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  z-index: 100;
+  overflow: hidden;
+
+  &.active {
+    background: #e2f5e2;
+  }
+
+  .closeModal {
+    position: absolute;
+    right: 7px;
+    top: 7px;
+    cursor: pointer;
+    border: none;
+    background: none;
+
+      &:focus-visible {
+      outline: 3px solid $accentColor;
+    }
+  }
+}
+
+@media (min-width: 500px) {
+  .modal {
+    width: 30rem;
+  }
+}
