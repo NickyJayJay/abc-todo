@@ -259,6 +259,8 @@ const App = () => {
 		const index = tasks.findIndex((task) => task.id === editTask.rowId);
 		newTasks[index] = editedTask;
 		setTasks(newTasks);
+		const dbRef = ref(db, `tasks/${editTask.rowId}`);
+		update(dbRef, editedTask);
 
 		setEditTask({ ...editTask, showMenu: false });
 		return;
