@@ -364,7 +364,7 @@ const App = () => {
 		update(dbRef, editedTask);
 	};
 
-	const handleEditFormKeydown = (e: React.KeyboardEvent) => {
+	const handleEditFormKeyboard = (e: React.KeyboardEvent) => {
 		const form = (e.target as HTMLInputElement).form;
 		const focusableElements = document.querySelectorAll(
 			'a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]'
@@ -387,9 +387,7 @@ const App = () => {
 			e.preventDefault();
 			(nextFocusableEl as HTMLElement).click();
 			(nextFocusableEl as HTMLElement).focus();
-		}
-
-		if (
+		} else if (
 			e.key === 'Tab' &&
 			e.shiftKey &&
 			(curFocusableEl.getAttribute('name') === 'priority' ||
@@ -601,7 +599,7 @@ const App = () => {
 											taskPriority={editFormData.priority}
 											handleEditFormChange={handleEditFormChange}
 											handleEditFormSubmit={handleEditFormSubmit}
-											handleEditFormKeydown={handleEditFormKeydown}
+											handleEditFormKeyboard={handleEditFormKeyboard}
 											taskId={task.id}
 											isError={isError}
 											rowId={editTask.rowId}
@@ -618,7 +616,7 @@ const App = () => {
 										<EditableDescription
 											handleEditFormChange={handleEditFormChange}
 											handleEditFormSubmit={handleEditFormSubmit}
-											handleEditFormKeydown={handleEditFormKeydown}
+											handleEditFormKeyboard={handleEditFormKeyboard}
 											taskId={task.id}
 											rowId={editTask.rowId}
 											inputType={editTask.inputType}
