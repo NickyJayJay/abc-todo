@@ -21,7 +21,7 @@ import classes from './App.module.scss';
 const App = () => {
 	const [tasks, setTasks] = useState<LoadedTask[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
-	const [httpError, setHttpError] = useState();
+	const [httpError, setHttpError] = useState(false);
 
 	const [addFormData, setAddFormData] = useState<EditFormData>({
 		status: '',
@@ -225,8 +225,9 @@ const App = () => {
 		setAddFormData(newFormData);
 	};
 
-	const handleMenuItemClick = (e: React.MouseEvent) => {
+	const handleMenuItemClick = (e: React.MouseEvent | React.KeyboardEvent) => {
 		e.stopPropagation();
+		if ((e as React.KeyboardEvent).key === 'Tab' || (e as React.KeyboardEvent).key === 'Shift') return;
 		let menuValue;
 
 		if (e.type === 'click' && (e.target as HTMLElement).tagName === 'SPAN') {
