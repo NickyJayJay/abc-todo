@@ -386,7 +386,6 @@ const App = () => {
 		) {
 			e.preventDefault();
 			(nextFocusableEl as HTMLElement).click();
-			(nextFocusableEl as HTMLElement).focus();
 		} else if (
 			e.key === 'Tab' &&
 			e.shiftKey &&
@@ -395,7 +394,6 @@ const App = () => {
 		) {
 			e.preventDefault();
 			(prevFocusableEl as HTMLElement).click();
-			(prevFocusableEl as HTMLElement).focus();
 		}
 
 		const fieldName = e.target.getAttribute('name');
@@ -434,8 +432,7 @@ const App = () => {
 				((e as MouseEvent).pageX && (e as MouseEvent).pageY && statusCell) || ((e as KeyboardEvent).key === 'Enter' && statusCell)
 					? true
 					: false,
-		});
-
+		})
 		const formValues: EditFormData = {
 			status: task.status || null,
 			letterPriority: '',
