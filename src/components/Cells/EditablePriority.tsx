@@ -6,7 +6,7 @@ interface Props {
 	taskPriority: string | null;
 	handleEditFormChange:(e: ChangeEvent<HTMLInputElement>) => void;
 	handleEditFormSubmit: (e: React.FormEvent) => void;
-	handleEditFormKeydown: (e: React.KeyboardEvent) => void;
+	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
 	taskId: string | null;
 	isError: boolean;
 	rowId: string | null;
@@ -17,7 +17,7 @@ const EditablePriority = ({
 	taskPriority,
 	handleEditFormChange,
 	handleEditFormSubmit,
-	handleEditFormKeydown,
+	handleEditFormKeyboard,
 	taskId,
 	isError,
 	rowId,
@@ -42,10 +42,10 @@ const EditablePriority = ({
 				type='text'
 				name='priority'
 				value={taskPriority as string}
-				onChange={(event) => handleEditFormChange(event)}
 				placeholder='ABC'
-				onBlur={handleEditFormSubmit}
-				onKeyDown={(event) => handleEditFormKeydown(event)}
+				onChange={(event) => handleEditFormChange(event)}
+				onKeyDown={(event) => handleEditFormKeyboard(event)}
+				onBlur={(event) => handleEditFormSubmit(event)}
 				ref={inputRef}
 			></input>
 		</td>

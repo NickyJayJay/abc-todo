@@ -21,7 +21,7 @@ import classes from './App.module.scss';
 const App = () => {
 	const [tasks, setTasks] = useState<LoadedTask[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
-	const [httpError, setHttpError] = useState();
+	const [httpError, setHttpError] = useState(false);
 
 	const [addFormData, setAddFormData] = useState<EditFormData>({
 		status: '',
@@ -225,8 +225,9 @@ const App = () => {
 		setAddFormData(newFormData);
 	};
 
-	const handleMenuItemClick = (e: React.MouseEvent) => {
+	const handleMenuItemClick = (e: React.MouseEvent | React.KeyboardEvent) => {
 		e.stopPropagation();
+		if ((e as React.KeyboardEvent).key === 'Tab' || (e as React.KeyboardEvent).key === 'Shift') return;
 		let menuValue;
 
 		if (e.type === 'click' && (e.target as HTMLElement).tagName === 'SPAN') {
@@ -363,7 +364,7 @@ const App = () => {
 		update(dbRef, editedTask);
 	};
 
-	const handleEditFormKeydown = (e: React.KeyboardEvent) => {
+	const handleEditFormKeyboard = (e: React.KeyboardEvent) => {
 		const form = (e.target as HTMLInputElement).form;
 		const focusableElements = document.querySelectorAll(
 			'a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]'
@@ -385,10 +386,7 @@ const App = () => {
 		) {
 			e.preventDefault();
 			(nextFocusableEl as HTMLElement).click();
-			(nextFocusableEl as HTMLElement).focus();
-		}
-
-		if (
+		} else if (
 			e.key === 'Tab' &&
 			e.shiftKey &&
 			(curFocusableEl.getAttribute('name') === 'priority' ||
@@ -396,7 +394,6 @@ const App = () => {
 		) {
 			e.preventDefault();
 			(prevFocusableEl as HTMLElement).click();
-			(prevFocusableEl as HTMLElement).focus();
 		}
 
 		const fieldName = e.target.getAttribute('name');
@@ -435,8 +432,7 @@ const App = () => {
 				((e as MouseEvent).pageX && (e as MouseEvent).pageY && statusCell) || ((e as KeyboardEvent).key === 'Enter' && statusCell)
 					? true
 					: false,
-		});
-
+		})
 		const formValues: EditFormData = {
 			status: task.status || null,
 			letterPriority: '',
@@ -600,7 +596,7 @@ const App = () => {
 											taskPriority={editFormData.priority}
 											handleEditFormChange={handleEditFormChange}
 											handleEditFormSubmit={handleEditFormSubmit}
-											handleEditFormKeydown={handleEditFormKeydown}
+											handleEditFormKeyboard={handleEditFormKeyboard}
 											taskId={task.id}
 											isError={isError}
 											rowId={editTask.rowId}
@@ -617,7 +613,7 @@ const App = () => {
 										<EditableDescription
 											handleEditFormChange={handleEditFormChange}
 											handleEditFormSubmit={handleEditFormSubmit}
-											handleEditFormKeydown={handleEditFormKeydown}
+											handleEditFormKeyboard={handleEditFormKeyboard}
 											taskId={task.id}
 											rowId={editTask.rowId}
 											inputType={editTask.inputType}

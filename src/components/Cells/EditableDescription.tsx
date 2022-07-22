@@ -5,7 +5,7 @@ import classes from '../../App.module.scss';
 interface Props {
 	handleEditFormChange: (e: ChangeEvent<HTMLInputElement>) => void;
 	handleEditFormSubmit: (e: React.FormEvent) => void;
-	handleEditFormKeydown: (e: React.KeyboardEvent) => void;
+	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
 	taskId: string | null;
 	rowId: string | null;
 	inputType: string | null | undefined;
@@ -16,7 +16,7 @@ const EditableDescription = ({
 	handleEditFormChange,
 	taskId,
 	handleEditFormSubmit,
-	handleEditFormKeydown,
+	handleEditFormKeyboard,
 	rowId,
 	inputType,
 	taskDescription
@@ -42,7 +42,7 @@ const EditableDescription = ({
 				name='description'
 				value={taskDescription as string}
 				onChange={(event) => handleEditFormChange(event)}
-				onKeyDown={(event) => handleEditFormKeydown(event)}
+				onKeyDown={(event) => handleEditFormKeyboard(event)}
 				onBlur={(event) => handleEditFormSubmit(event)}
 				ref={inputRef}
 				maxLength={150}

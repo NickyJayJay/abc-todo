@@ -11,12 +11,10 @@ const useOutsideClick = (callback: (event: MouseEvent | TouchEvent | KeyboardEve
 		};
 
 		document.addEventListener('click', (e) => handleClick(e));
-		document.addEventListener('keydown', (e) => handleClick(e));
 		document.addEventListener('touchstart', (e) => handleClick(e));
 
 		return () => {
 			document.removeEventListener('click', (e) => handleClick(e));
-			document.removeEventListener('keydown', (e) => handleClick(e));
 			document.removeEventListener('touchstart', (e) => handleClick(e));
 		};
 	}, [ref]);
