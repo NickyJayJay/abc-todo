@@ -44,7 +44,7 @@ const EditablePriority = ({
 				value={taskPriority as string}
 				placeholder='ABC'
 				onChange={(event) => handleEditFormChange(event)}
-				onKeyUp={(event) => handleEditFormKeyboard(event)}
+				onKeyDown={(event) => handleEditFormKeyboard(event)}
 				onBlur={(event) => handleEditFormSubmit(event)}
 				ref={inputRef}
 			></input>
