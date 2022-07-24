@@ -2,9 +2,6 @@
 	"folders": [
 		{
 			"path": "."
-		},
-		{
-			"path": "../benny-2.0"
 		}
 	],
 	"settings": {

@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react';
 
-const useOutsideClick = (callback: (event: MouseEvent | TouchEvent | KeyboardEvent) => void) => {
+const useOutsideClick = (callback: (event: MouseEvent | TouchEvent) => void) => {
 	const ref = useRef<HTMLTableSectionElement>(null);
 
 	useEffect(() => {
-		const handleClick = (event: MouseEvent | TouchEvent | KeyboardEvent) => {
+		const handleClick = (event: MouseEvent | TouchEvent) => {
 			if (ref.current && !ref.current.contains(event.target as Node)) {
-				callback(event); //disregard eslint warning - callback is wrapped in useCallback where it's defined
+				callback(event);
 			}
 		};
 
@@ -17,7 +17,7 @@ const useOutsideClick = (callback: (event: MouseEvent | TouchEvent | KeyboardEve
 			document.removeEventListener('click', (e) => handleClick(e));
 			document.removeEventListener('touchstart', (e) => handleClick(e));
 		};
-	}, [ref]);
+	}, [ref, callback]);
 
 	return ref;
 };

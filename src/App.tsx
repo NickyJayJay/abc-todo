@@ -167,7 +167,7 @@ const App = () => {
 			}px`;
 		} else {
 			return null;
-		}
+		}// eslint-disable-next-line
 	}, []);
 
 	interface EditTask {
