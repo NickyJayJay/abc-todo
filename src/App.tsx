@@ -312,8 +312,11 @@ const App = () => {
 			fieldValue.length <= 3
 		) {
 			setIsError(false);
-		} else {
+		} else if (editTask.inputType === 'priority-cell') {
 			newFormData[fieldName] = editFormData.priority;
+			setIsError(true);
+		} else if (editTask.inputType === 'priority-input') {
+			newFormData[fieldName] = addFormData.priority;
 			setIsError(true);
 		}
 	};
@@ -530,7 +533,7 @@ const App = () => {
 		} else {
 			const newFormData: EditFormData = {
 				...addFormData,
-				priority: `${editFormData.letterPriority}${editFormData.numberPriority}`,
+				priority: `${addFormData.letterPriority}${addFormData.numberPriority}`,
 				letterPriority: '',
 				numberPriority: '',
 			};
