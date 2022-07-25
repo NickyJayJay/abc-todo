@@ -3,9 +3,9 @@ import React from 'react';
 import classes from './Button.module.scss';
 
 interface Props {
-	type: "submit" | "button" | "reset" | undefined;
+	type: 'submit' | 'button' | 'reset' | undefined;
 	children: React.ReactNode;
-	onClick: (event:React. MouseEvent) => void;
+	onClick: (event: React.MouseEvent) => void;
 	disabled: boolean;
 }
 

@@ -4,7 +4,7 @@ import classes from '../../App.module.scss';
 
 interface Props {
 	taskPriority: string | null;
-	handleEditFormChange:(e: ChangeEvent<HTMLInputElement>) => void;
+	handleEditFormChange: (e: ChangeEvent<HTMLInputElement>) => void;
 	handleEditFormSubmit: (e: React.FormEvent) => void;
 	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
 	taskId: string | null;
@@ -21,7 +21,7 @@ const EditablePriority = ({
 	taskId,
 	isError,
 	rowId,
-	inputType
+	inputType,
 }: Props) => {
 	const inputRef = useRef<HTMLInputElement>(null);
 

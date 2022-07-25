@@ -4,7 +4,7 @@ import classes from './Card.module.scss';
 
 interface Props {
 	className: string | null;
-  	children: React.ReactNode;
+	children: React.ReactNode;
 }
 
 const Card = ({ className, children }: Props) => {

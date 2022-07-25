@@ -19,7 +19,7 @@ const EditableDescription = ({
 	handleEditFormKeyboard,
 	rowId,
 	inputType,
-	taskDescription
+	taskDescription,
 }: Props) => {
 	const inputRef = useRef<HTMLInputElement>(null);
 

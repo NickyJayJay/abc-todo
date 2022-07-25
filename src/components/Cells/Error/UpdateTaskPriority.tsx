@@ -4,13 +4,15 @@ import Button from '../../UI/Button/Button';
 import classes from './UpdateTaskPriority.module.scss';
 
 interface Props {
-	onPriority: (e: React.MouseEvent<Element>) => void
+	onPriority: (e: React.MouseEvent<Element>) => void;
 	onLetter: (e: React.FormEvent<HTMLInputElement>) => void;
 	onNumber: (e: React.FormEvent<HTMLInputElement>) => void;
 	letterPriority: string;
 	numberPriority: string;
 	handleEditFormSubmit: (e: React.FormEvent<Element>) => void;
-	handleAddFormChange: (e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>) => void;
+	handleAddFormChange: (
+		e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>
+	) => void;
 	editMode: string;
 }
 

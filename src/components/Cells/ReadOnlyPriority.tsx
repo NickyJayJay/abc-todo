@@ -3,14 +3,17 @@ import React from 'react';
 import classes from '../../App.module.scss';
 
 type Task = {
-	id: string | null,
-	status: string | null | undefined,
-	priority: string | null,
-	description: string | null
+	id: string | null;
+	status: string | null | undefined;
+	priority: string | null;
+	description: string | null;
 };
 
 interface Props {
-	handleEditTask: (a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent, b: Task) => void;
+	handleEditTask: (
+		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
+		b: Task
+	) => void;
 	task: Task;
 }
 

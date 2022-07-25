@@ -7,24 +7,27 @@ import arrowRight from '../../assets/SVG/arrow-right.svg';
 import dot from '../../assets/SVG/dot.svg';
 
 type Task = {
-	id: string | null,
-	status: string | null | undefined,
-	priority: string | null,
-	description: string | null
+	id: string | null;
+	status: string | null | undefined;
+	priority: string | null;
+	description: string | null;
 };
 
 type EditTask = {
-	rowId: string | null,
-	inputType: string | null | undefined,
-	xPos?: string | null,
-	yPos?: string | null,
-	xPosTouch: string | null,
-	yPosTouch: string | null,
-	showMenu: boolean,
-}
+	rowId: string | null;
+	inputType: string | null | undefined;
+	xPos?: string | null;
+	yPos?: string | null;
+	xPosTouch: string | null;
+	yPosTouch: string | null;
+	showMenu: boolean;
+};
 
 interface Props {
-	handleEditTask: (a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent, b: Task) => void;
+	handleEditTask: (
+		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
+		b: Task
+	) => void;
 	task: Task;
 	editTask: EditTask;
 }
