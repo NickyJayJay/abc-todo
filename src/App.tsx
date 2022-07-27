@@ -1,4 +1,10 @@
-import React, { useState, useRef, useCallback, useEffect, ChangeEvent } from 'react';
+import React, {
+	useState,
+	useRef,
+	useCallback,
+	useEffect,
+	ChangeEvent,
+} from 'react';
 import { nanoid } from 'nanoid';
 import { initializeApp } from 'firebase/app';
 // import { getAuth } from 'firebase/auth';
@@ -6,16 +12,10 @@ import { getDatabase, ref, remove, update } from 'firebase/database';
 
 import { firebaseConfig } from './firebaseConfig';
 import useOutsideClick from './hooks/useOutsideClick';
-import EditablePriority from './components/Cells/EditablePriority';
-import EditableDescription from './components/Cells/EditableDescription';
-import ReadOnlyStatus from './components/Cells/ReadOnlyStatus';
-import ReadOnlyPriority from './components/Cells/ReadOnlyPriority';
-import ReadOnlyDescription from './components/Cells/ReadOnlyDescription';
+import TableForm from './components/TableForm';
+import AddTaskForm from './components/AddTaskForm';
 import Card from './components/UI/Card/Card';
-import ButtonGradient from './components/UI/Button/ButtonGradient';
 import Modal from './components/UI/Modal/Modal';
-import ContextMenu from './components/UI/ContextMenu/ContextMenu';
-import checkBox from './assets/SVG/checkBox.svg';
 import classes from './App.module.scss';
 
 const App = () => {
@@ -56,7 +56,7 @@ const App = () => {
 	// Initialize Firebase and set bindings
 	const app = initializeApp(firebaseConfig);
 	const db = getDatabase(app);
-	// const auth = getAuth(); 
+	// const auth = getAuth();
 	const url = app.options.databaseURL;
 
 	if (editTask.showMenu || isError) {
@@ -80,10 +80,10 @@ const App = () => {
 	});
 
 	type LoadedTask = {
-		id: string | null,
-		status: string | null | undefined,
-		priority: string | null,
-		description: string | null
+		id: string | null;
+		status: string | null | undefined;
+		priority: string | null;
+		description: string | null;
 	};
 
 	useEffect(() => {
@@ -115,73 +115,87 @@ const App = () => {
 		});
 	}, [url]);
 
-	const setX = useCallback((e: React.MouseEvent | TouchEvent | KeyboardEvent) => {
-		if (e.type === 'click') {
-			return `${(e as React.MouseEvent).pageX}px`;
-		} else if (e.type === 'touchstart') {
-			return `${(e as TouchEvent).touches[0].pageX}px`;
-		} else if (e.type === 'keydown') {
-			return `${(e.target as HTMLElement).getBoundingClientRect().x + 35}px`;
-		} else {
-			return null;
-		}
-	}, []);
+	const setX = useCallback(
+		(e: React.MouseEvent | TouchEvent | KeyboardEvent) => {
+			if (e.type === 'click') {
+				return `${(e as React.MouseEvent).pageX}px`;
+			} else if (e.type === 'touchstart') {
+				return `${(e as TouchEvent).touches[0].pageX}px`;
+			} else if (e.type === 'keydown') {
+				return `${(e.target as HTMLElement).getBoundingClientRect().x + 35}px`;
+			} else {
+				return null;
+			}
+		},
+		[]
+	);
 
-	const setY = useCallback((e: React.MouseEvent | TouchEvent | KeyboardEvent) => {
-		const containerBottom = (outsideClickRef.current as HTMLElement).getBoundingClientRect().bottom;
-		const menuBottom: number =
-			(e as React.MouseEvent).pageY + 224 - window.scrollY ||
-			((e as TouchEvent).touches && (e as TouchEvent).touches[0].pageY + 224 - window.scrollY) ||
-			(e.target as HTMLElement).getBoundingClientRect().y + 224;
-		if (e.type === 'click' && menuBottom <= containerBottom) {
-			return `${(e as React.MouseEvent).pageY}px`;
-		} else if (e.type === 'click' && menuBottom > containerBottom) {
-			return `${(e as React.MouseEvent).pageY - (menuBottom - containerBottom)}px`;
-		} else if (
-			e.type === 'touchstart' &&
-			(e as TouchEvent).touches &&
-			(e as TouchEvent).touches[0].pageY &&
-			menuBottom <= containerBottom
-		) {
-			return `${(e as TouchEvent).touches[0].pageY}px`;
-		} else if (
-			e.type === 'touchstart' &&
-			(e as TouchEvent).touches &&
-			(e as TouchEvent).touches[0].pageY &&
-			menuBottom > containerBottom
-		) {
-			return `${(e as TouchEvent).touches[0].pageY - (menuBottom - containerBottom)}px`;
-		} else if (
-			e.type === 'keydown' &&
-			(e.target as HTMLElement).getBoundingClientRect() &&
-			menuBottom <= containerBottom
-		) {
-			return `${(e.target as HTMLElement).getBoundingClientRect().y + 35}px`;
-		} else if (
-			e.type === 'keydown' &&
-			(e.target as HTMLElement).getBoundingClientRect() &&
-			menuBottom > containerBottom
-		) {
-			return `${
-				(e.target as HTMLElement).getBoundingClientRect().y - (menuBottom - containerBottom)
-			}px`;
-		} else {
-			return null;
-		}// eslint-disable-next-line
-	}, []);
+	const setY = useCallback(
+		(e: React.MouseEvent | TouchEvent | KeyboardEvent) => {
+			const containerBottom = (
+				outsideClickRef.current as HTMLElement
+			).getBoundingClientRect().bottom;
+			const menuBottom: number =
+				(e as React.MouseEvent).pageY + 224 - window.scrollY ||
+				((e as TouchEvent).touches &&
+					(e as TouchEvent).touches[0].pageY + 224 - window.scrollY) ||
+				(e.target as HTMLElement).getBoundingClientRect().y + 224;
+			if (e.type === 'click' && menuBottom <= containerBottom) {
+				return `${(e as React.MouseEvent).pageY}px`;
+			} else if (e.type === 'click' && menuBottom > containerBottom) {
+				return `${
+					(e as React.MouseEvent).pageY - (menuBottom - containerBottom)
+				}px`;
+			} else if (
+				e.type === 'touchstart' &&
+				(e as TouchEvent).touches &&
+				(e as TouchEvent).touches[0].pageY &&
+				menuBottom <= containerBottom
+			) {
+				return `${(e as TouchEvent).touches[0].pageY}px`;
+			} else if (
+				e.type === 'touchstart' &&
+				(e as TouchEvent).touches &&
+				(e as TouchEvent).touches[0].pageY &&
+				menuBottom > containerBottom
+			) {
+				return `${
+					(e as TouchEvent).touches[0].pageY - (menuBottom - containerBottom)
+				}px`;
+			} else if (
+				e.type === 'keydown' &&
+				(e.target as HTMLElement).getBoundingClientRect() &&
+				menuBottom <= containerBottom
+			) {
+				return `${(e.target as HTMLElement).getBoundingClientRect().y + 35}px`;
+			} else if (
+				e.type === 'keydown' &&
+				(e.target as HTMLElement).getBoundingClientRect() &&
+				menuBottom > containerBottom
+			) {
+				return `${
+					(e.target as HTMLElement).getBoundingClientRect().y -
+					(menuBottom - containerBottom)
+				}px`;
+			} else {
+				return null;
+			}
+		}, // eslint-disable-next-line
+		[]
+	);
 
 	interface EditTask {
-		rowId: string | null,
-		inputType: string | null | undefined,
-		xPos?: string | null,
-		yPos: string | null,
-		xPosTouch: string | null,
-		yPosTouch: string | null,
-		showMenu: boolean,
+		rowId: string | null;
+		inputType: string | null | undefined;
+		xPos?: string | null;
+		yPos: string | null;
+		xPosTouch: string | null;
+		yPosTouch: string | null;
+		showMenu: boolean;
 	}
 
 	const handleOutsideClick = useCallback(
-		(e: any ) => {
+		(e: any) => {
 			setEditTask({
 				rowId: null,
 				inputType: (e.target as HTMLElement).dataset.id || null,
@@ -209,13 +223,17 @@ const App = () => {
 
 	const outsideClickRef = useOutsideClick((e) => handleOutsideClick(e));
 
-	const handleAddFormChange = (e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>) => {
+	const handleAddFormChange = (
+		e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>
+	) => {
 		e.preventDefault();
 
 		const fieldName = (e.target as HTMLInputElement).getAttribute('name');
 		if (!fieldName) return;
 		const fieldValue =
-			fieldName === 'priority' ? (e.target as HTMLInputElement).value.toUpperCase() : (e.target as HTMLInputElement).value;
+			fieldName === 'priority'
+				? (e.target as HTMLInputElement).value.toUpperCase()
+				: (e.target as HTMLInputElement).value;
 
 		const newFormData = { ...addFormData };
 		newFormData[fieldName as keyof typeof newFormData] = fieldValue;
@@ -227,12 +245,19 @@ const App = () => {
 
 	const handleMenuItemClick = (e: React.MouseEvent | React.KeyboardEvent) => {
 		e.stopPropagation();
-		if ((e as React.KeyboardEvent).key === 'Tab' || (e as React.KeyboardEvent).key === 'Shift') return;
+		if (
+			(e as React.KeyboardEvent).key === 'Tab' ||
+			(e as React.KeyboardEvent).key === 'Shift'
+		)
+			return;
 		let menuValue;
 
 		if (e.type === 'click' && (e.target as HTMLElement).tagName === 'SPAN') {
 			menuValue = (e.target as HTMLElement).textContent;
-		} else if (e.type === 'click' && (e.target as HTMLElement).tagName === 'IMG') {
+		} else if (
+			e.type === 'click' &&
+			(e.target as HTMLElement).tagName === 'IMG'
+		) {
 			menuValue = (e.target as HTMLElement).previousElementSibling?.textContent;
 		} else {
 			menuValue = (e.target as HTMLElement).childNodes[0].textContent;
@@ -268,14 +293,18 @@ const App = () => {
 	};
 
 	interface EditFormData {
-		status: string | null,
-		letterPriority: string,
-		numberPriority: string,
-		priority: string | null,
-		description: string | null,
+		status: string | null;
+		letterPriority: string;
+		numberPriority: string;
+		priority: string | null;
+		description: string | null;
 	}
 
-	const handlePriorityValidation = (fieldValue: string, fieldName: string | null, newFormData: EditFormData) => {
+	const handlePriorityValidation = (
+		fieldValue: string,
+		fieldName: string | null,
+		newFormData: EditFormData
+	) => {
 		if (fieldName !== 'priority') return;
 
 		if (
@@ -283,8 +312,11 @@ const App = () => {
 			fieldValue.length <= 3
 		) {
 			setIsError(false);
-		} else {
+		} else if (editTask.inputType === 'priority-cell') {
 			newFormData[fieldName] = editFormData.priority;
+			setIsError(true);
+		} else if (editTask.inputType === 'priority-input') {
+			newFormData[fieldName] = addFormData.priority;
 			setIsError(true);
 		}
 	};
@@ -398,7 +430,9 @@ const App = () => {
 
 		const fieldName = e.target.getAttribute('name');
 		const fieldValue =
-			fieldName === 'priority' ? (e.target as HTMLInputElement | HTMLSelectElement).value.toUpperCase() : (e.target as HTMLInputElement | HTMLSelectElement).value;
+			fieldName === 'priority'
+				? (e.target as HTMLInputElement | HTMLSelectElement).value.toUpperCase()
+				: (e.target as HTMLInputElement | HTMLSelectElement).value;
 
 		const newFormData = { ...editFormData };
 		newFormData[fieldName as keyof typeof newFormData] = fieldValue;
@@ -411,11 +445,13 @@ const App = () => {
 		let statusCell = (e.target as HTMLElement).dataset.id === 'status-cell';
 
 		if (
-			((e as KeyboardEvent).key === 'Tab' || (e as KeyboardEvent).key === 'Escape' || (e as KeyboardEvent).shiftKey) &&
+			((e as KeyboardEvent).key === 'Tab' ||
+				(e as KeyboardEvent).key === 'Escape' ||
+				(e as KeyboardEvent).shiftKey) &&
 			statusCell
 		)
 			return;
-			
+
 		e.stopPropagation();
 		statusCell && e.preventDefault();
 		statusCell && (e.target as HTMLElement).tagName === 'IMG'
@@ -429,10 +465,11 @@ const App = () => {
 			xPosTouch: setX(e),
 			yPosTouch: setY(e),
 			showMenu:
-				((e as MouseEvent).pageX && (e as MouseEvent).pageY && statusCell) || ((e as KeyboardEvent).key === 'Enter' && statusCell)
+				((e as MouseEvent).pageX && (e as MouseEvent).pageY && statusCell) ||
+				((e as KeyboardEvent).key === 'Enter' && statusCell)
 					? true
 					: false,
-		})
+		});
 		const formValues: EditFormData = {
 			status: task.status || null,
 			letterPriority: '',
@@ -496,7 +533,7 @@ const App = () => {
 		} else {
 			const newFormData: EditFormData = {
 				...addFormData,
-				priority: `${editFormData.letterPriority}${editFormData.numberPriority}`,
+				priority: `${addFormData.letterPriority}${addFormData.numberPriority}`,
 				letterPriority: '',
 				numberPriority: '',
 			};
@@ -505,7 +542,9 @@ const App = () => {
 		setIsError(false);
 	};
 
-	const hideModalHandler = (e: React.MouseEvent | TouchEvent | KeyboardEvent) => {
+	const hideModalHandler = (
+		e: React.MouseEvent | TouchEvent | KeyboardEvent
+	) => {
 		e.stopPropagation();
 		if ((e as KeyboardEvent).key === 'Tab') return;
 
@@ -562,124 +601,27 @@ const App = () => {
 					/>
 				)}
 			<Card className={`${classes.card} card`}>
-				<form onSubmit={handleEditFormSubmit}>
-					{editTask.showMenu && (
-						<ContextMenu
-							xPos={editTask.xPos}
-							yPos={editTask.yPos}
-							handleMenuItemClick={handleMenuItemClick}
-						/>
-					)}
-					<table>
-						<thead>
-							<tr>
-								<th className={classes.statusTitle}>
-									<img src={checkBox} alt='status icon' />
-								</th>
-								<th className={classes.priorityTitle}>ABC</th>
-								<th className={classes.descriptionTitle}>
-									Prioritized Task List
-								</th>
-							</tr>
-						</thead>
-						<tbody ref={outsideClickRef}>
-							{tasks.map((task) => (
-								<tr key={task.id}>
-									<ReadOnlyStatus
-										task={task}
-										handleEditTask={handleEditTask}
-										editTask={editTask}
-									/>
-									{editTask.inputType === 'priority-cell' &&
-									editTask.rowId === task.id ? (
-										<EditablePriority
-											taskPriority={editFormData.priority}
-											handleEditFormChange={handleEditFormChange}
-											handleEditFormSubmit={handleEditFormSubmit}
-											handleEditFormKeyboard={handleEditFormKeyboard}
-											taskId={task.id}
-											isError={isError}
-											rowId={editTask.rowId}
-											inputType={editTask.inputType}
-										/>
-									) : (
-										<ReadOnlyPriority
-											task={task}
-											handleEditTask={handleEditTask}
-										/>
-									)}
-									{editTask.inputType === 'description-cell' &&
-									editTask.rowId === task.id ? (
-										<EditableDescription
-											handleEditFormChange={handleEditFormChange}
-											handleEditFormSubmit={handleEditFormSubmit}
-											handleEditFormKeyboard={handleEditFormKeyboard}
-											taskId={task.id}
-											rowId={editTask.rowId}
-											inputType={editTask.inputType}
-											taskDescription={editFormData.description}
-										/>
-									) : (
-										<ReadOnlyDescription
-											task={task}
-											handleEditTask={handleEditTask}
-										/>
-									)}
-								</tr>
-							))}
-						</tbody>
-					</table>
-				</form>
+				<TableForm
+					handleEditFormSubmit={handleEditFormSubmit}
+					editTask={editTask}
+					handleMenuItemClick={handleMenuItemClick}
+					outsideClickRef={outsideClickRef}
+					tasks={tasks}
+					handleEditTask={handleEditTask}
+					editFormData={editFormData}
+					handleEditFormChange={handleEditFormChange}
+					handleEditFormKeyboard={handleEditFormKeyboard}
+					isError={isError}
+				/>
 
-				<div className={classes.addTask}>
-					<form onSubmit={handleAddFormSubmit}>
-						<fieldset>
-							<legend>Add a Task</legend>
-							<select
-								onChange={handleAddFormChange}
-								onKeyDown={(e) => handleAddFormKeydown(e)}
-								name='status'
-								value={addFormData.status as string}
-								data-id='status-input'
-								aria-label='Select status'
-							>
-								<option hidden>Select Status</option>
-								<option disabled defaultValue=''>
-									Select Status
-								</option>
-								<option value='In Process'>In Process</option>
-								<option value='Completed'>Completed</option>
-								<option value='Forwarded'>Forwarded</option>
-								<option value='Delegated'>Delegated</option>
-							</select>
-							<input
-								type='text'
-								name='priority'
-								data-id='priority-input'
-								placeholder='ABC'
-								value={addFormData.priority as string}
-								onChange={(e) => handleAddFormChange(e)}
-								onKeyDown={(e) => handleAddFormKeydown(e)}
-								aria-label='Enter task priority'
-								ref={priorityInput}
-							></input>
-							<input
-								type='text'
-								name='description'
-								data-id='description-input'
-								placeholder='Enter task description...'
-								value={addFormData.description as string}
-								onChange={handleAddFormChange}
-								onKeyDown={(e) => handleAddFormKeydown(e)}
-								aria-label='Enter task description'
-								maxLength={150}
-							/>
-							<ButtonGradient type='submit'>
-								<span>Add Task</span>
-							</ButtonGradient>
-						</fieldset>
-					</form>
-				</div>
+				<AddTaskForm
+					handleAddFormSubmit={handleAddFormSubmit}
+					handleAddFormChange={handleAddFormChange}
+					handleAddFormKeydown={handleAddFormKeydown}
+					isError={isError}
+					addFormData={addFormData}
+					priorityInput={priorityInput}
+				/>
 			</Card>
 		</div>
 	);

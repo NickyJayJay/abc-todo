@@ -8,22 +8,24 @@ import UpdateTaskPriority from '../../Cells/Error/UpdateTaskPriority';
 import Close from '../../../assets/SVG/close.svg';
 
 type EditFormData = {
-		status: string | null,
-		letterPriority: string,
-		numberPriority: string,
-		priority: string | null,
-		description: string | null,
-	}
+	status: string | null;
+	letterPriority: string;
+	numberPriority: string;
+	priority: string | null;
+	description: string | null;
+};
 interface Props {
 	editFormData: EditFormData;
 	addFormData: EditFormData;
 	onHide: (e: React.MouseEvent | TouchEvent | KeyboardEvent) => void;
-	onPriority: (e: React.MouseEvent<Element>) => void
+	onPriority: (e: React.MouseEvent<Element>) => void;
 	onLetter: (e: React.FormEvent<HTMLInputElement>) => void;
 	onNumber: (e: React.FormEvent<HTMLInputElement>) => void;
 	editMode: string;
 	handleEditFormSubmit: (e: React.FormEvent<Element>) => void;
-	handleAddFormChange: (e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>) => void;
+	handleAddFormChange: (
+		e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>
+	) => void;
 	priorityInput: RefObject<HTMLInputElement>;
 }
 
