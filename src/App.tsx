@@ -15,7 +15,9 @@ import useOutsideClick from './hooks/useOutsideClick';
 import TableForm from './components/TableForm';
 import AddTaskForm from './components/AddTaskForm';
 import Card from './components/UI/Card/Card';
-import Modal from './components/UI/Modal/Modal';
+// import Modal from './components/UI/Modal/Modal';
+import { ModalProvider } from './components/UI/Modal/ModalContext';
+import UpdateTaskPriority from './components/Cells/Error/UpdateTaskPriority';
 import classes from './App.module.scss';
 
 const App = () => {
@@ -186,7 +188,7 @@ const App = () => {
 
 	interface EditTask {
 		rowId: string | null;
-		inputType: string | null | undefined;
+		inputType: string | null;
 		xPos?: string | null;
 		yPos: string | null;
 		xPosTouch: string | null;
@@ -459,7 +461,7 @@ const App = () => {
 			: (e.target as HTMLElement).focus();
 		setEditTask({
 			rowId: task.id || null,
-			inputType: (e.target as HTMLElement).dataset.id,
+			inputType: (e.target as HTMLElement).dataset.id || null,
 			xPos: setX(e),
 			yPos: setY(e),
 			xPosTouch: setX(e),
@@ -584,7 +586,7 @@ const App = () => {
 
 	return (
 		<div className={classes.appContainer}>
-			{isError &&
+			{/* {isError &&
 				(editTask.inputType === 'priority-cell' ||
 					editTask.inputType === 'priority-input') && (
 					<Modal
@@ -599,6 +601,30 @@ const App = () => {
 						handleAddFormChange={handleAddFormChange}
 						priorityInput={priorityInput}
 					/>
+				)} */}
+			{isError &&
+				(editTask.inputType === 'priority-cell' ||
+					editTask.inputType === 'priority-input') && (
+					<ModalProvider>
+						<UpdateTaskPriority
+							onPriority={updatePriorityHandler}
+							onLetter={letterPriorityHandler}
+							onNumber={numberPriorityHandler}
+							editMode={editTask.inputType as string}
+							letterPriority={
+								editTask.inputType === 'priority-cell'
+									? editFormData.letterPriority
+									: addFormData.letterPriority
+							}
+							numberPriority={
+								editTask.inputType === 'priority-cell'
+									? editFormData.numberPriority
+									: addFormData.numberPriority
+							}
+							handleEditFormSubmit={handleEditFormSubmit}
+							handleAddFormChange={handleAddFormChange}
+						/>
+					</ModalProvider>
 				)}
 			<Card className={`${classes.card} card`}>
 				<TableForm
