@@ -5,7 +5,7 @@ import React, {
 	useEffect,
 	ChangeEvent,
 } from 'react';
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 import { initializeApp } from 'firebase/app';
 // import { getAuth } from 'firebase/auth';
 import { getDatabase, ref, remove, update } from 'firebase/database';
@@ -23,13 +23,13 @@ const App = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [httpError, setHttpError] = useState(false);
 
-	const [addFormData, setAddFormData] = useState<EditFormData>({
-		status: '',
-		letterPriority: '',
-		numberPriority: '',
-		priority: '',
-		description: '',
-	});
+	// const [addFormData, setAddFormData] = useState<EditFormData>({
+	// 	status: '',
+	// 	letterPriority: '',
+	// 	numberPriority: '',
+	// 	priority: '',
+	// 	description: '',
+	// });
 
 	const [editFormData, setEditFormData] = useState<EditFormData>({
 		status: '',
@@ -223,25 +223,25 @@ const App = () => {
 
 	const outsideClickRef = useOutsideClick((e) => handleOutsideClick(e));
 
-	const handleAddFormChange = (
-		e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>
-	) => {
-		e.preventDefault();
+	// const handleAddFormChange = (
+	// 	e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>
+	// ) => {
+	// 	e.preventDefault();
 
-		const fieldName = (e.target as HTMLInputElement).getAttribute('name');
-		if (!fieldName) return;
-		const fieldValue =
-			fieldName === 'priority'
-				? (e.target as HTMLInputElement).value.toUpperCase()
-				: (e.target as HTMLInputElement).value;
+	// 	const fieldName = (e.target as HTMLInputElement).getAttribute('name');
+	// 	if (!fieldName) return;
+	// 	const fieldValue =
+	// 		fieldName === 'priority'
+	// 			? (e.target as HTMLInputElement).value.toUpperCase()
+	// 			: (e.target as HTMLInputElement).value;
 
-		const newFormData = { ...addFormData };
-		newFormData[fieldName as keyof typeof newFormData] = fieldValue;
+	// 	const newFormData = { ...addFormData };
+	// 	newFormData[fieldName as keyof typeof newFormData] = fieldValue;
 
-		handlePriorityValidation(fieldValue, fieldName, newFormData);
+	// 	handlePriorityValidation(fieldValue, fieldName, newFormData);
 
-		setAddFormData(newFormData);
-	};
+	// 	setAddFormData(newFormData);
+	// };
 
 	const handleMenuItemClick = (e: React.MouseEvent | React.KeyboardEvent) => {
 		e.stopPropagation();
@@ -336,47 +336,47 @@ const App = () => {
 		setEditFormData(newFormData);
 	};
 
-	const handleAddFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
+	// const handleAddFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	// 	e.preventDefault();
 
-		const newTask = {
-			id: nanoid(),
-			key: nanoid(),
-			status: addFormData.status,
-			priority: addFormData.priority,
-			description: addFormData.description,
-		};
+	// 	const newTask = {
+	// 		id: nanoid(),
+	// 		key: nanoid(),
+	// 		status: addFormData.status,
+	// 		priority: addFormData.priority,
+	// 		description: addFormData.description,
+	// 	};
 
-		const newTasks = [...tasks, newTask];
-		setTasks(newTasks);
+	// 	const newTasks = [...tasks, newTask];
+	// 	setTasks(newTasks);
 
-		setAddFormData({
-			status: 'Select Status',
-			letterPriority: '',
-			numberPriority: '',
-			priority: '',
-			description: '',
-		});
+	// 	setAddFormData({
+	// 		status: 'Select Status',
+	// 		letterPriority: '',
+	// 		numberPriority: '',
+	// 		priority: '',
+	// 		description: '',
+	// 	});
 
-		fetch(`${url}/tasks.json`, {
-			method: 'POST',
-			body: JSON.stringify({
-				status: addFormData.status,
-				priority: addFormData.priority,
-				description: addFormData.description,
-			}),
-		});
-	};
+	// 	fetch(`${url}/tasks.json`, {
+	// 		method: 'POST',
+	// 		body: JSON.stringify({
+	// 			status: addFormData.status,
+	// 			priority: addFormData.priority,
+	// 			description: addFormData.description,
+	// 		}),
+	// 	});
+	// };
 
-	const handleAddFormKeydown = (e: React.KeyboardEvent) => {
-		if (e.key === 'Enter') {
-			const form = (e.target as HTMLInputElement | HTMLSelectElement).form;
-			const i = Array.from(form!.elements).indexOf(e.target);
-			const nextFormControl = form!.elements[i + 1];
-			(nextFormControl as HTMLElement).focus();
-			e.preventDefault();
-		}
-	};
+	// const handleAddFormKeydown = (e: React.KeyboardEvent) => {
+	// 	if (e.key === 'Enter') {
+	// 		const form = (e.target as HTMLInputElement | HTMLSelectElement).form;
+	// 		const i = Array.from(form!.elements).indexOf(e.target);
+	// 		const nextFormControl = form!.elements[i + 1];
+	// 		(nextFormControl as HTMLElement).focus();
+	// 		e.preventDefault();
+	// 	}
+	// };
 
 	const handleEditFormSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -615,12 +615,15 @@ const App = () => {
 				/>
 
 				<AddTaskForm
-					handleAddFormSubmit={handleAddFormSubmit}
-					handleAddFormChange={handleAddFormChange}
-					handleAddFormKeydown={handleAddFormKeydown}
-					isError={isError}
-					addFormData={addFormData}
+					// handleAddFormSubmit={handleAddFormSubmit}
+					// handleAddFormChange={handleAddFormChange}
+					// handleAddFormKeydown={handleAddFormKeydown}
+					// handlePriorityValidation={handlePriorityValidation}
+					setTasks={setTasks}
+					setIsError={setIsError}
 					priorityInput={priorityInput}
+					url={url as string}
+					tasks={tasks}
 				/>
 			</Card>
 		</div>
