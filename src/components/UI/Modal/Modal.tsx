@@ -2,7 +2,7 @@ import React, { RefObject, useEffect, useContext, ChangeEvent } from 'react';
 import ReactDOM from 'react-dom';
 import FocusLock from 'react-focus-lock';
 
-import { PriorityContext } from '../../../App';
+import { PriorityContext } from '../../../context/priority-context';
 import classes from './Modal.module.scss';
 import Card from '../Card/Card';
 import UpdateTaskPriority from '../../Cells/Error/UpdateTaskPriority';

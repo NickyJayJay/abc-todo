@@ -1,17 +1,16 @@
 import React, {
-	RefObject,
 	useState,
 	useRef,
 	useCallback,
 	useEffect,
 	ChangeEvent,
-	createContext,
 } from 'react';
 import { nanoid } from 'nanoid';
 import { initializeApp } from 'firebase/app';
 // import { getAuth } from 'firebase/auth';
 import { getDatabase, ref, remove, update } from 'firebase/database';
 
+import { PriorityContext } from './context/priority-context';
 import { firebaseConfig } from './firebaseConfig';
 import useOutsideClick from './hooks/useOutsideClick';
 import TableForm from './components/TableForm';
@@ -19,22 +18,6 @@ import AddTaskForm from './components/AddTaskForm';
 import Card from './components/UI/Card/Card';
 import Modal from './components/UI/Modal/Modal';
 import classes from './App.module.scss';
-
-interface PriorityContext {
-	letterPriority: string;
-	numberPriority: string;
-	editMode: string | null | undefined;
-	priorityInput: RefObject<HTMLInputElement>;
-	updatePriorityHandler: (e: React.MouseEvent<Element, MouseEvent>) => void;
-	letterPriorityHandler: (e: React.FormEvent<HTMLInputElement>) => void;
-	numberPriorityHandler: (e: React.FormEvent<HTMLInputElement>) => void;
-	handleEditFormSubmit: (e: React.FormEvent) => void;
-	handleAddFormChange: (
-		e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>
-	) => void;
-}
-
-export const PriorityContext = createContext({} as PriorityContext);
 
 const App = () => {
 	const [tasks, setTasks] = useState<LoadedTask[]>([]);

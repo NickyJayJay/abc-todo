@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useContext, ChangeEvent } from 'react';
 
-import { PriorityContext } from '../../../App';
+import { PriorityContext } from '../../../context/priority-context';
 import Button from '../../UI/Button/Button';
 import classes from './UpdateTaskPriority.module.scss';
 
