@@ -1,9 +1,11 @@
 import React, {
+	RefObject,
 	useState,
 	useRef,
 	useCallback,
 	useEffect,
 	ChangeEvent,
+	createContext,
 } from 'react';
 import { nanoid } from 'nanoid';
 import { initializeApp } from 'firebase/app';
@@ -17,6 +19,22 @@ import AddTaskForm from './components/AddTaskForm';
 import Card from './components/UI/Card/Card';
 import Modal from './components/UI/Modal/Modal';
 import classes from './App.module.scss';
+
+interface PriorityContext {
+	letterPriority: string;
+	numberPriority: string;
+	editMode: string | null | undefined;
+	priorityInput: RefObject<HTMLInputElement>;
+	updatePriorityHandler: (e: React.MouseEvent<Element, MouseEvent>) => void;
+	letterPriorityHandler: (e: React.FormEvent<HTMLInputElement>) => void;
+	numberPriorityHandler: (e: React.FormEvent<HTMLInputElement>) => void;
+	handleEditFormSubmit: (e: React.FormEvent) => void;
+	handleAddFormChange: (
+		e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>
+	) => void;
+}
+
+export const PriorityContext = createContext({} as PriorityContext);
 
 const App = () => {
 	const [tasks, setTasks] = useState<LoadedTask[]>([]);
@@ -587,18 +605,27 @@ const App = () => {
 			{isError &&
 				(editTask.inputType === 'priority-cell' ||
 					editTask.inputType === 'priority-input') && (
-					<Modal
-						editFormData={editFormData}
-						addFormData={addFormData}
-						onHide={hideModalHandler}
-						onPriority={updatePriorityHandler}
-						onLetter={letterPriorityHandler}
-						onNumber={numberPriorityHandler}
-						editMode={editTask.inputType}
-						handleEditFormSubmit={handleEditFormSubmit}
-						handleAddFormChange={handleAddFormChange}
-						priorityInput={priorityInput}
-					/>
+					<PriorityContext.Provider
+						value={{
+							letterPriority:
+								editTask.inputType === 'priority-cell'
+									? editFormData.letterPriority
+									: addFormData.letterPriority,
+							numberPriority:
+								editTask.inputType === 'priority-cell'
+									? editFormData.numberPriority
+									: addFormData.numberPriority,
+							editMode: editTask.inputType,
+							priorityInput: priorityInput,
+							updatePriorityHandler,
+							letterPriorityHandler,
+							numberPriorityHandler,
+							handleEditFormSubmit,
+							handleAddFormChange,
+						}}
+					>
+						<Modal onHide={hideModalHandler} />
+					</PriorityContext.Provider>
 				)}
 			<Card className={`${classes.card} card`}>
 				<TableForm
