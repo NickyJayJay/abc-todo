@@ -1,36 +1,26 @@
-import React, { useRef, useEffect, ChangeEvent } from 'react';
+import React, { useRef, useEffect, useContext, ChangeEvent } from 'react';
 
+import { PriorityContext } from '../../../context/priorityContext';
 import Button from '../../UI/Button/Button';
 import classes from './UpdateTaskPriority.module.scss';
 
-interface Props {
-	onPriority: (e: React.MouseEvent<Element>) => void;
-	onLetter: (e: React.FormEvent<HTMLInputElement>) => void;
-	onNumber: (e: React.FormEvent<HTMLInputElement>) => void;
-	letterPriority: string;
-	numberPriority: string;
-	handleEditFormSubmit: (e: React.FormEvent<Element>) => void;
-	handleAddFormChange: (
-		e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>
-	) => void;
-	editMode: string;
-}
-
-const UpdateTaskPriority = ({
-	onPriority,
-	onLetter,
-	onNumber,
-	letterPriority,
-	numberPriority,
-	handleEditFormSubmit,
-	handleAddFormChange,
-	editMode,
-}: Props) => {
+const UpdateTaskPriority = () => {
 	const radioRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
 		radioRef.current?.focus();
 	}, []);
+
+	const {
+		letterPriority,
+		numberPriority,
+		editMode,
+		updatePriorityHandler,
+		letterPriorityHandler,
+		numberPriorityHandler,
+		handleEditFormSubmit,
+		handleAddFormChange,
+	} = useContext(PriorityContext);
 
 	return (
 		<form
@@ -51,7 +41,7 @@ const UpdateTaskPriority = ({
 						id='A'
 						name='letter'
 						value='A'
-						onInput={onLetter}
+						onInput={letterPriorityHandler}
 						ref={radioRef}
 					/>
 					<label>
@@ -64,7 +54,7 @@ const UpdateTaskPriority = ({
 						id='B'
 						name='letter'
 						value='B'
-						onInput={onLetter}
+						onInput={letterPriorityHandler}
 					/>
 					<label>
 						B <span>(Important but not time sensitive)</span>
@@ -76,7 +66,7 @@ const UpdateTaskPriority = ({
 						id='C'
 						name='letter'
 						value='C'
-						onInput={onLetter}
+						onInput={letterPriorityHandler}
 					/>
 					<label>
 						C <span>(Not important)</span>
@@ -89,7 +79,7 @@ const UpdateTaskPriority = ({
 					type='number'
 					min='1'
 					max='99'
-					onInput={onNumber}
+					onInput={numberPriorityHandler}
 					name='priority'
 				/>
 			</fieldset>
@@ -99,7 +89,9 @@ const UpdateTaskPriority = ({
 			</div>
 			<Button
 				type='submit'
-				onClick={(event: React.MouseEvent<Element>) => onPriority(event)}
+				onClick={(event: React.MouseEvent<Element>) =>
+					updatePriorityHandler(event)
+				}
 				disabled={letterPriority ? false : true}
 			>
 				CONFIRM PRIORITY
