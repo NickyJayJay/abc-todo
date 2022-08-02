@@ -13,11 +13,7 @@ type Props = {
 };
 
 const Modal = ({ onHide }: Props) => {
-	const { editMode, priorityInput } = useContext(PriorityContext);
-
-	useEffect(() => {
-		editMode === 'priority-input' && priorityInput.current?.focus();
-	}, []);
+	const { editMode } = useContext(PriorityContext);
 
 	return (
 		<>

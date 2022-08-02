@@ -631,6 +631,7 @@ const App = () => {
 					isError={isError}
 					addFormData={addFormData}
 					priorityInput={priorityInput}
+					editMode={editTask.inputType}
 				/>
 			</Card>
 		</div>

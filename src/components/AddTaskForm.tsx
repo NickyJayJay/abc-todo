@@ -1,4 +1,4 @@
-import React, { RefObject, ChangeEvent } from 'react';
+import React, { RefObject, ChangeEvent, useEffect } from 'react';
 
 import ButtonGradient from './UI/Button/ButtonGradient';
 import classes from '../App.module.scss';
@@ -12,6 +12,7 @@ interface Props {
 	isError: boolean;
 	addFormData: AddFormData;
 	priorityInput: RefObject<HTMLInputElement>;
+	editMode: string | null | undefined;
 }
 
 type AddFormData = {
@@ -26,9 +27,14 @@ const AddTaskForm = ({
 	handleAddFormSubmit,
 	handleAddFormChange,
 	handleAddFormKeydown,
+	isError,
 	addFormData,
 	priorityInput,
+	editMode,
 }: Props) => {
+	useEffect(() => {
+		editMode === 'priority-input' && !isError && priorityInput.current?.focus();
+	}, [isError]);
 	return (
 		<div className={classes.addTask}>
 			<form onSubmit={handleAddFormSubmit}>
