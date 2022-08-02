@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect, useContext, ChangeEvent } from 'react';
+import React, { useContext } from 'react';
 import ReactDOM from 'react-dom';
 import FocusLock from 'react-focus-lock';
 

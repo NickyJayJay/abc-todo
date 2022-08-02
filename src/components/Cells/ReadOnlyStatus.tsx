@@ -40,7 +40,7 @@ const ReadOnlyStatus = ({ handleEditTask, task, editTask }: Props) => {
 			editTask.inputType === 'status-cell' &&
 			!editTask.showMenu &&
 			cellRef.current?.focus();
-	}, [editTask.showMenu]);
+	}, [editTask, task.id]);
 
 	return (
 		<td

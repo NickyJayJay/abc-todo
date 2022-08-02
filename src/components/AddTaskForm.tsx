@@ -34,7 +34,7 @@ const AddTaskForm = ({
 }: Props) => {
 	useEffect(() => {
 		editMode === 'priority-input' && !isError && priorityInput.current?.focus();
-	}, [isError]);
+	}, [isError, editMode, priorityInput]);
 	return (
 		<div className={classes.addTask}>
 			<form onSubmit={handleAddFormSubmit}>

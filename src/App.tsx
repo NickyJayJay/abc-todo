@@ -116,37 +116,32 @@ const App = () => {
 		});
 	}, [url]);
 
-	const setX = useCallback(
-		(e: React.MouseEvent | TouchEvent | KeyboardEvent) => {
-			if (e.type === 'click') {
-				return `${(e as React.MouseEvent).pageX}px`;
-			} else if (e.type === 'touchstart') {
-				return `${(e as TouchEvent).touches[0].pageX}px`;
-			} else if (e.type === 'keydown') {
-				return `${(e.target as HTMLElement).getBoundingClientRect().x + 35}px`;
-			} else {
-				return null;
-			}
-		},
-		[]
-	);
+	const setX = useCallback((e: MouseEvent | TouchEvent | KeyboardEvent) => {
+		if (e.type === 'click') {
+			return `${(e as MouseEvent).pageX}px`;
+		} else if (e.type === 'touchstart') {
+			return `${(e as TouchEvent).touches[0].pageX}px`;
+		} else if (e.type === 'keydown') {
+			return `${(e.target as HTMLElement).getBoundingClientRect().x + 35}px`;
+		} else {
+			return null;
+		}
+	}, []);
 
 	const setY = useCallback(
-		(e: React.MouseEvent | TouchEvent | KeyboardEvent) => {
+		(e: MouseEvent | TouchEvent | KeyboardEvent) => {
 			const containerBottom = (
 				outsideClickRef.current as HTMLElement
 			).getBoundingClientRect().bottom;
 			const menuBottom: number =
-				(e as React.MouseEvent).pageY + 224 - window.scrollY ||
+				(e as MouseEvent).pageY + 224 - window.scrollY ||
 				((e as TouchEvent).touches &&
 					(e as TouchEvent).touches[0].pageY + 224 - window.scrollY) ||
 				(e.target as HTMLElement).getBoundingClientRect().y + 224;
 			if (e.type === 'click' && menuBottom <= containerBottom) {
-				return `${(e as React.MouseEvent).pageY}px`;
+				return `${(e as MouseEvent).pageY}px`;
 			} else if (e.type === 'click' && menuBottom > containerBottom) {
-				return `${
-					(e as React.MouseEvent).pageY - (menuBottom - containerBottom)
-				}px`;
+				return `${(e as MouseEvent).pageY - (menuBottom - containerBottom)}px`;
 			} else if (
 				e.type === 'touchstart' &&
 				(e as TouchEvent).touches &&
@@ -266,7 +261,7 @@ const App = () => {
 
 		const editedTask: LoadedTask = {
 			id: editTask.rowId,
-			status: menuValue,
+			status: menuValue || null,
 			priority: editFormData.priority,
 			description: editFormData.description,
 		};
