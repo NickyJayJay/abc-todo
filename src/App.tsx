@@ -239,7 +239,9 @@ const App = () => {
 		setAddFormData(newFormData);
 	};
 
-	const handleMenuItemClick = (e: React.MouseEvent | React.KeyboardEvent) => {
+	const handleMenuItemEvent = (
+		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent
+	) => {
 		e.stopPropagation();
 		if (
 			(e as React.KeyboardEvent).key === 'Tab' ||
@@ -285,7 +287,6 @@ const App = () => {
 		update(dbRef, editedTask);
 
 		setEditTask({ ...editTask, showMenu: false });
-		return;
 	};
 
 	interface EditFormData {
@@ -609,7 +610,7 @@ const App = () => {
 				<TableForm
 					handleEditFormSubmit={handleEditFormSubmit}
 					editTask={editTask}
-					handleMenuItemClick={handleMenuItemClick}
+					handleMenuItemEvent={handleMenuItemEvent}
 					outsideClickRef={outsideClickRef}
 					tasks={tasks}
 					handleEditTask={handleEditTask}

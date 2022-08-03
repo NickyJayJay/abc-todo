@@ -13,7 +13,9 @@ import classes from '../App.module.scss';
 interface Props {
 	handleEditFormSubmit: (e: React.FormEvent<Element>) => void;
 	editTask: EditTask;
-	handleMenuItemClick: (e: React.MouseEvent | React.KeyboardEvent) => void;
+	handleMenuItemEvent: (
+		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent
+	) => void;
 	outsideClickRef: RefObject<HTMLTableSectionElement>;
 	tasks: Task[];
 	handleEditTask: (
@@ -54,7 +56,7 @@ type EditFormData = {
 const TableForm = ({
 	handleEditFormSubmit,
 	editTask,
-	handleMenuItemClick,
+	handleMenuItemEvent,
 	outsideClickRef,
 	tasks,
 	handleEditTask,
@@ -69,7 +71,7 @@ const TableForm = ({
 				<ContextMenu
 					xPos={editTask.xPos}
 					yPos={editTask.yPos}
-					handleMenuItemClick={handleMenuItemClick}
+					handleMenuItemEvent={handleMenuItemEvent}
 				/>
 			)}
 			<table>

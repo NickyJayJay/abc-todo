@@ -46,9 +46,7 @@ const ReadOnlyStatus = ({ handleEditTask, task, editTask }: Props) => {
 		<td
 			data-id='status-cell'
 			className={
-				task.id === editTask.rowId &&
-				editTask.inputType === 'status-cell' &&
-				editTask.showMenu === true
+				task.id === editTask.rowId && editTask.inputType === 'status-cell'
 					? `${classes.status} ${classes.active}`
 					: classes.status
 			}
