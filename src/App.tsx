@@ -116,47 +116,53 @@ const App = () => {
 		});
 	}, [url]);
 
-	const setX = useCallback((e: MouseEvent | TouchEvent | KeyboardEvent) => {
-		if (e.type === 'click') {
-			return `${(e as MouseEvent).pageX}px`;
-		} else if (e.type === 'touchstart') {
-			return `${(e as TouchEvent).touches[0].pageX}px`;
-		} else if (e.type === 'keydown') {
-			return `${(e.target as HTMLElement).getBoundingClientRect().x + 35}px`;
-		} else {
-			return null;
-		}
-	}, []);
+	const setX = useCallback(
+		(e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => {
+			if (e.type === 'click') {
+				return `${(e as React.MouseEvent).pageX}px`;
+			} else if (e.type === 'touchstart') {
+				return `${(e as React.TouchEvent).touches[0].pageX}px`;
+			} else if (e.type === 'keydown') {
+				return `${(e.target as HTMLElement).getBoundingClientRect().x + 35}px`;
+			} else {
+				return null;
+			}
+		},
+		[]
+	);
 
 	const setY = useCallback(
-		(e: MouseEvent | TouchEvent | KeyboardEvent) => {
+		(e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => {
 			const containerBottom = (
 				outsideClickRef.current as HTMLElement
 			).getBoundingClientRect().bottom;
 			const menuBottom: number =
-				(e as MouseEvent).pageY + 224 - window.scrollY ||
-				((e as TouchEvent).touches &&
-					(e as TouchEvent).touches[0].pageY + 224 - window.scrollY) ||
+				(e as React.MouseEvent).pageY + 224 - window.scrollY ||
+				((e as React.TouchEvent).touches &&
+					(e as React.TouchEvent).touches[0].pageY + 224 - window.scrollY) ||
 				(e.target as HTMLElement).getBoundingClientRect().y + 224;
 			if (e.type === 'click' && menuBottom <= containerBottom) {
-				return `${(e as MouseEvent).pageY}px`;
+				return `${(e as React.MouseEvent).pageY}px`;
 			} else if (e.type === 'click' && menuBottom > containerBottom) {
-				return `${(e as MouseEvent).pageY - (menuBottom - containerBottom)}px`;
+				return `${
+					(e as React.MouseEvent).pageY - (menuBottom - containerBottom)
+				}px`;
 			} else if (
 				e.type === 'touchstart' &&
-				(e as TouchEvent).touches &&
-				(e as TouchEvent).touches[0].pageY &&
+				(e as React.TouchEvent).touches &&
+				(e as React.TouchEvent).touches[0].pageY &&
 				menuBottom <= containerBottom
 			) {
-				return `${(e as TouchEvent).touches[0].pageY}px`;
+				return `${(e as React.TouchEvent).touches[0].pageY}px`;
 			} else if (
 				e.type === 'touchstart' &&
-				(e as TouchEvent).touches &&
-				(e as TouchEvent).touches[0].pageY &&
+				(e as React.TouchEvent).touches &&
+				(e as React.TouchEvent).touches[0].pageY &&
 				menuBottom > containerBottom
 			) {
 				return `${
-					(e as TouchEvent).touches[0].pageY - (menuBottom - containerBottom)
+					(e as React.TouchEvent).touches[0].pageY -
+					(menuBottom - containerBottom)
 				}px`;
 			} else if (
 				e.type === 'keydown' &&
@@ -438,13 +444,16 @@ const App = () => {
 		setEditFormData(newFormData);
 	};
 
-	const handleEditTask = (e: any, task: LoadedTask) => {
+	const handleEditTask = (
+		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent,
+		task: LoadedTask
+	) => {
 		let statusCell = (e.target as HTMLElement).dataset.id === 'status-cell';
 
 		if (
-			((e as KeyboardEvent).key === 'Tab' ||
-				(e as KeyboardEvent).key === 'Escape' ||
-				(e as KeyboardEvent).shiftKey) &&
+			((e as React.KeyboardEvent).key === 'Tab' ||
+				(e as React.KeyboardEvent).key === 'Escape' ||
+				(e as React.KeyboardEvent).shiftKey) &&
 			statusCell
 		)
 			return;
@@ -462,8 +471,10 @@ const App = () => {
 			xPosTouch: setX(e),
 			yPosTouch: setY(e),
 			showMenu:
-				((e as MouseEvent).pageX && (e as MouseEvent).pageY && statusCell) ||
-				((e as KeyboardEvent).key === 'Enter' && statusCell)
+				((e as React.MouseEvent).pageX &&
+					(e as React.MouseEvent).pageY &&
+					statusCell) ||
+				((e as React.KeyboardEvent).key === 'Enter' && statusCell)
 					? true
 					: false,
 		});
