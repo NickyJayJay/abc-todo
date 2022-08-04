@@ -18,8 +18,8 @@ const useOutsideClick = (
 		return () => {
 			document.removeEventListener('click', (e) => handleClick(e));
 			document.removeEventListener('touchstart', (e) => handleClick(e));
-		};
-	}, [ref, callback]);
+		}; // eslint-disable-next-line
+	}, [ref]);
 
 	return ref;
 };

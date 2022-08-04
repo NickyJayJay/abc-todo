@@ -60,14 +60,16 @@ const App = () => {
 	// const auth = getAuth();
 	const url = app.options.databaseURL;
 
-	if (editTask.showMenu || isError) {
-		document.body.classList.add('lockScroll');
-		document.body.style.top = `-${window.scrollY}px`;
-	}
-	if (!editTask.showMenu && !isError) {
-		document.body.classList.remove('lockScroll');
-		document.body.style.top = '';
-	}
+	useEffect(() => {
+		if (editTask.showMenu || isError) {
+			document.body.classList.add('lockScroll');
+			document.body.style.top = `-${window.scrollY}px`;
+		}
+		if (!editTask.showMenu && !isError) {
+			document.body.classList.remove('lockScroll');
+			document.body.style.top = '';
+		}
+	}, [editTask.showMenu, isError]);
 
 	useEffect(() => {
 		const close = (e: KeyboardEvent) => {
@@ -131,6 +133,8 @@ const App = () => {
 		[]
 	);
 
+	const outsideClickRef = useOutsideClick((e) => handleOutsideClick(e));
+
 	const setY = useCallback(
 		(e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => {
 			const containerBottom = (
@@ -182,8 +186,8 @@ const App = () => {
 			} else {
 				return null;
 			}
-		}, // eslint-disable-next-line
-		[]
+		},
+		[outsideClickRef]
 	);
 
 	interface EditTask {
@@ -222,8 +226,6 @@ const App = () => {
 			setY,
 		]
 	);
-
-	const outsideClickRef = useOutsideClick((e) => handleOutsideClick(e));
 
 	const handleAddFormChange = (
 		e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>
