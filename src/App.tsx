@@ -201,14 +201,14 @@ const App = () => {
 	}
 
 	const handleOutsideClick = useCallback(
-		(e: any) => {
+		(e: MouseEvent | TouchEvent | KeyboardEvent) => {
 			setEditTask({
 				rowId: null,
 				inputType: (e.target as HTMLElement).dataset.id || null,
-				xPos: setX(e),
-				yPos: setY(e),
-				xPosTouch: setX(e),
-				yPosTouch: setY(e),
+				xPos: null,
+				yPos: null,
+				xPosTouch: null,
+				yPosTouch: null,
 				showMenu:
 					((editTask.xPos && editTask.yPos) ||
 						(editTask.xPosTouch && editTask.yPosTouch)) &&
@@ -217,14 +217,7 @@ const App = () => {
 						: false,
 			});
 		},
-		[
-			editTask.xPos,
-			editTask.xPosTouch,
-			editTask.yPos,
-			editTask.yPosTouch,
-			setX,
-			setY,
-		]
+		[editTask.xPos, editTask.xPosTouch, editTask.yPos, editTask.yPosTouch]
 	);
 
 	const handleAddFormChange = (
