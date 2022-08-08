@@ -18,6 +18,8 @@ import AddTaskForm from './components/AddTaskForm';
 import Card from './components/UI/Card/Card';
 import Modal from './components/UI/Modal/Modal';
 import classes from './App.module.scss';
+import { LoadedTask } from './ts/types';
+import { EditTask, EditFormData } from './ts/interfaces';
 
 const App = () => {
 	const [tasks, setTasks] = useState<LoadedTask[]>([]);
@@ -81,13 +83,6 @@ const App = () => {
 		window.addEventListener('keydown', close);
 		return () => window.removeEventListener('keydown', close);
 	});
-
-	type LoadedTask = {
-		id: string | null;
-		status: string | null | undefined;
-		priority: string | null;
-		description: string | null;
-	};
 
 	useEffect(() => {
 		const fetchTasks = async () => {
@@ -190,16 +185,6 @@ const App = () => {
 		[outsideClickRef]
 	);
 
-	interface EditTask {
-		rowId: string | null;
-		inputType: string | null | undefined;
-		xPos?: string | null;
-		yPos: string | null;
-		xPosTouch: string | null;
-		yPosTouch: string | null;
-		showMenu: boolean;
-	}
-
 	const handleOutsideClick = useCallback(
 		(e: MouseEvent | TouchEvent | KeyboardEvent) => {
 			setEditTask({
@@ -289,14 +274,6 @@ const App = () => {
 
 		setEditTask({ ...editTask, showMenu: false });
 	};
-
-	interface EditFormData {
-		status: string | null;
-		letterPriority: string;
-		numberPriority: string;
-		priority: string | null;
-		description: string | null;
-	}
 
 	const handlePriorityValidation = (
 		fieldValue: string,
