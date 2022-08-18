@@ -5,14 +5,14 @@ import checkmark from '../../assets/SVG/checkmark.svg';
 import add from '../../assets/SVG/add.svg';
 import arrowRight from '../../assets/SVG/arrow-right.svg';
 import dot from '../../assets/SVG/dot.svg';
-import { LoadedTask } from '../../ts/types';
+import { Task } from '../../ts/types';
 import { EditTask } from '../../ts/interfaces';
 interface Props {
 	handleEditTask: (
 		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
-		b: LoadedTask
+		b: Task
 	) => void;
-	task: LoadedTask;
+	task: Task;
 	editTask: EditTask;
 }
 

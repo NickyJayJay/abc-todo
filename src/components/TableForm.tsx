@@ -9,7 +9,7 @@ import ContextMenu from './UI/ContextMenu/ContextMenu';
 import checkBox from '../assets/SVG/checkBox.svg';
 import classes from '../App.module.scss';
 import { EditTask, EditFormData } from '../ts/interfaces';
-import { LoadedTask } from '../ts/types';
+import { Task } from '../ts/types';
 
 interface Props {
 	handleEditFormSubmit: (e: React.FormEvent<Element>) => void;
@@ -18,10 +18,10 @@ interface Props {
 		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent
 	) => void;
 	outsideClickRef: RefObject<HTMLTableSectionElement>;
-	tasks: LoadedTask[];
+	tasks: Task[];
 	handleEditTask: (
 		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
-		b: LoadedTask
+		b: Task
 	) => void;
 	editFormData: EditFormData;
 	handleEditFormChange: (e: ChangeEvent<HTMLInputElement>) => void;

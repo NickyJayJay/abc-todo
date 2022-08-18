@@ -4,6 +4,7 @@ import React, {
 	useCallback,
 	useEffect,
 	ChangeEvent,
+	useReducer,
 } from 'react';
 import { nanoid } from 'nanoid';
 import { initializeApp } from 'firebase/app';
@@ -18,11 +19,14 @@ import AddTaskForm from './components/AddTaskForm';
 import Card from './components/UI/Card/Card';
 import Modal from './components/UI/Modal/Modal';
 import classes from './App.module.scss';
-import { LoadedTask } from './ts/types';
+import { Task } from './ts/types';
 import { EditTask, EditFormData } from './ts/interfaces';
+import { TaskActionType } from './ts/enums';
+import { taskReducer } from './reducers';
 
 const App = () => {
-	const [tasks, setTasks] = useState<LoadedTask[]>([]);
+	const [tasks, taskDispatch] = useReducer(taskReducer, []);
+
 	const [isLoading, setIsLoading] = useState(true);
 	const [httpError, setHttpError] = useState(false);
 
@@ -93,7 +97,7 @@ const App = () => {
 			}
 
 			const responseData = await response.json();
-			const loadedTasks: LoadedTask[] = [];
+			const loadedTasks: Task[] = [];
 
 			for (const key in responseData) {
 				loadedTasks.push({
@@ -103,7 +107,10 @@ const App = () => {
 					description: responseData[key].description,
 				});
 			}
-			setTasks(loadedTasks);
+			taskDispatch({
+				type: TaskActionType.SET,
+				data: loadedTasks,
+			});
 			setIsLoading(false);
 		};
 
@@ -247,7 +254,7 @@ const App = () => {
 			menuValue = (e.target as HTMLElement).childNodes[0].textContent;
 		}
 
-		const editedTask: LoadedTask = {
+		const editedTask: Task = {
 			id: editTask.rowId,
 			status: menuValue || null,
 			priority: editFormData.priority,
@@ -268,7 +275,10 @@ const App = () => {
 		const newTasks = [...tasks];
 		const index = tasks.findIndex((task) => task.id === editTask.rowId);
 		newTasks[index] = editedTask;
-		setTasks(newTasks);
+		taskDispatch({
+			type: TaskActionType.SET,
+			data: newTasks,
+		});
 		const dbRef = ref(db, `tasks/${editTask.rowId}`);
 		update(dbRef, editedTask);
 
@@ -322,8 +332,16 @@ const App = () => {
 			description: addFormData.description,
 		};
 
-		const newTasks = [...tasks, newTask];
-		setTasks(newTasks);
+		taskDispatch({
+			type: TaskActionType.ADD,
+			payload: {
+				id: newTask.id,
+				key: newTask.key,
+				status: addFormData.status,
+				priority: addFormData.priority,
+				description: addFormData.description,
+			},
+		});
 
 		setAddFormData({
 			status: 'Select Status',
@@ -366,7 +384,7 @@ const App = () => {
 		const newTasks = [...tasks];
 		const index = tasks.findIndex((task) => task.id === editTask.rowId);
 		newTasks[index] = editedTask;
-		setTasks(newTasks);
+
 		const dbRef = ref(db, `tasks/${editTask.rowId}`);
 		update(dbRef, editedTask);
 	};
@@ -418,7 +436,7 @@ const App = () => {
 
 	const handleEditTask = (
 		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent,
-		task: LoadedTask
+		task: Task
 	) => {
 		let statusCell = (e.target as HTMLElement).dataset.id === 'status-cell';
 
@@ -462,11 +480,12 @@ const App = () => {
 	};
 
 	const handleDeleteChange = (taskId: EditTask['rowId']) => {
-		const newTasks = [...tasks];
 		const index = tasks.findIndex((task) => task.id === taskId);
 
-		newTasks.splice(index, 1);
-		setTasks(newTasks);
+		taskDispatch({
+			type: TaskActionType.REMOVE,
+			index: index,
+		});
 		const dbRef = ref(db, `tasks/${taskId}`);
 		remove(dbRef);
 	};
