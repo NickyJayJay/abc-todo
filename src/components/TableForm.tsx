@@ -7,18 +7,21 @@ import ReadOnlyPriority from './Cells/ReadOnlyPriority';
 import ReadOnlyDescription from './Cells/ReadOnlyDescription';
 import ContextMenu from './UI/ContextMenu/ContextMenu';
 import checkBox from '../assets/SVG/checkBox.svg';
-
 import classes from '../App.module.scss';
+import { EditTask, EditFormData } from '../ts/interfaces';
+import { LoadedTask } from '../ts/types';
 
 interface Props {
 	handleEditFormSubmit: (e: React.FormEvent<Element>) => void;
 	editTask: EditTask;
-	handleMenuItemClick: (e: React.MouseEvent | React.KeyboardEvent) => void;
+	handleMenuItemEvent: (
+		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent
+	) => void;
 	outsideClickRef: RefObject<HTMLTableSectionElement>;
-	tasks: Task[];
+	tasks: LoadedTask[];
 	handleEditTask: (
 		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
-		b: Task
+		b: LoadedTask
 	) => void;
 	editFormData: EditFormData;
 	handleEditFormChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -26,35 +29,10 @@ interface Props {
 	isError: boolean;
 }
 
-interface EditTask {
-	rowId: string | null;
-	inputType: string | null | undefined;
-	xPos?: string | null;
-	yPos: string | null;
-	xPosTouch: string | null;
-	yPosTouch: string | null;
-	showMenu: boolean;
-}
-
-type Task = {
-	id: string | null;
-	status: string | null | undefined;
-	priority: string | null;
-	description: string | null;
-};
-
-type EditFormData = {
-	status: string | null;
-	letterPriority: string;
-	numberPriority: string;
-	priority: string | null;
-	description: string | null;
-};
-
 const TableForm = ({
 	handleEditFormSubmit,
 	editTask,
-	handleMenuItemClick,
+	handleMenuItemEvent,
 	outsideClickRef,
 	tasks,
 	handleEditTask,
@@ -69,7 +47,7 @@ const TableForm = ({
 				<ContextMenu
 					xPos={editTask.xPos}
 					yPos={editTask.yPos}
-					handleMenuItemClick={handleMenuItemClick}
+					handleMenuItemEvent={handleMenuItemEvent}
 				/>
 			)}
 			<table>

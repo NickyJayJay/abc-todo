@@ -1,7 +1,8 @@
-import React, { RefObject, ChangeEvent } from 'react';
+import React, { RefObject, ChangeEvent, useEffect } from 'react';
 
 import ButtonGradient from './UI/Button/ButtonGradient';
 import classes from '../App.module.scss';
+import { EditFormData } from '../ts/interfaces';
 
 interface Props {
 	handleAddFormSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -10,25 +11,23 @@ interface Props {
 	) => void;
 	handleAddFormKeydown: (e: React.KeyboardEvent) => void;
 	isError: boolean;
-	addFormData: AddFormData;
+	addFormData: EditFormData;
 	priorityInput: RefObject<HTMLInputElement>;
+	editMode: string | null | undefined;
 }
-
-type AddFormData = {
-	status: string | null;
-	letterPriority: string;
-	numberPriority: string;
-	priority: string | null;
-	description: string | null;
-};
 
 const AddTaskForm = ({
 	handleAddFormSubmit,
 	handleAddFormChange,
 	handleAddFormKeydown,
+	isError,
 	addFormData,
 	priorityInput,
+	editMode,
 }: Props) => {
+	useEffect(() => {
+		editMode === 'priority-input' && !isError && priorityInput.current?.focus();
+	}, [isError, editMode, priorityInput]);
 	return (
 		<div className={classes.addTask}>
 			<form onSubmit={handleAddFormSubmit}>

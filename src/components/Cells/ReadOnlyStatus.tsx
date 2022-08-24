@@ -5,30 +5,14 @@ import checkmark from '../../assets/SVG/checkmark.svg';
 import add from '../../assets/SVG/add.svg';
 import arrowRight from '../../assets/SVG/arrow-right.svg';
 import dot from '../../assets/SVG/dot.svg';
-
-type Task = {
-	id: string | null;
-	status: string | null | undefined;
-	priority: string | null;
-	description: string | null;
-};
-
-type EditTask = {
-	rowId: string | null;
-	inputType: string | null | undefined;
-	xPos?: string | null;
-	yPos?: string | null;
-	xPosTouch: string | null;
-	yPosTouch: string | null;
-	showMenu: boolean;
-};
-
+import { LoadedTask } from '../../ts/types';
+import { EditTask } from '../../ts/interfaces';
 interface Props {
 	handleEditTask: (
 		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
-		b: Task
+		b: LoadedTask
 	) => void;
-	task: Task;
+	task: LoadedTask;
 	editTask: EditTask;
 }
 
@@ -40,15 +24,13 @@ const ReadOnlyStatus = ({ handleEditTask, task, editTask }: Props) => {
 			editTask.inputType === 'status-cell' &&
 			!editTask.showMenu &&
 			cellRef.current?.focus();
-	}, [editTask.showMenu]);
+	}, [editTask, task.id]);
 
 	return (
 		<td
 			data-id='status-cell'
 			className={
-				task.id === editTask.rowId &&
-				editTask.inputType === 'status-cell' &&
-				editTask.showMenu === true
+				task.id === editTask.rowId && editTask.inputType === 'status-cell'
 					? `${classes.status} ${classes.active}`
 					: classes.status
 			}

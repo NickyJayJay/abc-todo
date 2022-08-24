@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react';
 
-const useOutsideClick = (callback: (event: MouseEvent | TouchEvent) => void) => {
+const useOutsideClick = (
+	callback: (event: MouseEvent | TouchEvent | KeyboardEvent) => void
+) => {
 	const ref = useRef<HTMLTableSectionElement>(null);
 
 	useEffect(() => {
-		const handleClick = (event: MouseEvent | TouchEvent) => {
+		const handleClick = (event: MouseEvent | TouchEvent | KeyboardEvent) => {
 			if (ref.current && !ref.current.contains(event.target as Node)) {
 				callback(event);
 			}
@@ -16,8 +18,8 @@ const useOutsideClick = (callback: (event: MouseEvent | TouchEvent) => void) => 
 		return () => {
 			document.removeEventListener('click', (e) => handleClick(e));
 			document.removeEventListener('touchstart', (e) => handleClick(e));
-		};
-	}, [ref, callback]);
+		}; // eslint-disable-next-line
+	}, [ref]);
 
 	return ref;
 };

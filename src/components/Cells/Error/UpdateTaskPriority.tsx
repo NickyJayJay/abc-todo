@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useContext, ChangeEvent } from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
 
 import { PriorityContext } from '../../../context/priority-context';
 import Button from '../../UI/Button/Button';

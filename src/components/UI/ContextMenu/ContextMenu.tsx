@@ -12,10 +12,12 @@ import close from '../../../assets/SVG/close-regular.svg';
 interface Props {
 	xPos?: string | null;
 	yPos?: string | null;
-	handleMenuItemClick: (e: React.MouseEvent | React.KeyboardEvent) => void;
+	handleMenuItemEvent: (
+		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent
+	) => void;
 }
 
-const ContextMenu = ({ xPos, yPos, handleMenuItemClick }: Props) => {
+const ContextMenu = ({ xPos, yPos, handleMenuItemEvent }: Props) => {
 	return (
 		<FocusLock returnFocus>
 			<div
@@ -27,8 +29,9 @@ const ContextMenu = ({ xPos, yPos, handleMenuItemClick }: Props) => {
 			>
 				<ul>
 					<li
-						onClick={(event) => handleMenuItemClick(event)}
-						onKeyDown={(event) => handleMenuItemClick(event)}
+						onClick={(event) => handleMenuItemEvent(event)}
+						onKeyDown={(event) => handleMenuItemEvent(event)}
+						onTouchStart={(event) => handleMenuItemEvent(event)}
 					>
 						<button>
 							<span>In Process</span>
@@ -36,8 +39,9 @@ const ContextMenu = ({ xPos, yPos, handleMenuItemClick }: Props) => {
 						</button>
 					</li>
 					<li
-						onClick={(event) => handleMenuItemClick(event)}
-						onKeyDown={(event) => handleMenuItemClick(event)}
+						onClick={(event) => handleMenuItemEvent(event)}
+						onKeyDown={(event) => handleMenuItemEvent(event)}
+						onTouchStart={(event) => handleMenuItemEvent(event)}
 					>
 						<button>
 							<span>Completed</span>
@@ -45,8 +49,9 @@ const ContextMenu = ({ xPos, yPos, handleMenuItemClick }: Props) => {
 						</button>
 					</li>
 					<li
-						onClick={(event) => handleMenuItemClick(event)}
-						onKeyDown={(event) => handleMenuItemClick(event)}
+						onClick={(event) => handleMenuItemEvent(event)}
+						onKeyDown={(event) => handleMenuItemEvent(event)}
+						onTouchStart={(event) => handleMenuItemEvent(event)}
 					>
 						<button>
 							<span>Forwarded</span>
@@ -54,8 +59,9 @@ const ContextMenu = ({ xPos, yPos, handleMenuItemClick }: Props) => {
 						</button>
 					</li>
 					<li
-						onClick={(event) => handleMenuItemClick(event)}
-						onKeyDown={(event) => handleMenuItemClick(event)}
+						onClick={(event) => handleMenuItemEvent(event)}
+						onKeyDown={(event) => handleMenuItemEvent(event)}
+						onTouchStart={(event) => handleMenuItemEvent(event)}
 					>
 						<button>
 							<span>Delegated</span>
@@ -63,8 +69,9 @@ const ContextMenu = ({ xPos, yPos, handleMenuItemClick }: Props) => {
 						</button>
 					</li>
 					<li
-						onClick={(event) => handleMenuItemClick(event)}
-						onKeyDown={(event) => handleMenuItemClick(event)}
+						onClick={(event) => handleMenuItemEvent(event)}
+						onKeyDown={(event) => handleMenuItemEvent(event)}
+						onTouchStart={(event) => handleMenuItemEvent(event)}
 					>
 						<button>
 							<span>Remove</span>
@@ -72,8 +79,9 @@ const ContextMenu = ({ xPos, yPos, handleMenuItemClick }: Props) => {
 						</button>
 					</li>
 					<li
-						onClick={(event) => handleMenuItemClick(event)}
-						onKeyDown={(event) => handleMenuItemClick(event)}
+						onClick={(event) => handleMenuItemEvent(event)}
+						onKeyDown={(event) => handleMenuItemEvent(event)}
+						onTouchStart={(event) => handleMenuItemEvent(event)}
 					>
 						<button>
 							<span>Cancel</span>

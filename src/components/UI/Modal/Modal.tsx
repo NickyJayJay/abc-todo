@@ -1,4 +1,4 @@
-import React, { RefObject, useEffect, useContext, ChangeEvent } from 'react';
+import React, { useContext } from 'react';
 import ReactDOM from 'react-dom';
 import FocusLock from 'react-focus-lock';
 
@@ -13,11 +13,7 @@ type Props = {
 };
 
 const Modal = ({ onHide }: Props) => {
-	const { editMode, priorityInput } = useContext(PriorityContext);
-
-	useEffect(() => {
-		editMode === 'priority-input' && priorityInput.current?.focus();
-	}, []);
+	const { editMode } = useContext(PriorityContext);
 
 	return (
 		<>

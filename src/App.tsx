@@ -18,6 +18,8 @@ import AddTaskForm from './components/AddTaskForm';
 import Card from './components/UI/Card/Card';
 import Modal from './components/UI/Modal/Modal';
 import classes from './App.module.scss';
+import { LoadedTask } from './ts/types';
+import { EditTask, EditFormData } from './ts/interfaces';
 
 const App = () => {
 	const [tasks, setTasks] = useState<LoadedTask[]>([]);
@@ -60,14 +62,16 @@ const App = () => {
 	// const auth = getAuth();
 	const url = app.options.databaseURL;
 
-	if (editTask.showMenu || isError) {
-		document.body.classList.add('lockScroll');
-		document.body.style.top = `-${window.scrollY}px`;
-	}
-	if (!editTask.showMenu && !isError) {
-		document.body.classList.remove('lockScroll');
-		document.body.style.top = '';
-	}
+	useEffect(() => {
+		if (editTask.showMenu || isError) {
+			document.body.classList.add('lockScroll');
+			document.body.style.top = `-${window.scrollY}px`;
+		}
+		if (!editTask.showMenu && !isError) {
+			document.body.classList.remove('lockScroll');
+			document.body.style.top = '';
+		}
+	}, [editTask.showMenu, isError]);
 
 	useEffect(() => {
 		const close = (e: KeyboardEvent) => {
@@ -79,13 +83,6 @@ const App = () => {
 		window.addEventListener('keydown', close);
 		return () => window.removeEventListener('keydown', close);
 	});
-
-	type LoadedTask = {
-		id: string | null;
-		status: string | null | undefined;
-		priority: string | null;
-		description: string | null;
-	};
 
 	useEffect(() => {
 		const fetchTasks = async () => {
@@ -117,11 +114,11 @@ const App = () => {
 	}, [url]);
 
 	const setX = useCallback(
-		(e: React.MouseEvent | TouchEvent | KeyboardEvent) => {
+		(e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => {
 			if (e.type === 'click') {
 				return `${(e as React.MouseEvent).pageX}px`;
 			} else if (e.type === 'touchstart') {
-				return `${(e as TouchEvent).touches[0].pageX}px`;
+				return `${(e as React.TouchEvent).touches[0].pageX}px`;
 			} else if (e.type === 'keydown') {
 				return `${(e.target as HTMLElement).getBoundingClientRect().x + 35}px`;
 			} else {
@@ -131,15 +128,17 @@ const App = () => {
 		[]
 	);
 
+	const outsideClickRef = useOutsideClick((e) => handleOutsideClick(e));
+
 	const setY = useCallback(
-		(e: React.MouseEvent | TouchEvent | KeyboardEvent) => {
+		(e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => {
 			const containerBottom = (
 				outsideClickRef.current as HTMLElement
 			).getBoundingClientRect().bottom;
 			const menuBottom: number =
 				(e as React.MouseEvent).pageY + 224 - window.scrollY ||
-				((e as TouchEvent).touches &&
-					(e as TouchEvent).touches[0].pageY + 224 - window.scrollY) ||
+				((e as React.TouchEvent).touches &&
+					(e as React.TouchEvent).touches[0].pageY + 224 - window.scrollY) ||
 				(e.target as HTMLElement).getBoundingClientRect().y + 224;
 			if (e.type === 'click' && menuBottom <= containerBottom) {
 				return `${(e as React.MouseEvent).pageY}px`;
@@ -149,19 +148,20 @@ const App = () => {
 				}px`;
 			} else if (
 				e.type === 'touchstart' &&
-				(e as TouchEvent).touches &&
-				(e as TouchEvent).touches[0].pageY &&
+				(e as React.TouchEvent).touches &&
+				(e as React.TouchEvent).touches[0].pageY &&
 				menuBottom <= containerBottom
 			) {
-				return `${(e as TouchEvent).touches[0].pageY}px`;
+				return `${(e as React.TouchEvent).touches[0].pageY}px`;
 			} else if (
 				e.type === 'touchstart' &&
-				(e as TouchEvent).touches &&
-				(e as TouchEvent).touches[0].pageY &&
+				(e as React.TouchEvent).touches &&
+				(e as React.TouchEvent).touches[0].pageY &&
 				menuBottom > containerBottom
 			) {
 				return `${
-					(e as TouchEvent).touches[0].pageY - (menuBottom - containerBottom)
+					(e as React.TouchEvent).touches[0].pageY -
+					(menuBottom - containerBottom)
 				}px`;
 			} else if (
 				e.type === 'keydown' &&
@@ -181,29 +181,19 @@ const App = () => {
 			} else {
 				return null;
 			}
-		}, // eslint-disable-next-line
-		[]
+		},
+		[outsideClickRef]
 	);
 
-	interface EditTask {
-		rowId: string | null;
-		inputType: string | null | undefined;
-		xPos?: string | null;
-		yPos: string | null;
-		xPosTouch: string | null;
-		yPosTouch: string | null;
-		showMenu: boolean;
-	}
-
 	const handleOutsideClick = useCallback(
-		(e: any) => {
+		(e: MouseEvent | TouchEvent | KeyboardEvent) => {
 			setEditTask({
 				rowId: null,
 				inputType: (e.target as HTMLElement).dataset.id || null,
-				xPos: setX(e),
-				yPos: setY(e),
-				xPosTouch: setX(e),
-				yPosTouch: setY(e),
+				xPos: null,
+				yPos: null,
+				xPosTouch: null,
+				yPosTouch: null,
 				showMenu:
 					((editTask.xPos && editTask.yPos) ||
 						(editTask.xPosTouch && editTask.yPosTouch)) &&
@@ -212,17 +202,8 @@ const App = () => {
 						: false,
 			});
 		},
-		[
-			editTask.xPos,
-			editTask.xPosTouch,
-			editTask.yPos,
-			editTask.yPosTouch,
-			setX,
-			setY,
-		]
+		[editTask.xPos, editTask.xPosTouch, editTask.yPos, editTask.yPosTouch]
 	);
-
-	const outsideClickRef = useOutsideClick((e) => handleOutsideClick(e));
 
 	const handleAddFormChange = (
 		e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>
@@ -244,7 +225,9 @@ const App = () => {
 		setAddFormData(newFormData);
 	};
 
-	const handleMenuItemClick = (e: React.MouseEvent | React.KeyboardEvent) => {
+	const handleMenuItemEvent = (
+		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent
+	) => {
 		e.stopPropagation();
 		if (
 			(e as React.KeyboardEvent).key === 'Tab' ||
@@ -266,7 +249,7 @@ const App = () => {
 
 		const editedTask: LoadedTask = {
 			id: editTask.rowId,
-			status: menuValue,
+			status: menuValue || null,
 			priority: editFormData.priority,
 			description: editFormData.description,
 		};
@@ -290,16 +273,7 @@ const App = () => {
 		update(dbRef, editedTask);
 
 		setEditTask({ ...editTask, showMenu: false });
-		return;
 	};
-
-	interface EditFormData {
-		status: string | null;
-		letterPriority: string;
-		numberPriority: string;
-		priority: string | null;
-		description: string | null;
-	}
 
 	const handlePriorityValidation = (
 		fieldValue: string,
@@ -442,13 +416,16 @@ const App = () => {
 		setEditFormData(newFormData);
 	};
 
-	const handleEditTask = (e: any, task: LoadedTask) => {
+	const handleEditTask = (
+		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent,
+		task: LoadedTask
+	) => {
 		let statusCell = (e.target as HTMLElement).dataset.id === 'status-cell';
 
 		if (
-			((e as KeyboardEvent).key === 'Tab' ||
-				(e as KeyboardEvent).key === 'Escape' ||
-				(e as KeyboardEvent).shiftKey) &&
+			((e as React.KeyboardEvent).key === 'Tab' ||
+				(e as React.KeyboardEvent).key === 'Escape' ||
+				(e as React.KeyboardEvent).shiftKey) &&
 			statusCell
 		)
 			return;
@@ -466,8 +443,10 @@ const App = () => {
 			xPosTouch: setX(e),
 			yPosTouch: setY(e),
 			showMenu:
-				((e as MouseEvent).pageX && (e as MouseEvent).pageY && statusCell) ||
-				((e as KeyboardEvent).key === 'Enter' && statusCell)
+				((e as React.MouseEvent).pageX &&
+					(e as React.MouseEvent).pageY &&
+					statusCell) ||
+				((e as React.KeyboardEvent).key === 'Enter' && statusCell)
 					? true
 					: false,
 		});
@@ -614,7 +593,7 @@ const App = () => {
 				<TableForm
 					handleEditFormSubmit={handleEditFormSubmit}
 					editTask={editTask}
-					handleMenuItemClick={handleMenuItemClick}
+					handleMenuItemEvent={handleMenuItemEvent}
 					outsideClickRef={outsideClickRef}
 					tasks={tasks}
 					handleEditTask={handleEditTask}
@@ -631,6 +610,7 @@ const App = () => {
 					isError={isError}
 					addFormData={addFormData}
 					priorityInput={priorityInput}
+					editMode={editTask.inputType}
 				/>
 			</Card>
 		</div>

@@ -1,20 +1,13 @@
 import React from 'react';
 
 import classes from '../../App.module.scss';
-
-type Task = {
-	id: string | null;
-	status: string | null | undefined;
-	priority: string | null;
-	description: string | null;
-};
-
+import { LoadedTask } from '../../ts/types';
 interface Props {
 	handleEditTask: (
 		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
-		b: Task
+		b: LoadedTask
 	) => void;
-	task: Task;
+	task: LoadedTask;
 }
 
 const ReadOnlyPriority = ({ handleEditTask, task }: Props) => {
