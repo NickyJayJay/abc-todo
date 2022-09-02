@@ -20,15 +20,18 @@ import Card from './components/UI/Card/Card';
 import Modal from './components/UI/Modal/Modal';
 import classes from './App.module.scss';
 import { Task } from './ts/types';
-import { EditTask, EditFormData } from './ts/interfaces';
+import { EditTask, EditFormData, ErrorsAndLoading } from './ts/interfaces';
 import { TaskActionType } from './ts/enums';
 import { taskReducer } from './reducers';
 
 const App = () => {
 	const [tasks, taskDispatch] = useReducer(taskReducer, []);
 
-	const [isLoading, setIsLoading] = useState(true);
-	const [httpError, setHttpError] = useState(false);
+	const [state, setState] = useState<ErrorsAndLoading>({
+		isLoading: true,
+		httpError: null,
+		isError: false,
+	});
 
 	const [addFormData, setAddFormData] = useState<EditFormData>({
 		status: '',
@@ -56,8 +59,6 @@ const App = () => {
 		showMenu: false,
 	});
 
-	const [isError, setIsError] = useState<boolean>(false);
-
 	const priorityInput = useRef<HTMLInputElement>(null);
 
 	// Initialize Firebase and set bindings
@@ -67,20 +68,20 @@ const App = () => {
 	const url = app.options.databaseURL;
 
 	useEffect(() => {
-		if (editTask.showMenu || isError) {
+		if (editTask.showMenu || state.isError) {
 			document.body.classList.add('lockScroll');
 			document.body.style.top = `-${window.scrollY}px`;
 		}
-		if (!editTask.showMenu && !isError) {
+		if (!editTask.showMenu && !state.isError) {
 			document.body.classList.remove('lockScroll');
 			document.body.style.top = '';
 		}
-	}, [editTask.showMenu, isError]);
+	}, [editTask.showMenu, state.isError]);
 
 	useEffect(() => {
 		const close = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
-				isError && hideModalHandler(e);
+				state.isError && hideModalHandler(e);
 				editTask.showMenu && setEditTask({ ...editTask, showMenu: false });
 			}
 		};
@@ -111,12 +112,11 @@ const App = () => {
 				type: TaskActionType.SET,
 				data: loadedTasks,
 			});
-			setIsLoading(false);
+			setState({ isLoading: false });
 		};
 
 		fetchTasks().catch((error) => {
-			setIsLoading(false);
-			setHttpError(error.message);
+			setState({ isLoading: false, httpError: error.message });
 		});
 	}, [url]);
 
@@ -296,13 +296,13 @@ const App = () => {
 			/^([ABC]?|[ABC][1-9]?|[ABC][1-9][0-9])?$/i.test(fieldValue) &&
 			fieldValue.length <= 3
 		) {
-			setIsError(false);
+			setState({ isError: false });
 		} else if (editTask.inputType === 'priority-cell') {
 			newFormData[fieldName] = editFormData.priority;
-			setIsError(true);
+			setState({ isError: true });
 		} else if (editTask.inputType === 'priority-input') {
 			newFormData[fieldName] = addFormData.priority;
-			setIsError(true);
+			setState({ isError: true });
 		}
 	};
 
@@ -384,6 +384,11 @@ const App = () => {
 		const newTasks = [...tasks];
 		const index = tasks.findIndex((task) => task.id === editTask.rowId);
 		newTasks[index] = editedTask;
+
+		taskDispatch({
+			type: TaskActionType.SET,
+			data: newTasks,
+		});
 
 		const dbRef = ref(db, `tasks/${editTask.rowId}`);
 		update(dbRef, editedTask);
@@ -538,7 +543,7 @@ const App = () => {
 			};
 			setAddFormData(newFormData);
 		}
-		setIsError(false);
+		setState({ isError: false });
 	};
 
 	const hideModalHandler = (
@@ -562,18 +567,18 @@ const App = () => {
 			};
 			setAddFormData(newFormData);
 		}
-		setIsError(false);
+		setState({ isError: false });
 	};
 
-	if (httpError) {
+	if (state.httpError) {
 		return (
 			<section className={classes.tasksError}>
-				<p>{httpError}</p>
+				<p>{state.httpError}</p>
 			</section>
 		);
 	}
 
-	if (isLoading) {
+	if (state.isLoading) {
 		return (
 			<section className={classes.tasksLoading}>
 				<p>Loading...</p>
@@ -583,7 +588,7 @@ const App = () => {
 
 	return (
 		<div className={classes.appContainer}>
-			{isError &&
+			{state.isError &&
 				(editTask.inputType === 'priority-cell' ||
 					editTask.inputType === 'priority-input') && (
 					<PriorityContext.Provider
@@ -619,14 +624,14 @@ const App = () => {
 					editFormData={editFormData}
 					handleEditFormChange={handleEditFormChange}
 					handleEditFormKeyboard={handleEditFormKeyboard}
-					isError={isError}
+					isError={state.isError as boolean}
 				/>
 
 				<AddTaskForm
 					handleAddFormSubmit={handleAddFormSubmit}
 					handleAddFormChange={handleAddFormChange}
 					handleAddFormKeydown={handleAddFormKeydown}
-					isError={isError}
+					isError={state.isError as boolean}
 					addFormData={addFormData}
 					priorityInput={priorityInput}
 					editMode={editTask.inputType}
