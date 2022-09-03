@@ -1,10 +1,9 @@
-import { RefObject, ChangeEvent, createContext } from 'react';
+import { ChangeEvent, createContext } from 'react';
 
-interface PriorityContext {
+interface PriorityContextShape {
 	letterPriority: string;
 	numberPriority: string;
 	editMode: string | null | undefined;
-	priorityInput: RefObject<HTMLInputElement>;
 	updatePriorityHandler: (e: React.MouseEvent<Element, MouseEvent>) => void;
 	letterPriorityHandler: (e: React.FormEvent<HTMLInputElement>) => void;
 	numberPriorityHandler: (e: React.FormEvent<HTMLInputElement>) => void;
@@ -14,4 +13,4 @@ interface PriorityContext {
 	) => void;
 }
 
-export const PriorityContext = createContext({} as PriorityContext);
+export const PriorityContext = createContext({} as PriorityContextShape);

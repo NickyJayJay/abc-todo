@@ -1,5 +1,3 @@
-import { Task } from './types';
-import { TaskActionType } from './enums';
 export interface EditTask {
 	rowId: string | null;
 	inputType: string | null | undefined;

@@ -59,13 +59,19 @@ const App = () => {
 		showMenu: false,
 	});
 
-	const priorityInput = useRef<HTMLInputElement>(null);
-
 	// Initialize Firebase and set bindings
 	const app = initializeApp(firebaseConfig);
 	const db = getDatabase(app);
 	// const auth = getAuth();
 	const url = app.options.databaseURL;
+
+	const priorityInput = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		editTask.inputType === 'priority-input' &&
+			!state.isError &&
+			priorityInput.current?.focus();
+	}, [state.isError, editTask.inputType, priorityInput]);
 
 	useEffect(() => {
 		if (editTask.showMenu || state.isError) {
@@ -602,7 +608,6 @@ const App = () => {
 									? editFormData.numberPriority
 									: addFormData.numberPriority,
 							editMode: editTask.inputType,
-							priorityInput: priorityInput,
 							updatePriorityHandler,
 							letterPriorityHandler,
 							numberPriorityHandler,
@@ -631,10 +636,8 @@ const App = () => {
 					handleAddFormSubmit={handleAddFormSubmit}
 					handleAddFormChange={handleAddFormChange}
 					handleAddFormKeydown={handleAddFormKeydown}
-					isError={state.isError as boolean}
 					addFormData={addFormData}
-					priorityInput={priorityInput}
-					editMode={editTask.inputType}
+					ref={priorityInput}
 				/>
 			</Card>
 		</div>

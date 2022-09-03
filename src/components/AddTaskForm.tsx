@@ -1,4 +1,4 @@
-import React, { RefObject, ChangeEvent, useEffect } from 'react';
+import React, { ChangeEvent, forwardRef } from 'react';
 
 import ButtonGradient from './UI/Button/ButtonGradient';
 import classes from '../App.module.scss';
@@ -10,34 +10,20 @@ interface Props {
 		e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => void;
 	handleAddFormKeydown: (e: React.KeyboardEvent) => void;
-	isError: boolean;
 	addFormData: EditFormData;
-	priorityInput: RefObject<HTMLInputElement>;
-	editMode: string | null | undefined;
 }
 
-const AddTaskForm = ({
-	handleAddFormSubmit,
-	handleAddFormChange,
-	handleAddFormKeydown,
-	isError,
-	addFormData,
-	priorityInput,
-	editMode,
-}: Props) => {
-	useEffect(() => {
-		editMode === 'priority-input' && !isError && priorityInput.current?.focus();
-	}, [isError, editMode, priorityInput]);
+const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 	return (
 		<div className={classes.addTask}>
-			<form onSubmit={handleAddFormSubmit}>
+			<form onSubmit={props.handleAddFormSubmit}>
 				<fieldset>
 					<legend>Add a Task</legend>
 					<select
-						onChange={handleAddFormChange}
-						onKeyDown={(e) => handleAddFormKeydown(e)}
+						onChange={props.handleAddFormChange}
+						onKeyDown={(e) => props.handleAddFormKeydown(e)}
 						name='status'
-						value={addFormData.status as string}
+						value={props.addFormData.status as string}
 						data-id='status-input'
 						aria-label='Select status'
 					>
@@ -55,20 +41,20 @@ const AddTaskForm = ({
 						name='priority'
 						data-id='priority-input'
 						placeholder='ABC'
-						value={addFormData.priority as string}
-						onChange={(e) => handleAddFormChange(e)}
-						onKeyDown={(e) => handleAddFormKeydown(e)}
+						value={props.addFormData.priority as string}
+						onChange={(e) => props.handleAddFormChange(e)}
+						onKeyDown={(e) => props.handleAddFormKeydown(e)}
 						aria-label='Enter task priority'
-						ref={priorityInput}
+						ref={ref}
 					></input>
 					<input
 						type='text'
 						name='description'
 						data-id='description-input'
 						placeholder='Enter task description...'
-						value={addFormData.description as string}
-						onChange={handleAddFormChange}
-						onKeyDown={(e) => handleAddFormKeydown(e)}
+						value={props.addFormData.description as string}
+						onChange={props.handleAddFormChange}
+						onKeyDown={(e) => props.handleAddFormKeydown(e)}
 						aria-label='Enter task description'
 						maxLength={150}
 					/>
@@ -79,6 +65,6 @@ const AddTaskForm = ({
 			</form>
 		</div>
 	);
-};
+});
 
 export default AddTaskForm;
