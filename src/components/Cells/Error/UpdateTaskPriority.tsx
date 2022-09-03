@@ -3,24 +3,78 @@ import React, { useRef, useEffect, useContext } from 'react';
 import { PriorityContext } from '../../../context/priority-context';
 import Button from '../../UI/Button/Button';
 import classes from './UpdateTaskPriority.module.scss';
+import { EditFormData } from '../../../ts/interfaces';
 
 const UpdateTaskPriority = () => {
-	const radioRef = useRef<HTMLInputElement>(null);
-
 	useEffect(() => {
 		radioRef.current?.focus();
 	}, []);
 
 	const {
+		editTask,
+		editFormData,
+		setEditFormData,
+		addFormData,
+		setAddFormData,
+		setState,
 		letterPriority,
 		numberPriority,
 		editMode,
-		updatePriorityHandler,
-		letterPriorityHandler,
-		numberPriorityHandler,
 		handleEditFormSubmit,
 		handleAddFormChange,
 	} = useContext(PriorityContext);
+
+	const letterPriorityHandler = (e: React.FormEvent<HTMLInputElement>) => {
+		if (editTask.inputType === 'priority-cell') {
+			const newFormData: EditFormData = { ...editFormData };
+			newFormData.letterPriority = (e.target as HTMLInputElement).value;
+			setEditFormData(newFormData);
+		} else {
+			const newFormData = { ...addFormData };
+			newFormData.letterPriority = (e.target as HTMLInputElement).value;
+			setAddFormData(newFormData);
+		}
+	};
+
+	const numberPriorityHandler = (e: React.FormEvent<HTMLInputElement>) => {
+		if (editTask.inputType === 'priority-cell') {
+			const newFormData = { ...editFormData };
+			newFormData.numberPriority = Math.abs(
+				parseInt((e.target as HTMLInputElement).value.slice(0, 2))
+			).toString();
+			setEditFormData(newFormData);
+		} else {
+			const newFormData = { ...addFormData };
+			newFormData.numberPriority = Math.abs(
+				parseInt((e.target as HTMLInputElement).value.slice(0, 2))
+			).toString();
+			setAddFormData(newFormData);
+		}
+	};
+
+	const updatePriorityHandler = (e: React.MouseEvent<Element>) => {
+		e.preventDefault();
+
+		if (editTask.inputType === 'priority-cell') {
+			const newFormData: EditFormData = {
+				...editFormData,
+				priority: `${editFormData.letterPriority}${editFormData.numberPriority}`,
+				letterPriority: '',
+				numberPriority: '',
+			};
+			setEditFormData(newFormData);
+		} else {
+			const newFormData: EditFormData = {
+				...addFormData,
+				priority: `${addFormData.letterPriority}${addFormData.numberPriority}`,
+				letterPriority: '',
+				numberPriority: '',
+			};
+			setAddFormData(newFormData);
+		}
+		setState({ isError: false });
+	};
+	const radioRef = useRef<HTMLInputElement>(null);
 
 	return (
 		<form

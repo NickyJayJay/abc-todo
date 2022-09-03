@@ -9,21 +9,20 @@ import ContextMenu from './UI/ContextMenu/ContextMenu';
 import checkBox from '../assets/SVG/checkBox.svg';
 import classes from '../App.module.scss';
 import { EditTask, EditFormData } from '../ts/interfaces';
-import { LoadedTask } from '../ts/types';
+import { Task, TaskActionShape } from '../ts/types';
 
 interface Props {
 	handleEditFormSubmit: (e: React.FormEvent<Element>) => void;
 	editTask: EditTask;
-	handleMenuItemEvent: (
-		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent
-	) => void;
 	outsideClickRef: RefObject<HTMLTableSectionElement>;
-	tasks: LoadedTask[];
+	tasks: Task[];
+	taskDispatch: React.Dispatch<TaskActionShape>;
 	handleEditTask: (
 		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
-		b: LoadedTask
+		b: Task
 	) => void;
 	editFormData: EditFormData;
+	setEditTask: React.Dispatch<React.SetStateAction<EditTask>>;
 	handleEditFormChange: (e: ChangeEvent<HTMLInputElement>) => void;
 	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
 	isError: boolean;
@@ -32,11 +31,12 @@ interface Props {
 const TableForm = ({
 	handleEditFormSubmit,
 	editTask,
-	handleMenuItemEvent,
 	outsideClickRef,
 	tasks,
+	taskDispatch,
 	handleEditTask,
 	editFormData,
+	setEditTask,
 	handleEditFormChange,
 	handleEditFormKeyboard,
 	isError,
@@ -47,7 +47,11 @@ const TableForm = ({
 				<ContextMenu
 					xPos={editTask.xPos}
 					yPos={editTask.yPos}
-					handleMenuItemEvent={handleMenuItemEvent}
+					editTask={editTask}
+					tasks={tasks}
+					taskDispatch={taskDispatch}
+					editFormData={editFormData}
+					setEditTask={setEditTask}
 				/>
 			)}
 			<table>

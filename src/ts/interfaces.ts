@@ -15,3 +15,8 @@ export interface EditFormData {
 	priority: string | null;
 	description: string | null;
 }
+export interface ErrorsAndLoading {
+	isLoading?: boolean;
+	httpError?: string | null;
+	isError?: boolean;
+}

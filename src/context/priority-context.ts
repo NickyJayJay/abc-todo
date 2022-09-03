@@ -1,17 +1,20 @@
-import { RefObject, ChangeEvent, createContext } from 'react';
+import { ChangeEvent, createContext } from 'react';
+import { EditFormData, EditTask, ErrorsAndLoading } from '../ts/interfaces';
 
-interface PriorityContext {
+interface PriorityContextShape {
+	editTask: EditTask;
+	editFormData: EditFormData;
+	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
+	addFormData: EditFormData;
+	setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
+	setState: React.Dispatch<React.SetStateAction<ErrorsAndLoading>>;
 	letterPriority: string;
 	numberPriority: string;
 	editMode: string | null | undefined;
-	priorityInput: RefObject<HTMLInputElement>;
-	updatePriorityHandler: (e: React.MouseEvent<Element, MouseEvent>) => void;
-	letterPriorityHandler: (e: React.FormEvent<HTMLInputElement>) => void;
-	numberPriorityHandler: (e: React.FormEvent<HTMLInputElement>) => void;
 	handleEditFormSubmit: (e: React.FormEvent) => void;
 	handleAddFormChange: (
 		e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>
 	) => void;
 }
 
-export const PriorityContext = createContext({} as PriorityContext);
+export const PriorityContext = createContext({} as PriorityContextShape);

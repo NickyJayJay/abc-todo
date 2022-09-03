@@ -4,11 +4,11 @@ import React, {
 	useCallback,
 	useEffect,
 	ChangeEvent,
+	useReducer,
 } from 'react';
-import { nanoid } from 'nanoid';
 import { initializeApp } from 'firebase/app';
 // import { getAuth } from 'firebase/auth';
-import { getDatabase, ref, remove, update } from 'firebase/database';
+import { getDatabase, ref, update } from 'firebase/database';
 
 import { PriorityContext } from './context/priority-context';
 import { firebaseConfig } from './firebaseConfig';
@@ -18,13 +18,19 @@ import AddTaskForm from './components/AddTaskForm';
 import Card from './components/UI/Card/Card';
 import Modal from './components/UI/Modal/Modal';
 import classes from './App.module.scss';
-import { LoadedTask } from './ts/types';
-import { EditTask, EditFormData } from './ts/interfaces';
+import { Task } from './ts/types';
+import { EditTask, EditFormData, ErrorsAndLoading } from './ts/interfaces';
+import { TaskActionType } from './ts/enums';
+import { taskReducer } from './reducers';
 
 const App = () => {
-	const [tasks, setTasks] = useState<LoadedTask[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
-	const [httpError, setHttpError] = useState(false);
+	const [tasks, taskDispatch] = useReducer(taskReducer, []);
+
+	const [state, setState] = useState<ErrorsAndLoading>({
+		isLoading: true,
+		httpError: null,
+		isError: false,
+	});
 
 	const [addFormData, setAddFormData] = useState<EditFormData>({
 		status: '',
@@ -52,31 +58,35 @@ const App = () => {
 		showMenu: false,
 	});
 
-	const [isError, setIsError] = useState<boolean>(false);
-
-	const priorityInput = useRef<HTMLInputElement>(null);
-
 	// Initialize Firebase and set bindings
 	const app = initializeApp(firebaseConfig);
 	const db = getDatabase(app);
 	// const auth = getAuth();
 	const url = app.options.databaseURL;
 
+	const priorityInput = useRef<HTMLInputElement>(null);
+
 	useEffect(() => {
-		if (editTask.showMenu || isError) {
+		editTask.inputType === 'priority-input' &&
+			!state.isError &&
+			priorityInput.current?.focus();
+	}, [state.isError, editTask.inputType, priorityInput]);
+
+	useEffect(() => {
+		if (editTask.showMenu || state.isError) {
 			document.body.classList.add('lockScroll');
 			document.body.style.top = `-${window.scrollY}px`;
 		}
-		if (!editTask.showMenu && !isError) {
+		if (!editTask.showMenu && !state.isError) {
 			document.body.classList.remove('lockScroll');
 			document.body.style.top = '';
 		}
-	}, [editTask.showMenu, isError]);
+	}, [editTask.showMenu, state.isError]);
 
 	useEffect(() => {
 		const close = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
-				isError && hideModalHandler(e);
+				state.isError && hideModalHandler(e);
 				editTask.showMenu && setEditTask({ ...editTask, showMenu: false });
 			}
 		};
@@ -93,7 +103,7 @@ const App = () => {
 			}
 
 			const responseData = await response.json();
-			const loadedTasks: LoadedTask[] = [];
+			const loadedTasks: Task[] = [];
 
 			for (const key in responseData) {
 				loadedTasks.push({
@@ -103,13 +113,15 @@ const App = () => {
 					description: responseData[key].description,
 				});
 			}
-			setTasks(loadedTasks);
-			setIsLoading(false);
+			taskDispatch({
+				type: TaskActionType.SET,
+				data: loadedTasks,
+			});
+			setState({ isLoading: false });
 		};
 
 		fetchTasks().catch((error) => {
-			setIsLoading(false);
-			setHttpError(error.message);
+			setState({ isLoading: false, httpError: error.message });
 		});
 	}, [url]);
 
@@ -225,56 +237,6 @@ const App = () => {
 		setAddFormData(newFormData);
 	};
 
-	const handleMenuItemEvent = (
-		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent
-	) => {
-		e.stopPropagation();
-		if (
-			(e as React.KeyboardEvent).key === 'Tab' ||
-			(e as React.KeyboardEvent).key === 'Shift'
-		)
-			return;
-		let menuValue;
-
-		if (e.type === 'click' && (e.target as HTMLElement).tagName === 'SPAN') {
-			menuValue = (e.target as HTMLElement).textContent;
-		} else if (
-			e.type === 'click' &&
-			(e.target as HTMLElement).tagName === 'IMG'
-		) {
-			menuValue = (e.target as HTMLElement).previousElementSibling?.textContent;
-		} else {
-			menuValue = (e.target as HTMLElement).childNodes[0].textContent;
-		}
-
-		const editedTask: LoadedTask = {
-			id: editTask.rowId,
-			status: menuValue || null,
-			priority: editFormData.priority,
-			description: editFormData.description,
-		};
-
-		if (menuValue === 'Remove') {
-			handleDeleteChange(editTask.rowId);
-			setEditTask({ ...editTask, showMenu: false });
-			return;
-		}
-
-		if (menuValue === 'Cancel') {
-			setEditTask({ ...editTask, showMenu: false });
-			return;
-		}
-
-		const newTasks = [...tasks];
-		const index = tasks.findIndex((task) => task.id === editTask.rowId);
-		newTasks[index] = editedTask;
-		setTasks(newTasks);
-		const dbRef = ref(db, `tasks/${editTask.rowId}`);
-		update(dbRef, editedTask);
-
-		setEditTask({ ...editTask, showMenu: false });
-	};
-
 	const handlePriorityValidation = (
 		fieldValue: string,
 		fieldName: string | null,
@@ -286,13 +248,13 @@ const App = () => {
 			/^([ABC]?|[ABC][1-9]?|[ABC][1-9][0-9])?$/i.test(fieldValue) &&
 			fieldValue.length <= 3
 		) {
-			setIsError(false);
+			setState({ isError: false });
 		} else if (editTask.inputType === 'priority-cell') {
 			newFormData[fieldName] = editFormData.priority;
-			setIsError(true);
+			setState({ isError: true });
 		} else if (editTask.inputType === 'priority-input') {
 			newFormData[fieldName] = addFormData.priority;
-			setIsError(true);
+			setState({ isError: true });
 		}
 	};
 
@@ -311,48 +273,6 @@ const App = () => {
 		setEditFormData(newFormData);
 	};
 
-	const handleAddFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-
-		const newTask = {
-			id: nanoid(),
-			key: nanoid(),
-			status: addFormData.status,
-			priority: addFormData.priority,
-			description: addFormData.description,
-		};
-
-		const newTasks = [...tasks, newTask];
-		setTasks(newTasks);
-
-		setAddFormData({
-			status: 'Select Status',
-			letterPriority: '',
-			numberPriority: '',
-			priority: '',
-			description: '',
-		});
-
-		fetch(`${url}/tasks.json`, {
-			method: 'POST',
-			body: JSON.stringify({
-				status: addFormData.status,
-				priority: addFormData.priority,
-				description: addFormData.description,
-			}),
-		});
-	};
-
-	const handleAddFormKeydown = (e: React.KeyboardEvent) => {
-		if (e.key === 'Enter') {
-			const form = (e.target as HTMLInputElement | HTMLSelectElement).form;
-			const i = Array.from(form!.elements).indexOf(e.target);
-			const nextFormControl = form!.elements[i + 1];
-			(nextFormControl as HTMLElement).focus();
-			e.preventDefault();
-		}
-	};
-
 	const handleEditFormSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 
@@ -366,7 +286,12 @@ const App = () => {
 		const newTasks = [...tasks];
 		const index = tasks.findIndex((task) => task.id === editTask.rowId);
 		newTasks[index] = editedTask;
-		setTasks(newTasks);
+
+		taskDispatch({
+			type: TaskActionType.SET,
+			data: newTasks,
+		});
+
 		const dbRef = ref(db, `tasks/${editTask.rowId}`);
 		update(dbRef, editedTask);
 	};
@@ -418,7 +343,7 @@ const App = () => {
 
 	const handleEditTask = (
 		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent,
-		task: LoadedTask
+		task: Task
 	) => {
 		let statusCell = (e.target as HTMLElement).dataset.id === 'status-cell';
 
@@ -461,67 +386,6 @@ const App = () => {
 		setEditFormData(formValues);
 	};
 
-	const handleDeleteChange = (taskId: EditTask['rowId']) => {
-		const newTasks = [...tasks];
-		const index = tasks.findIndex((task) => task.id === taskId);
-
-		newTasks.splice(index, 1);
-		setTasks(newTasks);
-		const dbRef = ref(db, `tasks/${taskId}`);
-		remove(dbRef);
-	};
-
-	const letterPriorityHandler = (e: React.FormEvent<HTMLInputElement>) => {
-		if (editTask.inputType === 'priority-cell') {
-			const newFormData: EditFormData = { ...editFormData };
-			newFormData.letterPriority = (e.target as HTMLInputElement).value;
-			setEditFormData(newFormData);
-		} else {
-			const newFormData = { ...addFormData };
-			newFormData.letterPriority = (e.target as HTMLInputElement).value;
-			setAddFormData(newFormData);
-		}
-	};
-
-	const numberPriorityHandler = (e: React.FormEvent<HTMLInputElement>) => {
-		if (editTask.inputType === 'priority-cell') {
-			const newFormData = { ...editFormData };
-			newFormData.numberPriority = Math.abs(
-				parseInt((e.target as HTMLInputElement).value.slice(0, 2))
-			).toString();
-			setEditFormData(newFormData);
-		} else {
-			const newFormData = { ...addFormData };
-			newFormData.numberPriority = Math.abs(
-				parseInt((e.target as HTMLInputElement).value.slice(0, 2))
-			).toString();
-			setAddFormData(newFormData);
-		}
-	};
-
-	const updatePriorityHandler = (e: React.MouseEvent<Element>) => {
-		e.preventDefault();
-
-		if (editTask.inputType === 'priority-cell') {
-			const newFormData: EditFormData = {
-				...editFormData,
-				priority: `${editFormData.letterPriority}${editFormData.numberPriority}`,
-				letterPriority: '',
-				numberPriority: '',
-			};
-			setEditFormData(newFormData);
-		} else {
-			const newFormData: EditFormData = {
-				...addFormData,
-				priority: `${addFormData.letterPriority}${addFormData.numberPriority}`,
-				letterPriority: '',
-				numberPriority: '',
-			};
-			setAddFormData(newFormData);
-		}
-		setIsError(false);
-	};
-
 	const hideModalHandler = (
 		e: React.MouseEvent | TouchEvent | KeyboardEvent
 	) => {
@@ -543,18 +407,18 @@ const App = () => {
 			};
 			setAddFormData(newFormData);
 		}
-		setIsError(false);
+		setState({ isError: false });
 	};
 
-	if (httpError) {
+	if (state.httpError) {
 		return (
 			<section className={classes.tasksError}>
-				<p>{httpError}</p>
+				<p>{state.httpError}</p>
 			</section>
 		);
 	}
 
-	if (isLoading) {
+	if (state.isLoading) {
 		return (
 			<section className={classes.tasksLoading}>
 				<p>Loading...</p>
@@ -564,11 +428,17 @@ const App = () => {
 
 	return (
 		<div className={classes.appContainer}>
-			{isError &&
+			{state.isError &&
 				(editTask.inputType === 'priority-cell' ||
 					editTask.inputType === 'priority-input') && (
 					<PriorityContext.Provider
 						value={{
+							editTask: editTask,
+							editFormData: editFormData,
+							setEditFormData: setEditFormData,
+							addFormData: addFormData,
+							setAddFormData: setAddFormData,
+							setState: setState,
 							letterPriority:
 								editTask.inputType === 'priority-cell'
 									? editFormData.letterPriority
@@ -578,10 +448,6 @@ const App = () => {
 									? editFormData.numberPriority
 									: addFormData.numberPriority,
 							editMode: editTask.inputType,
-							priorityInput: priorityInput,
-							updatePriorityHandler,
-							letterPriorityHandler,
-							numberPriorityHandler,
 							handleEditFormSubmit,
 							handleAddFormChange,
 						}}
@@ -593,24 +459,23 @@ const App = () => {
 				<TableForm
 					handleEditFormSubmit={handleEditFormSubmit}
 					editTask={editTask}
-					handleMenuItemEvent={handleMenuItemEvent}
 					outsideClickRef={outsideClickRef}
 					tasks={tasks}
+					taskDispatch={taskDispatch}
 					handleEditTask={handleEditTask}
 					editFormData={editFormData}
+					setEditTask={setEditTask}
 					handleEditFormChange={handleEditFormChange}
 					handleEditFormKeyboard={handleEditFormKeyboard}
-					isError={isError}
+					isError={state.isError as boolean}
 				/>
 
 				<AddTaskForm
-					handleAddFormSubmit={handleAddFormSubmit}
 					handleAddFormChange={handleAddFormChange}
-					handleAddFormKeydown={handleAddFormKeydown}
-					isError={isError}
 					addFormData={addFormData}
-					priorityInput={priorityInput}
-					editMode={editTask.inputType}
+					ref={priorityInput}
+					taskDispatch={taskDispatch}
+					setAddFormData={setAddFormData}
 				/>
 			</Card>
 		</div>
