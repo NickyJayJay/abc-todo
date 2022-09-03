@@ -1,27 +1,86 @@
 import React, { ChangeEvent, forwardRef } from 'react';
+import { nanoid } from 'nanoid';
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from '../firebaseConfig';
 
 import ButtonGradient from './UI/Button/ButtonGradient';
 import classes from '../App.module.scss';
 import { EditFormData } from '../ts/interfaces';
+import { TaskActionType } from '../ts/enums';
+import { TaskActionShape } from '../ts/types';
 
 interface Props {
-	handleAddFormSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 	handleAddFormChange: (
 		e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => void;
-	handleAddFormKeydown: (e: React.KeyboardEvent) => void;
 	addFormData: EditFormData;
+	taskDispatch: React.Dispatch<TaskActionShape>;
+	setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 }
 
 const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
+	// Initialize Firebase and set bindings
+	const app = initializeApp(firebaseConfig);
+	const url = app.options.databaseURL;
+
+	const handleAddFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		const newTask = {
+			id: nanoid(),
+			key: nanoid(),
+			status: props.addFormData.status,
+			priority: props.addFormData.priority,
+			description: props.addFormData.description,
+		};
+
+		props.taskDispatch({
+			type: TaskActionType.ADD,
+			payload: {
+				id: newTask.id,
+				key: newTask.key,
+				status: props.addFormData.status,
+				priority: props.addFormData.priority,
+				description: props.addFormData.description,
+			},
+		});
+
+		props.setAddFormData({
+			status: 'Select Status',
+			letterPriority: '',
+			numberPriority: '',
+			priority: '',
+			description: '',
+		});
+
+		fetch(`${url}/tasks.json`, {
+			method: 'POST',
+			body: JSON.stringify({
+				status: props.addFormData.status,
+				priority: props.addFormData.priority,
+				description: props.addFormData.description,
+			}),
+		});
+	};
+
+	const handleAddFormKeydown = (e: React.KeyboardEvent) => {
+		if (e.key === 'Enter') {
+			const form = (e.target as HTMLInputElement | HTMLSelectElement).form;
+			const i = Array.from(form!.elements).indexOf(e.target);
+			const nextFormControl = form!.elements[i + 1];
+			(nextFormControl as HTMLElement).focus();
+			e.preventDefault();
+		}
+	};
+
 	return (
 		<div className={classes.addTask}>
-			<form onSubmit={props.handleAddFormSubmit}>
+			<form onSubmit={handleAddFormSubmit}>
 				<fieldset>
 					<legend>Add a Task</legend>
 					<select
 						onChange={props.handleAddFormChange}
-						onKeyDown={(e) => props.handleAddFormKeydown(e)}
+						onKeyDown={(e) => handleAddFormKeydown(e)}
 						name='status'
 						value={props.addFormData.status as string}
 						data-id='status-input'
@@ -43,7 +102,7 @@ const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 						placeholder='ABC'
 						value={props.addFormData.priority as string}
 						onChange={(e) => props.handleAddFormChange(e)}
-						onKeyDown={(e) => props.handleAddFormKeydown(e)}
+						onKeyDown={(e) => handleAddFormKeydown(e)}
 						aria-label='Enter task priority'
 						ref={ref}
 					></input>
@@ -54,7 +113,7 @@ const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 						placeholder='Enter task description...'
 						value={props.addFormData.description as string}
 						onChange={props.handleAddFormChange}
-						onKeyDown={(e) => props.handleAddFormKeydown(e)}
+						onKeyDown={(e) => handleAddFormKeydown(e)}
 						aria-label='Enter task description'
 						maxLength={150}
 					/>

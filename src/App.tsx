@@ -6,10 +6,9 @@ import React, {
 	ChangeEvent,
 	useReducer,
 } from 'react';
-import { nanoid } from 'nanoid';
 import { initializeApp } from 'firebase/app';
 // import { getAuth } from 'firebase/auth';
-import { getDatabase, ref, remove, update } from 'firebase/database';
+import { getDatabase, ref, update } from 'firebase/database';
 
 import { PriorityContext } from './context/priority-context';
 import { firebaseConfig } from './firebaseConfig';
@@ -238,59 +237,6 @@ const App = () => {
 		setAddFormData(newFormData);
 	};
 
-	const handleMenuItemEvent = (
-		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent
-	) => {
-		e.stopPropagation();
-		if (
-			(e as React.KeyboardEvent).key === 'Tab' ||
-			(e as React.KeyboardEvent).key === 'Shift'
-		)
-			return;
-		let menuValue;
-
-		if (e.type === 'click' && (e.target as HTMLElement).tagName === 'SPAN') {
-			menuValue = (e.target as HTMLElement).textContent;
-		} else if (
-			e.type === 'click' &&
-			(e.target as HTMLElement).tagName === 'IMG'
-		) {
-			menuValue = (e.target as HTMLElement).previousElementSibling?.textContent;
-		} else {
-			menuValue = (e.target as HTMLElement).childNodes[0].textContent;
-		}
-
-		const editedTask: Task = {
-			id: editTask.rowId,
-			status: menuValue || null,
-			priority: editFormData.priority,
-			description: editFormData.description,
-		};
-
-		if (menuValue === 'Remove') {
-			handleDeleteChange(editTask.rowId);
-			setEditTask({ ...editTask, showMenu: false });
-			return;
-		}
-
-		if (menuValue === 'Cancel') {
-			setEditTask({ ...editTask, showMenu: false });
-			return;
-		}
-
-		const newTasks = [...tasks];
-		const index = tasks.findIndex((task) => task.id === editTask.rowId);
-		newTasks[index] = editedTask;
-		taskDispatch({
-			type: TaskActionType.SET,
-			data: newTasks,
-		});
-		const dbRef = ref(db, `tasks/${editTask.rowId}`);
-		update(dbRef, editedTask);
-
-		setEditTask({ ...editTask, showMenu: false });
-	};
-
 	const handlePriorityValidation = (
 		fieldValue: string,
 		fieldName: string | null,
@@ -325,56 +271,6 @@ const App = () => {
 		handlePriorityValidation(fieldValue, fieldName, newFormData);
 
 		setEditFormData(newFormData);
-	};
-
-	const handleAddFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-
-		const newTask = {
-			id: nanoid(),
-			key: nanoid(),
-			status: addFormData.status,
-			priority: addFormData.priority,
-			description: addFormData.description,
-		};
-
-		taskDispatch({
-			type: TaskActionType.ADD,
-			payload: {
-				id: newTask.id,
-				key: newTask.key,
-				status: addFormData.status,
-				priority: addFormData.priority,
-				description: addFormData.description,
-			},
-		});
-
-		setAddFormData({
-			status: 'Select Status',
-			letterPriority: '',
-			numberPriority: '',
-			priority: '',
-			description: '',
-		});
-
-		fetch(`${url}/tasks.json`, {
-			method: 'POST',
-			body: JSON.stringify({
-				status: addFormData.status,
-				priority: addFormData.priority,
-				description: addFormData.description,
-			}),
-		});
-	};
-
-	const handleAddFormKeydown = (e: React.KeyboardEvent) => {
-		if (e.key === 'Enter') {
-			const form = (e.target as HTMLInputElement | HTMLSelectElement).form;
-			const i = Array.from(form!.elements).indexOf(e.target);
-			const nextFormControl = form!.elements[i + 1];
-			(nextFormControl as HTMLElement).focus();
-			e.preventDefault();
-		}
 	};
 
 	const handleEditFormSubmit = (e: React.FormEvent) => {
@@ -490,68 +386,6 @@ const App = () => {
 		setEditFormData(formValues);
 	};
 
-	const handleDeleteChange = (taskId: EditTask['rowId']) => {
-		const index = tasks.findIndex((task) => task.id === taskId);
-
-		taskDispatch({
-			type: TaskActionType.REMOVE,
-			index: index,
-		});
-		const dbRef = ref(db, `tasks/${taskId}`);
-		remove(dbRef);
-	};
-
-	const letterPriorityHandler = (e: React.FormEvent<HTMLInputElement>) => {
-		if (editTask.inputType === 'priority-cell') {
-			const newFormData: EditFormData = { ...editFormData };
-			newFormData.letterPriority = (e.target as HTMLInputElement).value;
-			setEditFormData(newFormData);
-		} else {
-			const newFormData = { ...addFormData };
-			newFormData.letterPriority = (e.target as HTMLInputElement).value;
-			setAddFormData(newFormData);
-		}
-	};
-
-	const numberPriorityHandler = (e: React.FormEvent<HTMLInputElement>) => {
-		if (editTask.inputType === 'priority-cell') {
-			const newFormData = { ...editFormData };
-			newFormData.numberPriority = Math.abs(
-				parseInt((e.target as HTMLInputElement).value.slice(0, 2))
-			).toString();
-			setEditFormData(newFormData);
-		} else {
-			const newFormData = { ...addFormData };
-			newFormData.numberPriority = Math.abs(
-				parseInt((e.target as HTMLInputElement).value.slice(0, 2))
-			).toString();
-			setAddFormData(newFormData);
-		}
-	};
-
-	const updatePriorityHandler = (e: React.MouseEvent<Element>) => {
-		e.preventDefault();
-
-		if (editTask.inputType === 'priority-cell') {
-			const newFormData: EditFormData = {
-				...editFormData,
-				priority: `${editFormData.letterPriority}${editFormData.numberPriority}`,
-				letterPriority: '',
-				numberPriority: '',
-			};
-			setEditFormData(newFormData);
-		} else {
-			const newFormData: EditFormData = {
-				...addFormData,
-				priority: `${addFormData.letterPriority}${addFormData.numberPriority}`,
-				letterPriority: '',
-				numberPriority: '',
-			};
-			setAddFormData(newFormData);
-		}
-		setState({ isError: false });
-	};
-
 	const hideModalHandler = (
 		e: React.MouseEvent | TouchEvent | KeyboardEvent
 	) => {
@@ -599,6 +433,12 @@ const App = () => {
 					editTask.inputType === 'priority-input') && (
 					<PriorityContext.Provider
 						value={{
+							editTask: editTask,
+							editFormData: editFormData,
+							setEditFormData: setEditFormData,
+							addFormData: addFormData,
+							setAddFormData: setAddFormData,
+							setState: setState,
 							letterPriority:
 								editTask.inputType === 'priority-cell'
 									? editFormData.letterPriority
@@ -608,9 +448,6 @@ const App = () => {
 									? editFormData.numberPriority
 									: addFormData.numberPriority,
 							editMode: editTask.inputType,
-							updatePriorityHandler,
-							letterPriorityHandler,
-							numberPriorityHandler,
 							handleEditFormSubmit,
 							handleAddFormChange,
 						}}
@@ -622,22 +459,23 @@ const App = () => {
 				<TableForm
 					handleEditFormSubmit={handleEditFormSubmit}
 					editTask={editTask}
-					handleMenuItemEvent={handleMenuItemEvent}
 					outsideClickRef={outsideClickRef}
 					tasks={tasks}
+					taskDispatch={taskDispatch}
 					handleEditTask={handleEditTask}
 					editFormData={editFormData}
+					setEditTask={setEditTask}
 					handleEditFormChange={handleEditFormChange}
 					handleEditFormKeyboard={handleEditFormKeyboard}
 					isError={state.isError as boolean}
 				/>
 
 				<AddTaskForm
-					handleAddFormSubmit={handleAddFormSubmit}
 					handleAddFormChange={handleAddFormChange}
-					handleAddFormKeydown={handleAddFormKeydown}
 					addFormData={addFormData}
 					ref={priorityInput}
+					taskDispatch={taskDispatch}
+					setAddFormData={setAddFormData}
 				/>
 			</Card>
 		</div>
