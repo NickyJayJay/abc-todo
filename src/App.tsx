@@ -103,6 +103,7 @@ const App = () => {
 			}
 
 			const responseData = await response.json();
+
 			const loadedTasks: Task[] = [];
 
 			for (const key in responseData) {
@@ -113,6 +114,27 @@ const App = () => {
 					description: responseData[key].description,
 				});
 			}
+
+			loadedTasks.sort((a: Task, b: Task) => {
+				const priorityA = a.priority as string;
+				const priorityB = b.priority as string;
+				const [letterA, numA] = priorityA.split(/([1-9]{1,2})/);
+				let [letterB, numB] = priorityB.split(/([1-9]{1,2})/);
+				const priorityNumberA = Number(numA);
+				const priorityNumberB = Number(numB);
+
+				if (priorityA === '') return 1;
+				if (priorityB === '') return -1;
+
+				if (letterA > letterB) return 1;
+				if (letterA < letterB) return -1;
+
+				if (priorityNumberA > priorityNumberB) return 1;
+				if (priorityNumberA < priorityNumberB) return -1;
+
+				return 0;
+			});
+
 			taskDispatch({
 				type: TaskActionType.SET,
 				data: loadedTasks,
