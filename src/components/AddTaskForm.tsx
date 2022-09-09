@@ -10,6 +10,7 @@ import { TaskActionType } from '../ts/enums';
 import { TaskActionShape } from '../ts/types';
 
 interface Props {
+	handlePriorityValidation: (e: any) => void;
 	handleAddFormChange: (
 		e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => void;
@@ -101,6 +102,7 @@ const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 						data-id='priority-input'
 						placeholder='ABC'
 						value={props.addFormData.priority as string}
+						onClick={(e) => props.handlePriorityValidation(e)}
 						onChange={(e) => props.handleAddFormChange(e)}
 						onKeyDown={(e) => handleAddFormKeydown(e)}
 						aria-label='Enter task priority'

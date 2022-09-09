@@ -7,10 +7,15 @@ interface Props {
 		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
 		b: Task
 	) => void;
+	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
 	task: Task;
 }
 
-const ReadOnlyPriority = ({ handleEditTask, task }: Props) => {
+const ReadOnlyPriority = ({
+	handleEditTask,
+	handleEditFormKeyboard,
+	task,
+}: Props) => {
 	return (
 		<td
 			data-id='priority-cell'
@@ -18,6 +23,7 @@ const ReadOnlyPriority = ({ handleEditTask, task }: Props) => {
 			onTouchStart={(event) => handleEditTask(event, task)}
 			onClick={(event) => handleEditTask(event, task)}
 			onKeyUp={(event) => handleEditTask(event, task)}
+			onKeyDown={(event) => handleEditFormKeyboard(event)}
 		>
 			<button data-id='priority-cell'>{task.priority}</button>
 		</td>

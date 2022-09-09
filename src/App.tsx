@@ -254,30 +254,31 @@ const App = () => {
 		const newFormData = { ...addFormData };
 		newFormData[fieldName as keyof typeof newFormData] = fieldValue;
 
-		handlePriorityValidation(fieldValue, fieldName, newFormData);
+		// handlePriorityValidation(e);
 
 		setAddFormData(newFormData);
 	};
 
-	const handlePriorityValidation = (
-		fieldValue: string,
-		fieldName: string | null,
-		newFormData: EditFormData
-	) => {
-		if (fieldName !== 'priority') return;
-
+	const handlePriorityValidation = (e: any) => {
 		if (
-			/^([ABC]?|[ABC][1-9]?|[ABC][1-9][0-9])?$/i.test(fieldValue) &&
-			fieldValue.length <= 3
+			editTask.inputType === 'priority-cell' ||
+			editTask.inputType === 'priority-input'
 		) {
-			setState({ isError: false });
-		} else if (editTask.inputType === 'priority-cell') {
-			newFormData[fieldName] = editFormData.priority;
-			setState({ isError: true });
-		} else if (editTask.inputType === 'priority-input') {
-			newFormData[fieldName] = addFormData.priority;
 			setState({ isError: true });
 		}
+
+		// if (
+		// 	/^([ABC]?|[ABC][1-9]?|[ABC][1-9][0-9])?$/i.test(fieldValue) &&
+		// 	fieldValue.length <= 3
+		// ) {
+		// 	setState({ isError: false });
+		// } else if (editTask.inputType === 'priority-cell') {
+		// 	newFormData[fieldName] = editFormData.priority;
+		// 	setState({ isError: true });
+		// } else if (editTask.inputType === 'priority-input') {
+		// 	newFormData[fieldName] = addFormData.priority;
+		// 	setState({ isError: true });
+		// }
 	};
 
 	const handleEditFormChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -290,7 +291,7 @@ const App = () => {
 		const newFormData = { ...editFormData };
 		newFormData[fieldName as keyof typeof newFormData] = fieldValue;
 
-		handlePriorityValidation(fieldValue, fieldName, newFormData);
+		// handlePriorityValidation(e);
 
 		setEditFormData(newFormData);
 	};
@@ -359,7 +360,7 @@ const App = () => {
 		const newFormData = { ...editFormData };
 		newFormData[fieldName as keyof typeof newFormData] = fieldValue;
 
-		handlePriorityValidation(fieldValue, fieldName, newFormData);
+		// handlePriorityValidation(e);
 		setEditFormData(newFormData);
 	};
 
@@ -367,7 +368,8 @@ const App = () => {
 		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent,
 		task: Task
 	) => {
-		let statusCell = (e.target as HTMLElement).dataset.id === 'status-cell';
+		let statusCell = (e.target as HTMLElement).dataset.id === 'status-cell',
+			priorityCell = (e.target as HTMLElement).dataset.id === 'priority-cell';
 
 		if (
 			((e as React.KeyboardEvent).key === 'Tab' ||
@@ -382,6 +384,7 @@ const App = () => {
 		statusCell && (e.target as HTMLElement).tagName === 'IMG'
 			? (e.target as HTMLElement).parentElement?.focus()
 			: (e.target as HTMLElement).focus();
+
 		setEditTask({
 			rowId: task.id || null,
 			inputType: (e.target as HTMLElement).dataset.id,
@@ -397,6 +400,9 @@ const App = () => {
 					? true
 					: false,
 		});
+
+		handlePriorityValidation(e);
+
 		const formValues: EditFormData = {
 			status: task.status || null,
 			letterPriority: '',
@@ -493,6 +499,7 @@ const App = () => {
 				/>
 
 				<AddTaskForm
+					handlePriorityValidation={handlePriorityValidation}
 					handleAddFormChange={handleAddFormChange}
 					addFormData={addFormData}
 					ref={priorityInput}

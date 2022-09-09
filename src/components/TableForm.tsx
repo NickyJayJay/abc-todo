@@ -72,21 +72,11 @@ const TableForm = ({
 								handleEditTask={handleEditTask}
 								editTask={editTask}
 							/>
-							{editTask.inputType === 'priority-cell' &&
-							editTask.rowId === task.id ? (
-								<EditablePriority
-									taskPriority={editFormData.priority}
-									handleEditFormChange={handleEditFormChange}
-									handleEditFormSubmit={handleEditFormSubmit}
-									handleEditFormKeyboard={handleEditFormKeyboard}
-									taskId={task.id}
-									isError={isError}
-									rowId={editTask.rowId}
-									inputType={editTask.inputType}
-								/>
-							) : (
-								<ReadOnlyPriority task={task} handleEditTask={handleEditTask} />
-							)}
+							<ReadOnlyPriority
+								task={task}
+								handleEditTask={handleEditTask}
+								handleEditFormKeyboard={handleEditFormKeyboard}
+							/>
 							{editTask.inputType === 'description-cell' &&
 							editTask.rowId === task.id ? (
 								<EditableDescription
