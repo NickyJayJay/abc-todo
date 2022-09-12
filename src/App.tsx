@@ -370,7 +370,8 @@ const App = () => {
 		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent,
 		task: Task
 	) => {
-		let statusCell = (e.target as HTMLElement).dataset.id === 'status-cell';
+		let statusCell = (e.target as HTMLElement).dataset.id === 'status-cell',
+			priorityCell = (e.target as HTMLElement).dataset.id === 'priority-cell';
 
 		if (
 			((e as React.KeyboardEvent).key === 'Tab' ||
@@ -379,6 +380,14 @@ const App = () => {
 			statusCell
 		)
 			return;
+
+		if (
+			((e as React.KeyboardEvent).key === 'Enter' ||
+				(e as React.MouseEvent).type === 'click') &&
+			priorityCell
+		) {
+			setState({ isError: true });
+		}
 
 		e.stopPropagation();
 		statusCell && e.preventDefault();
