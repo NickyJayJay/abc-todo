@@ -111,62 +111,38 @@ const ContextMenu = ({
 					left: xPos as string,
 				}}
 			>
-				<ul>
-					<li
-						onClick={(event) => handleMenuItemEvent(event)}
-						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
-					>
+				<ul onTouchStart={(event) => event.stopPropagation()}>
+					<li onClick={(event) => handleMenuItemEvent(event)}>
 						<button>
 							<span>In Process</span>
 							<img src={dot} alt='in process icon' />
 						</button>
 					</li>
-					<li
-						onClick={(event) => handleMenuItemEvent(event)}
-						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
-					>
+					<li onClick={(event) => handleMenuItemEvent(event)}>
 						<button>
 							<span>Completed</span>
 							<img src={checkmark} alt='completed icon' />
 						</button>
 					</li>
-					<li
-						onClick={(event) => handleMenuItemEvent(event)}
-						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
-					>
+					<li onClick={(event) => handleMenuItemEvent(event)}>
 						<button>
 							<span>Forwarded</span>
 							<img src={arrowRight} alt='forwarded icon' />
 						</button>
 					</li>
-					<li
-						onClick={(event) => handleMenuItemEvent(event)}
-						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
-					>
+					<li onClick={(event) => handleMenuItemEvent(event)}>
 						<button>
 							<span>Delegated</span>
 							<img src={add} alt='delegated icon' />
 						</button>
 					</li>
-					<li
-						onClick={(event) => handleMenuItemEvent(event)}
-						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
-					>
+					<li onClick={(event) => handleMenuItemEvent(event)}>
 						<button>
 							<span>Remove</span>
 							<img src={trash} alt='removed icon' />
 						</button>
 					</li>
-					<li
-						onClick={(event) => handleMenuItemEvent(event)}
-						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
-					>
+					<li onClick={(event) => handleMenuItemEvent(event)}>
 						<button>
 							<span>Cancel</span>
 							<img src={close} alt='close icon' />

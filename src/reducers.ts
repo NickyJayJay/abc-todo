@@ -1,7 +1,6 @@
 import { Reducer } from 'react';
-import { Task } from './ts/types';
+import { Task, TaskActionShape } from './ts/types';
 import { TaskActionType } from './ts/enums';
-import { TaskActionShape } from './ts/types';
 
 export const taskReducer: Reducer<Task[], TaskActionShape> = (
 	state = [],

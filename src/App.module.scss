@@ -67,7 +67,7 @@
 
               &.active {
                 background-color: $highlightColor;
-                outline: 1px solid $accentColor;
+                outline: 3px solid $accentColor;
 
                 input {
                   background-color: $highlightColor;
@@ -114,25 +114,6 @@
                 font-weight: bold;
                 text-indent: 0;
               }
-    
-              input {
-                position: absolute;
-                left: 0;
-                top: 0;
-                border: none;
-                height: 100%;
-                width: 100%;
-                text-align: center;
-                padding: 0;
-                font-weight: bold;
-                font-family: $serifFont2;
-                line-height: 1;
-    
-                 &:focus-visible {
-                  background-color: $highlightColor;
-                  outline: 3px solid $accentColor;
-                }
-              }
             }
     
             .description {
@@ -166,7 +147,7 @@
     
                 &:focus-visible {
                   background-color: $highlightColor;
-                  outline: 3px solid $accentColor;
+                  outline: 0;
                 }
               }
             }
@@ -268,6 +249,11 @@
           background-color: $highlightColor;
           outline: 3px solid $accentColor;
         }
+
+        &.active {
+            background-color: $highlightColor;
+            outline: 3px solid $accentColor;
+        }
       }
 
       input[name=description] {
@@ -287,6 +273,11 @@
         border: 1px solid $accentColor;
 
         &:focus-visible {
+          background-color: $highlightColor;
+          outline: 3px solid $accentColor;
+        }
+
+        &.active {
           background-color: $highlightColor;
           outline: 3px solid $accentColor;
         }

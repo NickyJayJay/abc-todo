@@ -18,5 +18,5 @@ export interface EditFormData {
 export interface ErrorsAndLoading {
 	isLoading?: boolean;
 	httpError?: string | null;
-	isError?: boolean;
+	isModal?: boolean;
 }
