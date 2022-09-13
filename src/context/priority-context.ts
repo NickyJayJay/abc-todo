@@ -1,5 +1,6 @@
 import { ChangeEvent, createContext } from 'react';
 import { EditFormData, EditTask, ErrorsAndLoading } from '../ts/interfaces';
+import { Task, TaskActionShape } from '../ts/types';
 
 interface PriorityContextShape {
 	editTask: EditTask;
@@ -15,6 +16,8 @@ interface PriorityContextShape {
 	handleAddFormChange: (
 		e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>
 	) => void;
+	tasks: Task[];
+	taskDispatch: React.Dispatch<TaskActionShape>;
 }
 
 export const PriorityContext = createContext({} as PriorityContextShape);

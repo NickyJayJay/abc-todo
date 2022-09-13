@@ -484,6 +484,8 @@ const App = () => {
 							editMode: editTask.inputType,
 							handleEditFormSubmit,
 							handleAddFormChange,
+							tasks: tasks,
+							taskDispatch: taskDispatch,
 						}}
 					>
 						<Modal onHide={hideModalHandler} />
