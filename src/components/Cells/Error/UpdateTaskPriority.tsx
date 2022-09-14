@@ -14,10 +14,6 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const UpdateTaskPriority = () => {
-	useEffect(() => {
-		radioRef.current?.focus();
-	}, []);
-
 	const {
 		editTask,
 		editFormData,

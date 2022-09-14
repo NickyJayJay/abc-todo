@@ -71,7 +71,12 @@ const TableForm = ({
 								handleEditTask={handleEditTask}
 								editTask={editTask}
 							/>
-							<ReadOnlyPriority task={task} handleEditTask={handleEditTask} />
+							<ReadOnlyPriority
+								task={task}
+								handleEditTask={handleEditTask}
+								isError={isError}
+								editTask={editTask}
+							/>
 							{editTask.inputType === 'description-cell' &&
 							editTask.rowId === task.id ? (
 								<EditableDescription
