@@ -101,6 +101,7 @@ const UpdateTaskPriority = () => {
 		}
 		setState({ isError: false });
 	};
+
 	const radioRef = useRef<HTMLInputElement>(null);
 
 	return (
