@@ -441,7 +441,9 @@ const App = () => {
 			};
 			setAddFormData(newFormData);
 		}
-		setState({ isError: false });
+		setTimeout(() => {
+			setState({ isError: false });
+		}, 250);
 	};
 
 	if (state.httpError) {

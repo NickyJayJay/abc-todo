@@ -28,12 +28,22 @@ const ReadOnlyPriority = ({
 	return (
 		<td
 			data-id='priority-cell'
-			className={classes.priority}
+			className={
+				task.id === editTask.rowId && editTask.inputType === 'priority-cell'
+					? `${classes.priority} ${classes.active}`
+					: classes.priority
+			}
 			onClick={(event) => handleEditTask(event, task)}
 			onKeyUp={(event) => handleEditTask(event, task)}
 			ref={cellRef}
 		>
-			<button data-id='priority-cell'>{task.priority}</button>
+			<button
+				data-id='priority-cell'
+				onClick={(event) => handleEditTask(event, task)}
+				onKeyUp={(event) => handleEditTask(event, task)}
+			>
+				{task.priority}
+			</button>
 		</td>
 	);
 };

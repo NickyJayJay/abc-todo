@@ -14,10 +14,6 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const UpdateTaskPriority = () => {
-	useEffect(() => {
-		isError && radioRef.current?.focus();
-	}, []);
-
 	const {
 		editTask,
 		editFormData,
@@ -100,7 +96,9 @@ const UpdateTaskPriority = () => {
 			};
 			setAddFormData(newFormData);
 		}
-		setState({ isError: false });
+		setTimeout(() => {
+			setState({ isError: false });
+		}, 250);
 	};
 
 	const radioRef = useRef<HTMLInputElement>(null);
@@ -120,7 +118,6 @@ const UpdateTaskPriority = () => {
 						name='letter'
 						value='A'
 						onInput={letterPriorityHandler}
-						ref={radioRef}
 					/>
 					<label>
 						A <span>(Important and time sensitive)</span>
