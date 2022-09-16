@@ -22,7 +22,7 @@ const ReadOnlyPriority = ({
 	const cellRef = useRef<HTMLTableCellElement>(null);
 
 	useEffect(() => {
-		task.id === editTask.rowId && cellRef.current?.focus();
+		task.id === editTask.rowId && !isError && cellRef.current?.focus();
 	}, [editTask, task.id, isError]);
 
 	return (

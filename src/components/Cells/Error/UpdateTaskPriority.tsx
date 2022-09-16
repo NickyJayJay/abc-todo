@@ -14,6 +14,10 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const UpdateTaskPriority = () => {
+	useEffect(() => {
+		isError && radioRef.current?.focus();
+	}, []);
+
 	const {
 		editTask,
 		editFormData,
@@ -28,6 +32,7 @@ const UpdateTaskPriority = () => {
 		handleAddFormChange,
 		tasks,
 		taskDispatch,
+		isError,
 	} = useContext(PriorityContext);
 
 	const letterPriorityHandler = (e: React.FormEvent<HTMLInputElement>) => {

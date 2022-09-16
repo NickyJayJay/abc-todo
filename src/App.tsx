@@ -486,6 +486,7 @@ const App = () => {
 							handleAddFormChange,
 							tasks: tasks,
 							taskDispatch: taskDispatch,
+							isError: state.isError,
 						}}
 					>
 						<Modal onHide={hideModalHandler} />

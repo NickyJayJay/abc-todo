@@ -18,6 +18,7 @@ interface PriorityContextShape {
 	) => void;
 	tasks: Task[];
 	taskDispatch: React.Dispatch<TaskActionShape>;
+	isError: boolean;
 }
 
 export const PriorityContext = createContext({} as PriorityContextShape);
