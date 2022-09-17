@@ -65,7 +65,9 @@ const UpdateTaskPriority = () => {
 		}
 	};
 
-	const updatePriorityHandler = (e: React.MouseEvent<Element>) => {
+	const updatePriorityHandler = (
+		e: React.MouseEvent<Element> | React.TouchEvent<Element>
+	) => {
 		e.preventDefault();
 
 		if (editTask.inputType === 'priority-cell') {
@@ -117,7 +119,7 @@ const UpdateTaskPriority = () => {
 						id='A'
 						name='letter'
 						value='A'
-						onInput={letterPriorityHandler}
+						onChange={letterPriorityHandler}
 					/>
 					<label>
 						A <span>(Important and time sensitive)</span>
@@ -129,7 +131,7 @@ const UpdateTaskPriority = () => {
 						id='B'
 						name='letter'
 						value='B'
-						onInput={letterPriorityHandler}
+						onChange={letterPriorityHandler}
 					/>
 					<label>
 						B <span>(Important but not time sensitive)</span>
@@ -141,7 +143,7 @@ const UpdateTaskPriority = () => {
 						id='C'
 						name='letter'
 						value='C'
-						onInput={letterPriorityHandler}
+						onChange={letterPriorityHandler}
 					/>
 					<label>
 						C <span>(Not important)</span>
@@ -164,9 +166,8 @@ const UpdateTaskPriority = () => {
 			</div>
 			<Button
 				type='submit'
-				onClick={(event: React.MouseEvent<Element>) =>
-					updatePriorityHandler(event)
-				}
+				onTouchStart={(event) => updatePriorityHandler(event)}
+				onClick={(event) => updatePriorityHandler(event)}
 				disabled={letterPriority ? false : true}
 			>
 				CONFIRM PRIORITY

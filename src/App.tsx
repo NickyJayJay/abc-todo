@@ -421,7 +421,7 @@ const App = () => {
 	};
 
 	const hideModalHandler = (
-		e: React.MouseEvent | TouchEvent | KeyboardEvent
+		e: React.MouseEvent | React.TouchEvent | KeyboardEvent
 	) => {
 		e.stopPropagation();
 		if ((e as KeyboardEvent).key === 'Tab') return;
