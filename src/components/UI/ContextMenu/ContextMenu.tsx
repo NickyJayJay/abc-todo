@@ -111,11 +111,10 @@ const ContextMenu = ({
 					left: xPos as string,
 				}}
 			>
-				<ul>
+				<ul onTouchStart={(event) => event.stopPropagation()}>
 					<li
 						onClick={(event) => handleMenuItemEvent(event)}
 						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
 					>
 						<button>
 							<span>In Process</span>
@@ -125,7 +124,6 @@ const ContextMenu = ({
 					<li
 						onClick={(event) => handleMenuItemEvent(event)}
 						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
 					>
 						<button>
 							<span>Completed</span>
@@ -135,7 +133,6 @@ const ContextMenu = ({
 					<li
 						onClick={(event) => handleMenuItemEvent(event)}
 						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
 					>
 						<button>
 							<span>Forwarded</span>
@@ -145,7 +142,6 @@ const ContextMenu = ({
 					<li
 						onClick={(event) => handleMenuItemEvent(event)}
 						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
 					>
 						<button>
 							<span>Delegated</span>
@@ -155,7 +151,6 @@ const ContextMenu = ({
 					<li
 						onClick={(event) => handleMenuItemEvent(event)}
 						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
 					>
 						<button>
 							<span>Remove</span>
@@ -165,7 +160,6 @@ const ContextMenu = ({
 					<li
 						onClick={(event) => handleMenuItemEvent(event)}
 						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
 					>
 						<button>
 							<span>Cancel</span>

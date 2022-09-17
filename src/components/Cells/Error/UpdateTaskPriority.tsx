@@ -109,6 +109,7 @@ const UpdateTaskPriority = () => {
 		<form
 			className={classes.UpdateTaskPriority}
 			onClick={(e) => e.stopPropagation()}
+			onTouchStart={(e) => e.stopPropagation()}
 		>
 			<h2>Update Task Priority</h2>
 			<fieldset>
