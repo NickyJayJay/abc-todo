@@ -383,7 +383,9 @@ const App = () => {
 
 		if (
 			((e as React.KeyboardEvent).key === 'Enter' ||
-				(e as React.MouseEvent).type === 'click') &&
+				((e as React.MouseEvent).type === 'click' &&
+					(e as React.MouseEvent).clientX !== 0 &&
+					(e as React.MouseEvent).clientY !== 0)) &&
 			priorityCell
 		) {
 			setState({ isError: true });
