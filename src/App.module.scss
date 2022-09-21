@@ -166,7 +166,7 @@
     
                 &:focus-visible {
                   background-color: $highlightColor;
-                  outline: 3px solid $accentColor;
+                  outline: 0;
                 }
               }
             }
