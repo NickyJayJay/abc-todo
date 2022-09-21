@@ -335,18 +335,15 @@ const App = () => {
 		if (!nextFocusableEl || !prevFocusableEl) return;
 
 		if (
-			e.key === 'Enter' ||
-			(e.key === 'Tab' &&
-				!e.shiftKey &&
-				(curFocusableEl.getAttribute('name') === 'priority' ||
-					curFocusableEl.getAttribute('name') === 'description'))
+			curFocusableEl.getAttribute('name') === 'description' &&
+			(e.key === 'Enter' || (e.key === 'Tab' && !e.shiftKey))
 		) {
 			e.preventDefault();
 			(nextFocusableEl as HTMLElement).click();
 		} else if (
 			e.key === 'Tab' &&
 			e.shiftKey &&
-			(curFocusableEl.getAttribute('name') === 'priority' ||
+			((curFocusableEl as HTMLElement).dataset.id === 'priority-cell' ||
 				curFocusableEl.getAttribute('name') === 'description')
 		) {
 			e.preventDefault();

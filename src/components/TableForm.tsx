@@ -74,6 +74,7 @@ const TableForm = ({
 							<ReadOnlyPriority
 								task={task}
 								handleEditTask={handleEditTask}
+								handleEditFormKeyboard={handleEditFormKeyboard}
 								isError={isError}
 								editTask={editTask}
 							/>

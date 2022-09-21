@@ -8,6 +8,7 @@ interface Props {
 		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
 		b: Task
 	) => void;
+	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
 	task: Task;
 	isError: boolean;
 	editTask: EditTask;
@@ -18,6 +19,7 @@ const ReadOnlyPriority = ({
 	task,
 	isError,
 	editTask,
+	handleEditFormKeyboard,
 }: Props) => {
 	const cellRef = useRef<HTMLTableCellElement>(null);
 
@@ -33,14 +35,13 @@ const ReadOnlyPriority = ({
 					? `${classes.priority} ${classes.active}`
 					: classes.priority
 			}
-			onClick={(event) => handleEditTask(event, task)}
-			onKeyUp={(event) => handleEditTask(event, task)}
 			ref={cellRef}
 		>
 			<button
 				data-id='priority-cell'
 				onClick={(event) => handleEditTask(event, task)}
 				onKeyUp={(event) => handleEditTask(event, task)}
+				onKeyDown={(event) => handleEditFormKeyboard(event)}
 			>
 				{task.priority}
 			</button>
