@@ -1,11 +1,11 @@
-import React, { ChangeEvent, forwardRef } from 'react';
+import React, { ChangeEvent, forwardRef, useRef, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import { initializeApp } from 'firebase/app';
 import { firebaseConfig } from '../firebaseConfig';
 
 import ButtonGradient from './UI/Button/ButtonGradient';
 import classes from '../App.module.scss';
-import { EditFormData } from '../ts/interfaces';
+import { EditFormData, EditTask } from '../ts/interfaces';
 import { TaskActionType } from '../ts/enums';
 import { TaskActionShape } from '../ts/types';
 
@@ -16,12 +16,19 @@ interface Props {
 	addFormData: EditFormData;
 	taskDispatch: React.Dispatch<TaskActionShape>;
 	setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
+	editTask: EditTask;
 }
 
 const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
+	useEffect(() => {
+		props.editTask.inputType === 'status-input' && selectRef.current?.focus();
+	}, [props.editTask.inputType]);
+
 	// Initialize Firebase and set bindings
 	const app = initializeApp(firebaseConfig);
 	const url = app.options.databaseURL;
+
+	const selectRef = useRef<HTMLSelectElement>(null);
 
 	const handleAddFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -85,6 +92,7 @@ const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 						value={props.addFormData.status as string}
 						data-id='status-input'
 						aria-label='Select status'
+						ref={selectRef}
 					>
 						<option hidden>Select Status</option>
 						<option disabled defaultValue=''>

@@ -328,7 +328,7 @@ const App = () => {
 		);
 		const i = Array.from(form!.elements).indexOf(e.target as HTMLButtonElement);
 		const j = Array.from(focusableElements).indexOf(e.target as HTMLElement);
-		const curFocusableEl = form!.elements[i];
+		const curFocusableEl = form!.elements[i] || focusableElements[j];
 		const nextFocusableEl = form!.elements[i + 1] || focusableElements[j + 1];
 		const prevFocusableEl = form!.elements[i - 1] || focusableElements[j - 1];
 
@@ -339,6 +339,7 @@ const App = () => {
 			(e.key === 'Enter' || (e.key === 'Tab' && !e.shiftKey))
 		) {
 			e.preventDefault();
+			handleEditFormSubmit(e);
 			(nextFocusableEl as HTMLElement).click();
 		} else if (
 			e.key === 'Tab' &&
@@ -514,6 +515,7 @@ const App = () => {
 					ref={priorityInput}
 					taskDispatch={taskDispatch}
 					setAddFormData={setAddFormData}
+					editTask={editTask}
 				/>
 			</Card>
 		</div>
