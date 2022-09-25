@@ -8,6 +8,7 @@ import classes from '../App.module.scss';
 import { EditFormData, EditTask } from '../ts/interfaces';
 import { TaskActionType } from '../ts/enums';
 import { TaskActionShape } from '../ts/types';
+import { ErrorsAndLoading } from '../ts/interfaces';
 
 interface Props {
 	handleAddFormChange: (
@@ -17,6 +18,8 @@ interface Props {
 	taskDispatch: React.Dispatch<TaskActionShape>;
 	setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 	editTask: EditTask;
+	setState: React.Dispatch<React.SetStateAction<ErrorsAndLoading>>;
+	isError: boolean | undefined;
 }
 
 const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
@@ -70,14 +73,48 @@ const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 		});
 	};
 
-	const handleAddFormKeydown = (e: React.KeyboardEvent) => {
-		if (e.key === 'Enter') {
-			const form = (e.target as HTMLInputElement | HTMLSelectElement).form;
-			const i = Array.from(form!.elements).indexOf(e.target);
-			const nextFormControl = form!.elements[i + 1];
-			(nextFormControl as HTMLElement).focus();
+	const handleAddFormKeydown = (e: React.KeyboardEvent | ChangeEvent) => {
+		(e as React.KeyboardEvent).key === 'Enter' && e.preventDefault();
+
+		const focusableElements = document.querySelectorAll(
+			'a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]'
+		);
+		const i = Array.from(focusableElements).indexOf(e.target as HTMLElement);
+		const nextFocusableEl = focusableElements[i + 1];
+		const prevFocusableEl = focusableElements[i - 1];
+
+		if (!nextFocusableEl || !prevFocusableEl) return;
+
+		if (
+			props.editTask.inputType === 'priority-input' &&
+			(e as React.KeyboardEvent).key !== 'Tab' &&
+			!(e as React.KeyboardEvent).shiftKey
+		) {
 			e.preventDefault();
+			props.setState({ isError: true });
+		} else if (
+			((props.editTask.inputType === 'priority-input' ||
+				props.editTask.inputType === 'status-input') &&
+				(e as React.KeyboardEvent).key) === 'Tab' &&
+			!(e as React.KeyboardEvent).shiftKey
+		) {
+			e.preventDefault();
+			(nextFocusableEl as HTMLElement).click();
+			(nextFocusableEl as HTMLElement).focus();
+		} else if (
+			(e as React.KeyboardEvent).key === 'Tab' &&
+			(e as React.KeyboardEvent).shiftKey
+		) {
+			e.preventDefault();
+			(prevFocusableEl as HTMLElement).click();
 		}
+	};
+
+	const handlePriorityClick = (e: React.MouseEvent) => {
+		e.preventDefault();
+		(e as React.MouseEvent).clientX !== 0 &&
+			(e as React.MouseEvent).clientY !== 0 &&
+			props.setState({ isError: true });
 	};
 
 	return (
@@ -86,7 +123,7 @@ const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 				<fieldset>
 					<legend>Add a Task</legend>
 					<select
-						onChange={props.handleAddFormChange}
+						onChange={(e) => props.handleAddFormChange(e)}
 						onKeyDown={(e) => handleAddFormKeydown(e)}
 						name='status'
 						value={props.addFormData.status as string}
@@ -109,10 +146,16 @@ const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 						data-id='priority-input'
 						placeholder='ABC'
 						value={props.addFormData.priority as string}
-						onChange={(e) => props.handleAddFormChange(e)}
+						onChange={(e) => handleAddFormKeydown(e)}
 						onKeyDown={(e) => handleAddFormKeydown(e)}
+						onClick={(e) => handlePriorityClick(e)}
 						aria-label='Enter task priority'
 						ref={ref}
+						className={
+							props.editTask.inputType === 'priority-input'
+								? classes.active
+								: ''
+						}
 					></input>
 					<input
 						type='text'
@@ -120,7 +163,7 @@ const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 						data-id='description-input'
 						placeholder='Enter task description...'
 						value={props.addFormData.description as string}
-						onChange={props.handleAddFormChange}
+						onChange={(e) => props.handleAddFormChange(e)}
 						onKeyDown={(e) => handleAddFormKeydown(e)}
 						aria-label='Enter task description'
 						maxLength={150}

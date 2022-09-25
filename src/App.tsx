@@ -516,6 +516,8 @@ const App = () => {
 					taskDispatch={taskDispatch}
 					setAddFormData={setAddFormData}
 					editTask={editTask}
+					setState={setState}
+					isError={state.isError}
 				/>
 			</Card>
 		</div>
