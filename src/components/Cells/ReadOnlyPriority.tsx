@@ -21,10 +21,13 @@ const ReadOnlyPriority = ({
 	editTask,
 	handleEditFormKeyboard,
 }: Props) => {
-	const cellRef = useRef<HTMLTableCellElement>(null);
+	const buttonRef = useRef<HTMLButtonElement>(null);
 
 	useEffect(() => {
-		task.id === editTask.rowId && !isError && cellRef.current?.focus();
+		task.id === editTask.rowId &&
+			editTask.inputType === 'priority-cell' &&
+			!isError &&
+			buttonRef.current?.focus();
 	}, [editTask, task.id, isError]);
 
 	return (
@@ -35,13 +38,13 @@ const ReadOnlyPriority = ({
 					? `${classes.priority} ${classes.active}`
 					: classes.priority
 			}
-			ref={cellRef}
 		>
 			<button
 				data-id='priority-cell'
 				onClick={(event) => handleEditTask(event, task)}
 				onKeyUp={(event) => handleEditTask(event, task)}
 				onKeyDown={(event) => handleEditFormKeyboard(event)}
+				ref={buttonRef}
 			>
 				{task.priority}
 			</button>

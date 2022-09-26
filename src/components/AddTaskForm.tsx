@@ -110,7 +110,7 @@ const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 		}
 	};
 
-	const handlePriorityClick = (e: React.MouseEvent) => {
+	const handlePriorityEvent = (e: React.MouseEvent | React.TouchEvent) => {
 		e.preventDefault();
 		(e as React.MouseEvent).clientX !== 0 &&
 			(e as React.MouseEvent).clientY !== 0 &&
@@ -148,7 +148,8 @@ const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 						value={props.addFormData.priority as string}
 						onChange={(e) => handleAddFormKeydown(e)}
 						onKeyDown={(e) => handleAddFormKeydown(e)}
-						onClick={(e) => handlePriorityClick(e)}
+						onTouchEnd={(e) => handlePriorityEvent(e)}
+						onClick={(e) => handlePriorityEvent(e)}
 						aria-label='Enter task priority'
 						ref={ref}
 						className={

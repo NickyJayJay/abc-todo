@@ -31,6 +31,13 @@ const UpdateTaskPriority = () => {
 		isError,
 	} = useContext(PriorityContext);
 
+	useEffect(() => {
+		(editTask.inputType === 'priority-input' ||
+			editTask.inputType === 'priority-cell') &&
+			isError &&
+			radioRef.current?.focus();
+	}, [isError]);
+
 	const letterPriorityHandler = (e: React.FormEvent<HTMLInputElement>) => {
 		if (editTask.inputType === 'priority-cell') {
 			const newFormData: EditFormData = {
@@ -121,6 +128,7 @@ const UpdateTaskPriority = () => {
 						name='letter'
 						value='A'
 						onChange={letterPriorityHandler}
+						ref={radioRef}
 					/>
 					<label>
 						A <span>(Important and time sensitive)</span>
