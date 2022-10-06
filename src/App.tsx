@@ -117,8 +117,8 @@ const App = () => {
 			loadedTasks.sort((a: Task, b: Task) => {
 				const priorityA = a.priority as string;
 				const priorityB = b.priority as string;
-				const [letterA, numA] = priorityA.split(/([1-9]{1,2})/);
-				const [letterB, numB] = priorityB.split(/([1-9]{1,2})/);
+				const [letterA, numA] = priorityA.split(/([0-9]{1,2})/);
+				const [letterB, numB] = priorityB.split(/([0-9]{1,2})/);
 				const priorityNumberA = Number(numA);
 				const priorityNumberB = Number(numB);
 
@@ -131,11 +131,10 @@ const App = () => {
 				if (priorityNumberA > priorityNumberB) return 1;
 				if (priorityNumberA < priorityNumberB) return -1;
 
-				if (priorityA.length === 1) {
-					return -1;
-				} else {
-					return 0;
-				}
+				if (priorityA.length === 1) return 1;
+				if (priorityB.length === 1) return -1;
+
+				return 0;
 			});
 
 			taskDispatch({
