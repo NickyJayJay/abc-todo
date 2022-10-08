@@ -31,6 +31,10 @@
     
           tr {
             cursor: pointer;
+
+            &.completed {
+                background-color: $primaryColor;
+              }
     
             td {
               padding: 0;
@@ -62,6 +66,10 @@
                 &:focus-visible {
                   background-color: $highlightColor;
                   outline: 3px solid $accentColor;
+                }
+
+                &.completed {
+                  color: $accentColor;
                 }
               }
 
@@ -273,11 +281,6 @@
         border: 1px solid $accentColor;
 
         &:focus-visible {
-          background-color: $highlightColor;
-          outline: 3px solid $accentColor;
-        }
-
-        &.active {
           background-color: $highlightColor;
           outline: 3px solid $accentColor;
         }

@@ -45,6 +45,7 @@ const ReadOnlyPriority = ({
 				onKeyUp={(event) => handleEditTask(event, task)}
 				onKeyDown={(event) => handleEditFormKeyboard(event)}
 				ref={buttonRef}
+				className={task.status === 'Completed' ? classes.completed : ''}
 			>
 				{task.priority}
 			</button>

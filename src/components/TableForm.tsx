@@ -25,6 +25,7 @@ interface Props {
 	handleEditFormChange: (e: ChangeEvent<HTMLInputElement>) => void;
 	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
 	isModal: boolean;
+	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 }
 
 const TableForm = ({
@@ -39,6 +40,7 @@ const TableForm = ({
 	handleEditFormChange,
 	handleEditFormKeyboard,
 	isModal,
+	setEditFormData,
 }: Props) => {
 	return (
 		<form onSubmit={handleFormSubmit}>
@@ -51,6 +53,7 @@ const TableForm = ({
 					taskDispatch={taskDispatch}
 					editFormData={editFormData}
 					setEditTask={setEditTask}
+					setEditFormData={setEditFormData}
 				/>
 			)}
 			<table>
@@ -65,7 +68,10 @@ const TableForm = ({
 				</thead>
 				<tbody ref={outsideClickRef}>
 					{tasks.map((task) => (
-						<tr key={task.id}>
+						<tr
+							key={task.id}
+							className={task.status === 'Completed' ? classes.completed : ''}
+						>
 							<ReadOnlyStatus
 								task={task}
 								handleEditTask={handleEditTask}

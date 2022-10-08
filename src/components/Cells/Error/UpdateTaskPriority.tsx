@@ -47,7 +47,9 @@ const UpdateTaskPriority = () => {
 				numberPriority: Math.abs(
 					Number((e.target as HTMLInputElement).value.slice(0, 2))
 				).toString(),
-				priority: letterPriority + (e.target as HTMLInputElement).value,
+				priority:
+					letterPriority +
+					parseInt((e.target as HTMLInputElement).value.slice(0, 2), 10),
 			};
 			setEditFormData(newFormData);
 		} else {
