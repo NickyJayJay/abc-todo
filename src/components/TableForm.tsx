@@ -26,6 +26,7 @@ interface Props {
 	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
 	isModal: boolean;
 	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
+	sortList: (loadedTasks: Task[]) => void;
 }
 
 const TableForm = ({
@@ -41,6 +42,7 @@ const TableForm = ({
 	handleEditFormKeyboard,
 	isModal,
 	setEditFormData,
+	sortList,
 }: Props) => {
 	return (
 		<form onSubmit={handleFormSubmit}>
@@ -54,6 +56,7 @@ const TableForm = ({
 					editFormData={editFormData}
 					setEditTask={setEditTask}
 					setEditFormData={setEditFormData}
+					sortList={sortList}
 				/>
 			)}
 			<table>

@@ -24,6 +24,7 @@ interface Props {
 	editFormData: EditFormData;
 	setEditTask: React.Dispatch<React.SetStateAction<EditTask>>;
 	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
+	sortList: (loadedTasks: Task[]) => void;
 }
 
 // Initialize Firebase and set bindings
@@ -39,6 +40,7 @@ const ContextMenu = ({
 	editFormData,
 	setEditTask,
 	setEditFormData,
+	sortList,
 }: Props) => {
 	const handleDeleteChange = (taskId: EditTask['rowId']) => {
 		const index = tasks.findIndex((task) => task.id === taskId);
@@ -107,6 +109,7 @@ const ContextMenu = ({
 		update(dbRef, editedTask);
 
 		setEditTask({ ...editTask, showMenu: false });
+		sortList(newTasks);
 	};
 
 	return (
