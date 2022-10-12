@@ -296,6 +296,8 @@ const App = () => {
 			data: newTasks,
 		});
 
+		sortList(newTasks);
+
 		const dbRef = ref(db, `tasks/${editTask.rowId}`);
 		update(dbRef, editedTask);
 	};
