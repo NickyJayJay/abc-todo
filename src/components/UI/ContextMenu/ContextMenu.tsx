@@ -14,6 +14,7 @@ import close from '../../../assets/SVG/close-regular.svg';
 import { Task, TaskActionShape } from '../../../ts/types';
 import { EditTask, EditFormData } from '../../../ts/interfaces';
 import { TaskActionType } from '../../../ts/enums';
+import { sortList } from '../../../App';
 
 interface Props {
 	xPos?: string | null;
@@ -24,7 +25,6 @@ interface Props {
 	editFormData: EditFormData;
 	setEditTask: React.Dispatch<React.SetStateAction<EditTask>>;
 	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
-	sortList: (loadedTasks: Task[]) => void;
 }
 
 // Initialize Firebase and set bindings
@@ -40,7 +40,6 @@ const ContextMenu = ({
 	editFormData,
 	setEditTask,
 	setEditFormData,
-	sortList,
 }: Props) => {
 	const handleDeleteChange = (taskId: EditTask['rowId']) => {
 		const index = tasks.findIndex((task) => task.id === taskId);

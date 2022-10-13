@@ -1,4 +1,5 @@
 import { Reducer } from 'react';
+import { sortList } from './App';
 import { Task, TaskActionShape } from './ts/types';
 import { TaskActionType } from './ts/enums';
 
@@ -10,7 +11,7 @@ export const taskReducer: Reducer<Task[], TaskActionShape> = (
 		case TaskActionType.SET:
 			return action.data;
 		case TaskActionType.ADD:
-			return [
+			let sortedTasks = [
 				...state,
 				{
 					id: action.payload.id,
@@ -20,6 +21,9 @@ export const taskReducer: Reducer<Task[], TaskActionShape> = (
 					description: action.payload.description,
 				},
 			];
+
+			sortList(sortedTasks);
+			return sortedTasks;
 		case TaskActionType.REMOVE:
 			return state.filter((_, index) => index !== action.index);
 		default:

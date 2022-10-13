@@ -39,19 +39,11 @@ const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 	const handleAddFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const newTask = {
-			id: nanoid(),
-			key: nanoid(),
-			status: props.addFormData.status,
-			priority: props.addFormData.priority,
-			description: props.addFormData.description,
-		};
-
 		props.taskDispatch({
 			type: TaskActionType.ADD,
 			payload: {
-				id: newTask.id,
-				key: newTask.key,
+				id: nanoid(),
+				key: nanoid(),
 				status: props.addFormData.status,
 				priority: props.addFormData.priority,
 				description: props.addFormData.description,

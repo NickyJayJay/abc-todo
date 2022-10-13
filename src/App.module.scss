@@ -33,7 +33,10 @@
             cursor: pointer;
 
             &.completed {
-                background-color: $primaryColor;
+                td {
+                  background-color: $primaryColor;
+                  background-clip: padding-box;
+                }
               }
     
             td {
