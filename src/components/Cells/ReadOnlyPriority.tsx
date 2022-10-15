@@ -1,25 +1,54 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 
 import classes from '../../App.module.scss';
 import { Task } from '../../ts/types';
+import { EditTask } from '../../ts/interfaces';
 interface Props {
 	handleEditTask: (
 		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
 		b: Task
 	) => void;
+	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
 	task: Task;
+	isModal: boolean;
+	editTask: EditTask;
 }
 
-const ReadOnlyPriority = ({ handleEditTask, task }: Props) => {
+const ReadOnlyPriority = ({
+	handleEditTask,
+	task,
+	isModal,
+	editTask,
+	handleEditFormKeyboard,
+}: Props) => {
+	const buttonRef = useRef<HTMLButtonElement>(null);
+
+	useEffect(() => {
+		task.id === editTask.rowId &&
+			editTask.inputType === 'priority-cell' &&
+			!isModal &&
+			buttonRef.current?.focus();
+	}, [editTask, task.id, isModal]);
+
 	return (
 		<td
 			data-id='priority-cell'
-			className={classes.priority}
-			onTouchStart={(event) => handleEditTask(event, task)}
-			onClick={(event) => handleEditTask(event, task)}
-			onKeyUp={(event) => handleEditTask(event, task)}
+			className={
+				task.id === editTask.rowId && editTask.inputType === 'priority-cell'
+					? `${classes.priority} ${classes.active}`
+					: classes.priority
+			}
 		>
-			<button data-id='priority-cell'>{task.priority}</button>
+			<button
+				data-id='priority-cell'
+				onClick={(event) => handleEditTask(event, task)}
+				onKeyUp={(event) => handleEditTask(event, task)}
+				onKeyDown={(event) => handleEditFormKeyboard(event)}
+				ref={buttonRef}
+				className={task.status === 'Completed' ? classes.completed : ''}
+			>
+				{task.priority}
+			</button>
 		</td>
 	);
 };

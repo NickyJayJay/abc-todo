@@ -19,7 +19,12 @@ const ReadOnlyDescription = ({ handleEditTask, task }: Props) => {
 			onClick={(event) => handleEditTask(event, task)}
 			onKeyUp={(event) => handleEditTask(event, task)}
 		>
-			<button data-id='description-cell'>{task.description}</button>
+			<button
+				data-id='description-cell'
+				className={task.status === 'Completed' ? classes.completed : ''}
+			>
+				{task.description}
+			</button>
 		</td>
 	);
 };

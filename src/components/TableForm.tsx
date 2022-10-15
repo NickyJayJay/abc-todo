@@ -1,6 +1,5 @@
 import React, { ChangeEvent, RefObject } from 'react';
 
-import EditablePriority from './Cells/EditablePriority';
 import EditableDescription from './Cells/EditableDescription';
 import ReadOnlyStatus from './Cells/ReadOnlyStatus';
 import ReadOnlyPriority from './Cells/ReadOnlyPriority';
@@ -12,7 +11,7 @@ import { EditTask, EditFormData } from '../ts/interfaces';
 import { Task, TaskActionShape } from '../ts/types';
 
 interface Props {
-	handleEditFormSubmit: (e: React.FormEvent<Element>) => void;
+	handleFormSubmit: (e: React.FormEvent<Element>) => void;
 	editTask: EditTask;
 	outsideClickRef: RefObject<HTMLTableSectionElement>;
 	tasks: Task[];
@@ -25,11 +24,12 @@ interface Props {
 	setEditTask: React.Dispatch<React.SetStateAction<EditTask>>;
 	handleEditFormChange: (e: ChangeEvent<HTMLInputElement>) => void;
 	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
-	isError: boolean;
+	isModal: boolean;
+	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 }
 
 const TableForm = ({
-	handleEditFormSubmit,
+	handleFormSubmit,
 	editTask,
 	outsideClickRef,
 	tasks,
@@ -39,10 +39,11 @@ const TableForm = ({
 	setEditTask,
 	handleEditFormChange,
 	handleEditFormKeyboard,
-	isError,
+	isModal,
+	setEditFormData,
 }: Props) => {
 	return (
-		<form onSubmit={handleEditFormSubmit}>
+		<form onSubmit={handleFormSubmit}>
 			{editTask.showMenu && (
 				<ContextMenu
 					xPos={editTask.xPos}
@@ -52,6 +53,7 @@ const TableForm = ({
 					taskDispatch={taskDispatch}
 					editFormData={editFormData}
 					setEditTask={setEditTask}
+					setEditFormData={setEditFormData}
 				/>
 			)}
 			<table>
@@ -66,32 +68,27 @@ const TableForm = ({
 				</thead>
 				<tbody ref={outsideClickRef}>
 					{tasks.map((task) => (
-						<tr key={task.id}>
+						<tr
+							key={task.id}
+							className={task.status === 'Completed' ? classes.completed : ''}
+						>
 							<ReadOnlyStatus
 								task={task}
 								handleEditTask={handleEditTask}
 								editTask={editTask}
 							/>
-							{editTask.inputType === 'priority-cell' &&
-							editTask.rowId === task.id ? (
-								<EditablePriority
-									taskPriority={editFormData.priority}
-									handleEditFormChange={handleEditFormChange}
-									handleEditFormSubmit={handleEditFormSubmit}
-									handleEditFormKeyboard={handleEditFormKeyboard}
-									taskId={task.id}
-									isError={isError}
-									rowId={editTask.rowId}
-									inputType={editTask.inputType}
-								/>
-							) : (
-								<ReadOnlyPriority task={task} handleEditTask={handleEditTask} />
-							)}
+							<ReadOnlyPriority
+								task={task}
+								handleEditTask={handleEditTask}
+								handleEditFormKeyboard={handleEditFormKeyboard}
+								isModal={isModal}
+								editTask={editTask}
+							/>
 							{editTask.inputType === 'description-cell' &&
 							editTask.rowId === task.id ? (
 								<EditableDescription
 									handleEditFormChange={handleEditFormChange}
-									handleEditFormSubmit={handleEditFormSubmit}
+									handleFormSubmit={handleFormSubmit}
 									handleEditFormKeyboard={handleEditFormKeyboard}
 									taskId={task.id}
 									rowId={editTask.rowId}

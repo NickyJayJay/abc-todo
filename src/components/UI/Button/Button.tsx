@@ -6,6 +6,7 @@ interface Props {
 	type: 'submit' | 'button' | 'reset' | undefined;
 	children: React.ReactNode;
 	onClick: (event: React.MouseEvent) => void;
+	onTouchStart: (event: React.TouchEvent) => void;
 	disabled: boolean;
 }
 

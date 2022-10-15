@@ -23,13 +23,43 @@ import { EditTask, EditFormData, ErrorsAndLoading } from './ts/interfaces';
 import { TaskActionType } from './ts/enums';
 import { taskReducer } from './reducers';
 
+export const sortList = (loadedTasks: Task[]) => {
+	loadedTasks.sort((a: Task, b: Task) => {
+		const priorityA = a.priority as string;
+		const priorityB = b.priority as string;
+		const statusA = a.status as string;
+		const statusB = b.status as string;
+		const [letterA, numA] = priorityA.split(/([0-9]{1,2})/);
+		const [letterB, numB] = priorityB.split(/([0-9]{1,2})/);
+		const priorityNumberA = Number(numA);
+		const priorityNumberB = Number(numB);
+
+		if (priorityA === '' && priorityB !== '') return 1;
+		if (priorityB === '' && priorityA !== '') return -1;
+
+		if (statusA === 'Completed' && statusB !== 'Completed') return 1;
+		if (statusA !== 'Completed' && statusB === 'Completed') return -1;
+
+		if (letterA > letterB) return 1;
+		if (letterA < letterB) return -1;
+
+		if (priorityNumberA > priorityNumberB) return 1;
+		if (priorityNumberA < priorityNumberB) return -1;
+
+		if (priorityA.length === 1 && priorityB.length !== 1) return 1;
+		if (priorityB.length === 1 && priorityA.length !== 1) return -1;
+
+		return 0;
+	});
+};
+
 const App = () => {
 	const [tasks, taskDispatch] = useReducer(taskReducer, []);
 
 	const [state, setState] = useState<ErrorsAndLoading>({
 		isLoading: true,
 		httpError: null,
-		isError: false,
+		isModal: false,
 	});
 
 	const [addFormData, setAddFormData] = useState<EditFormData>({
@@ -68,25 +98,25 @@ const App = () => {
 
 	useEffect(() => {
 		editTask.inputType === 'priority-input' &&
-			!state.isError &&
+			!state.isModal &&
 			priorityInput.current?.focus();
-	}, [state.isError, editTask.inputType, priorityInput]);
+	}, [state.isModal, editTask.inputType, priorityInput]);
 
 	useEffect(() => {
-		if (editTask.showMenu || state.isError) {
+		if (editTask.showMenu || state.isModal) {
 			document.body.classList.add('lockScroll');
 			document.body.style.top = `-${window.scrollY}px`;
 		}
-		if (!editTask.showMenu && !state.isError) {
+		if (!editTask.showMenu && !state.isModal) {
 			document.body.classList.remove('lockScroll');
 			document.body.style.top = '';
 		}
-	}, [editTask.showMenu, state.isError]);
+	}, [editTask.showMenu, state.isModal]);
 
 	useEffect(() => {
 		const close = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
-				state.isError && hideModalHandler(e);
+				state.isModal && hideModalHandler(e);
 				editTask.showMenu && setEditTask({ ...editTask, showMenu: false });
 			}
 		};
@@ -113,6 +143,9 @@ const App = () => {
 					description: responseData[key].description,
 				});
 			}
+
+			sortList(loadedTasks);
+
 			taskDispatch({
 				type: TaskActionType.SET,
 				data: loadedTasks,
@@ -224,56 +257,27 @@ const App = () => {
 
 		const fieldName = (e.target as HTMLInputElement).getAttribute('name');
 		if (!fieldName) return;
-		const fieldValue =
-			fieldName === 'priority'
-				? (e.target as HTMLInputElement).value.toUpperCase()
-				: (e.target as HTMLInputElement).value;
+		const fieldValue = (e.target as HTMLInputElement).value;
 
 		const newFormData = { ...addFormData };
 		newFormData[fieldName as keyof typeof newFormData] = fieldValue;
 
-		handlePriorityValidation(fieldValue, fieldName, newFormData);
-
 		setAddFormData(newFormData);
-	};
-
-	const handlePriorityValidation = (
-		fieldValue: string,
-		fieldName: string | null,
-		newFormData: EditFormData
-	) => {
-		if (fieldName !== 'priority') return;
-
-		if (
-			/^([ABC]?|[ABC][1-9]?|[ABC][1-9][0-9])?$/i.test(fieldValue) &&
-			fieldValue.length <= 3
-		) {
-			setState({ isError: false });
-		} else if (editTask.inputType === 'priority-cell') {
-			newFormData[fieldName] = editFormData.priority;
-			setState({ isError: true });
-		} else if (editTask.inputType === 'priority-input') {
-			newFormData[fieldName] = addFormData.priority;
-			setState({ isError: true });
-		}
 	};
 
 	const handleEditFormChange = (e: ChangeEvent<HTMLInputElement>) => {
 		e.preventDefault();
 
 		const fieldName = e.target.getAttribute('name');
-		const fieldValue =
-			fieldName === 'priority' ? e.target.value.toUpperCase() : e.target.value;
+		const fieldValue = e.target.value;
 
 		const newFormData = { ...editFormData };
 		newFormData[fieldName as keyof typeof newFormData] = fieldValue;
 
-		handlePriorityValidation(fieldValue, fieldName, newFormData);
-
 		setEditFormData(newFormData);
 	};
 
-	const handleEditFormSubmit = (e: React.FormEvent) => {
+	const handleFormSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 
 		const editedTask = {
@@ -292,6 +296,8 @@ const App = () => {
 			data: newTasks,
 		});
 
+		sortList(newTasks);
+
 		const dbRef = ref(db, `tasks/${editTask.rowId}`);
 		update(dbRef, editedTask);
 	};
@@ -303,25 +309,23 @@ const App = () => {
 		);
 		const i = Array.from(form!.elements).indexOf(e.target as HTMLButtonElement);
 		const j = Array.from(focusableElements).indexOf(e.target as HTMLElement);
-		const curFocusableEl = form!.elements[i];
+		const curFocusableEl = form!.elements[i] || focusableElements[j];
 		const nextFocusableEl = form!.elements[i + 1] || focusableElements[j + 1];
 		const prevFocusableEl = form!.elements[i - 1] || focusableElements[j - 1];
 
 		if (!nextFocusableEl || !prevFocusableEl) return;
 
 		if (
-			e.key === 'Enter' ||
-			(e.key === 'Tab' &&
-				!e.shiftKey &&
-				(curFocusableEl.getAttribute('name') === 'priority' ||
-					curFocusableEl.getAttribute('name') === 'description'))
+			curFocusableEl.getAttribute('name') === 'description' &&
+			(e.key === 'Enter' || (e.key === 'Tab' && !e.shiftKey))
 		) {
 			e.preventDefault();
+			handleFormSubmit(e);
 			(nextFocusableEl as HTMLElement).click();
 		} else if (
 			e.key === 'Tab' &&
 			e.shiftKey &&
-			(curFocusableEl.getAttribute('name') === 'priority' ||
+			((curFocusableEl as HTMLElement).dataset.id === 'priority-cell' ||
 				curFocusableEl.getAttribute('name') === 'description')
 		) {
 			e.preventDefault();
@@ -337,7 +341,6 @@ const App = () => {
 		const newFormData = { ...editFormData };
 		newFormData[fieldName as keyof typeof newFormData] = fieldValue;
 
-		handlePriorityValidation(fieldValue, fieldName, newFormData);
 		setEditFormData(newFormData);
 	};
 
@@ -345,7 +348,8 @@ const App = () => {
 		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent,
 		task: Task
 	) => {
-		let statusCell = (e.target as HTMLElement).dataset.id === 'status-cell';
+		let statusCell = (e.target as HTMLElement).dataset.id === 'status-cell',
+			priorityCell = (e.target as HTMLElement).dataset.id === 'priority-cell';
 
 		if (
 			((e as React.KeyboardEvent).key === 'Tab' ||
@@ -354,6 +358,16 @@ const App = () => {
 			statusCell
 		)
 			return;
+
+		if (
+			((e as React.KeyboardEvent).key === 'Enter' ||
+				((e as React.MouseEvent).type === 'click' &&
+					(e as React.MouseEvent).clientX !== 0 &&
+					(e as React.MouseEvent).clientY !== 0)) &&
+			priorityCell
+		) {
+			setState({ isModal: true });
+		}
 
 		e.stopPropagation();
 		statusCell && e.preventDefault();
@@ -387,7 +401,7 @@ const App = () => {
 	};
 
 	const hideModalHandler = (
-		e: React.MouseEvent | TouchEvent | KeyboardEvent
+		e: React.MouseEvent | React.TouchEvent | KeyboardEvent
 	) => {
 		e.stopPropagation();
 		if ((e as KeyboardEvent).key === 'Tab') return;
@@ -407,7 +421,9 @@ const App = () => {
 			};
 			setAddFormData(newFormData);
 		}
-		setState({ isError: false });
+		setTimeout(() => {
+			setState({ isModal: false });
+		}, 250);
 	};
 
 	if (state.httpError) {
@@ -428,7 +444,7 @@ const App = () => {
 
 	return (
 		<div className={classes.appContainer}>
-			{state.isError &&
+			{state.isModal &&
 				(editTask.inputType === 'priority-cell' ||
 					editTask.inputType === 'priority-input') && (
 					<PriorityContext.Provider
@@ -448,8 +464,11 @@ const App = () => {
 									? editFormData.numberPriority
 									: addFormData.numberPriority,
 							editMode: editTask.inputType,
-							handleEditFormSubmit,
+							handleFormSubmit,
 							handleAddFormChange,
+							tasks: tasks,
+							taskDispatch: taskDispatch,
+							isModal: state.isModal,
 						}}
 					>
 						<Modal onHide={hideModalHandler} />
@@ -457,7 +476,7 @@ const App = () => {
 				)}
 			<Card className={`${classes.card} card`}>
 				<TableForm
-					handleEditFormSubmit={handleEditFormSubmit}
+					handleFormSubmit={handleFormSubmit}
 					editTask={editTask}
 					outsideClickRef={outsideClickRef}
 					tasks={tasks}
@@ -467,7 +486,8 @@ const App = () => {
 					setEditTask={setEditTask}
 					handleEditFormChange={handleEditFormChange}
 					handleEditFormKeyboard={handleEditFormKeyboard}
-					isError={state.isError as boolean}
+					isModal={state.isModal as boolean}
+					setEditFormData={setEditFormData}
 				/>
 
 				<AddTaskForm
@@ -476,6 +496,9 @@ const App = () => {
 					ref={priorityInput}
 					taskDispatch={taskDispatch}
 					setAddFormData={setAddFormData}
+					editTask={editTask}
+					setState={setState}
+					isModal={state.isModal}
 				/>
 			</Card>
 		</div>

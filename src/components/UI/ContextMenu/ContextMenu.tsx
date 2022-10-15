@@ -14,6 +14,7 @@ import close from '../../../assets/SVG/close-regular.svg';
 import { Task, TaskActionShape } from '../../../ts/types';
 import { EditTask, EditFormData } from '../../../ts/interfaces';
 import { TaskActionType } from '../../../ts/enums';
+import { sortList } from '../../../App';
 
 interface Props {
 	xPos?: string | null;
@@ -23,6 +24,7 @@ interface Props {
 	taskDispatch: React.Dispatch<TaskActionShape>;
 	editFormData: EditFormData;
 	setEditTask: React.Dispatch<React.SetStateAction<EditTask>>;
+	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 }
 
 // Initialize Firebase and set bindings
@@ -37,6 +39,7 @@ const ContextMenu = ({
 	taskDispatch,
 	editFormData,
 	setEditTask,
+	setEditFormData,
 }: Props) => {
 	const handleDeleteChange = (taskId: EditTask['rowId']) => {
 		const index = tasks.findIndex((task) => task.id === taskId);
@@ -71,13 +74,6 @@ const ContextMenu = ({
 			menuValue = (e.target as HTMLElement).childNodes[0].textContent;
 		}
 
-		const editedTask: Task = {
-			id: editTask.rowId,
-			status: menuValue || null,
-			priority: editFormData.priority,
-			description: editFormData.description,
-		};
-
 		if (menuValue === 'Remove') {
 			handleDeleteChange(editTask.rowId);
 			setEditTask({ ...editTask, showMenu: false });
@@ -88,6 +84,18 @@ const ContextMenu = ({
 			setEditTask({ ...editTask, showMenu: false });
 			return;
 		}
+
+		if (menuValue === 'Completed') {
+			setEditFormData({ ...editFormData, priority: '' });
+			setEditTask({ ...editTask, showMenu: false });
+		}
+
+		const editedTask: Task = {
+			id: editTask.rowId,
+			status: menuValue || null,
+			priority: menuValue !== 'Completed' ? editFormData.priority! : '',
+			description: editFormData.description,
+		};
 
 		const newTasks = [...tasks];
 		const index = tasks.findIndex((task) => task.id === editTask.rowId);
@@ -100,6 +108,7 @@ const ContextMenu = ({
 		update(dbRef, editedTask);
 
 		setEditTask({ ...editTask, showMenu: false });
+		sortList(newTasks);
 	};
 
 	return (
@@ -111,62 +120,38 @@ const ContextMenu = ({
 					left: xPos as string,
 				}}
 			>
-				<ul>
-					<li
-						onClick={(event) => handleMenuItemEvent(event)}
-						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
-					>
+				<ul onTouchStart={(event) => event.stopPropagation()}>
+					<li onClick={(event) => handleMenuItemEvent(event)}>
 						<button>
 							<span>In Process</span>
 							<img src={dot} alt='in process icon' />
 						</button>
 					</li>
-					<li
-						onClick={(event) => handleMenuItemEvent(event)}
-						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
-					>
+					<li onClick={(event) => handleMenuItemEvent(event)}>
 						<button>
-							<span>Completed</span>
+							<span className={classes.completed}>Completed</span>
 							<img src={checkmark} alt='completed icon' />
 						</button>
 					</li>
-					<li
-						onClick={(event) => handleMenuItemEvent(event)}
-						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
-					>
+					<li onClick={(event) => handleMenuItemEvent(event)}>
 						<button>
 							<span>Forwarded</span>
 							<img src={arrowRight} alt='forwarded icon' />
 						</button>
 					</li>
-					<li
-						onClick={(event) => handleMenuItemEvent(event)}
-						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
-					>
+					<li onClick={(event) => handleMenuItemEvent(event)}>
 						<button>
 							<span>Delegated</span>
 							<img src={add} alt='delegated icon' />
 						</button>
 					</li>
-					<li
-						onClick={(event) => handleMenuItemEvent(event)}
-						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
-					>
+					<li onClick={(event) => handleMenuItemEvent(event)}>
 						<button>
 							<span>Remove</span>
 							<img src={trash} alt='removed icon' />
 						</button>
 					</li>
-					<li
-						onClick={(event) => handleMenuItemEvent(event)}
-						onKeyDown={(event) => handleMenuItemEvent(event)}
-						onTouchStart={(event) => handleMenuItemEvent(event)}
-					>
+					<li onClick={(event) => handleMenuItemEvent(event)}>
 						<button>
 							<span>Cancel</span>
 							<img src={close} alt='close icon' />
