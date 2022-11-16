@@ -22,6 +22,7 @@ import { Task } from './ts/types';
 import { EditTask, EditFormData, ErrorsAndLoading } from './ts/interfaces';
 import { TaskActionType } from './ts/enums';
 import { taskReducer } from './reducers';
+import { handleMenuItemEvent } from './components/UI/ContextMenu/handleMenuItemEvent';
 
 export const sortList = (loadedTasks: Task[]) => {
 	loadedTasks.sort((a: Task, b: Task) => {
@@ -332,7 +333,7 @@ const App = () => {
 			(prevFocusableEl as HTMLElement).click();
 		}
 
-		const fieldName = e.target.getAttribute('name');
+		const fieldName = (e.target as Element).getAttribute('name');
 		const fieldValue =
 			fieldName === 'priority'
 				? (e.target as HTMLInputElement | HTMLSelectElement).value.toUpperCase()
@@ -478,6 +479,7 @@ const App = () => {
 				<TableForm
 					handleFormSubmit={handleFormSubmit}
 					editTask={editTask}
+					showMenu={editTask.showMenu}
 					outsideClickRef={outsideClickRef}
 					tasks={tasks}
 					taskDispatch={taskDispatch}
@@ -488,6 +490,7 @@ const App = () => {
 					handleEditFormKeyboard={handleEditFormKeyboard}
 					isModal={state.isModal as boolean}
 					setEditFormData={setEditFormData}
+					handleMenuItemEvent={handleMenuItemEvent}
 				/>
 
 				<AddTaskForm

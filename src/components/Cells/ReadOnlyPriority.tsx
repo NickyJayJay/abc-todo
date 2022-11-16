@@ -41,6 +41,7 @@ const ReadOnlyPriority = ({
 		>
 			<button
 				data-id='priority-cell'
+				aria-label='priority'
 				onClick={(event) => handleEditTask(event, task)}
 				onKeyUp={(event) => handleEditTask(event, task)}
 				onKeyDown={(event) => handleEditFormKeyboard(event)}

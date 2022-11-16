@@ -1,3 +1,6 @@
+import { Database, DatabaseReference } from 'firebase/database';
+import { Task, TaskActionShape } from './types';
+import { TaskActionType } from './enums';
 export interface EditTask {
 	rowId: string | null;
 	inputType: string | null | undefined;
@@ -19,4 +22,17 @@ export interface ErrorsAndLoading {
 	isLoading?: boolean;
 	httpError?: string | null;
 	isModal?: boolean;
+}
+export interface Menu {
+	editTask: EditTask;
+	setEditTask: (a: React.SetStateAction<EditTask>) => void;
+	editFormData: EditFormData;
+	setEditFormData: (a: React.SetStateAction<EditFormData>) => void;
+	sortList: (a: Task[]) => void;
+	tasks: Task[];
+	taskDispatch: (a: TaskActionShape) => void;
+	ref: (a: Database, b: string) => DatabaseReference;
+	db: Database;
+	update: (a: DatabaseReference, b: object) => Promise<void>;
+	remove: (a: DatabaseReference) => Promise<void>;
 }

@@ -9,28 +9,32 @@ import checkBox from '../assets/SVG/checkBox.svg';
 import classes from '../App.module.scss';
 import { EditTask, EditFormData } from '../ts/interfaces';
 import { Task, TaskActionShape } from '../ts/types';
+import { handleMenuItemEvent } from '../components/UI/ContextMenu/handleMenuItemEvent';
 
 interface Props {
-	handleFormSubmit: (e: React.FormEvent<Element>) => void;
-	editTask: EditTask;
-	outsideClickRef: RefObject<HTMLTableSectionElement>;
+	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
+	editTask?: EditTask;
+	showMenu?: boolean;
+	outsideClickRef?: RefObject<HTMLTableSectionElement>;
 	tasks: Task[];
-	taskDispatch: React.Dispatch<TaskActionShape>;
-	handleEditTask: (
+	taskDispatch?: React.Dispatch<TaskActionShape>;
+	handleEditTask?: (
 		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
 		b: Task
 	) => void;
-	editFormData: EditFormData;
-	setEditTask: React.Dispatch<React.SetStateAction<EditTask>>;
-	handleEditFormChange: (e: ChangeEvent<HTMLInputElement>) => void;
-	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
-	isModal: boolean;
-	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
+	editFormData?: EditFormData;
+	setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
+	handleEditFormChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+	handleEditFormKeyboard?: (e: React.KeyboardEvent) => void;
+	isModal?: boolean;
+	setEditFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
+	handleMenuItemEvent: typeof handleMenuItemEvent;
 }
 
 const TableForm = ({
 	handleFormSubmit,
 	editTask,
+	showMenu,
 	outsideClickRef,
 	tasks,
 	taskDispatch,
@@ -41,19 +45,21 @@ const TableForm = ({
 	handleEditFormKeyboard,
 	isModal,
 	setEditFormData,
+	handleMenuItemEvent,
 }: Props) => {
 	return (
 		<form onSubmit={handleFormSubmit}>
-			{editTask.showMenu && (
+			{showMenu && (
 				<ContextMenu
-					xPos={editTask.xPos}
-					yPos={editTask.yPos}
-					editTask={editTask}
+					xPos={editTask!.xPos}
+					yPos={editTask!.yPos}
+					editTask={editTask!}
 					tasks={tasks}
-					taskDispatch={taskDispatch}
-					editFormData={editFormData}
-					setEditTask={setEditTask}
-					setEditFormData={setEditFormData}
+					taskDispatch={taskDispatch!}
+					editFormData={editFormData!}
+					setEditTask={setEditTask!}
+					setEditFormData={setEditFormData!}
+					handleMenuItemEvent={handleMenuItemEvent}
 				/>
 			)}
 			<table>
@@ -67,38 +73,38 @@ const TableForm = ({
 					</tr>
 				</thead>
 				<tbody ref={outsideClickRef}>
-					{tasks.map((task) => (
+					{tasks!.map((task) => (
 						<tr
 							key={task.id}
 							className={task.status === 'Completed' ? classes.completed : ''}
 						>
 							<ReadOnlyStatus
 								task={task}
-								handleEditTask={handleEditTask}
-								editTask={editTask}
+								handleEditTask={handleEditTask!}
+								editTask={editTask!}
 							/>
 							<ReadOnlyPriority
 								task={task}
-								handleEditTask={handleEditTask}
-								handleEditFormKeyboard={handleEditFormKeyboard}
-								isModal={isModal}
-								editTask={editTask}
+								handleEditTask={handleEditTask!}
+								handleEditFormKeyboard={handleEditFormKeyboard!}
+								isModal={isModal!}
+								editTask={editTask!}
 							/>
-							{editTask.inputType === 'description-cell' &&
-							editTask.rowId === task.id ? (
+							{editTask!.inputType === 'description-cell' &&
+							editTask!.rowId === task.id ? (
 								<EditableDescription
-									handleEditFormChange={handleEditFormChange}
-									handleFormSubmit={handleFormSubmit}
-									handleEditFormKeyboard={handleEditFormKeyboard}
+									handleEditFormChange={handleEditFormChange!}
+									handleFormSubmit={handleFormSubmit!}
+									handleEditFormKeyboard={handleEditFormKeyboard!}
 									taskId={task.id}
-									rowId={editTask.rowId}
-									inputType={editTask.inputType}
-									taskDescription={editFormData.description}
+									rowId={editTask!.rowId}
+									inputType={editTask!.inputType}
+									taskDescription={editFormData!.description}
 								/>
 							) : (
 								<ReadOnlyDescription
 									task={task}
-									handleEditTask={handleEditTask}
+									handleEditTask={handleEditTask!}
 								/>
 							)}
 						</tr>

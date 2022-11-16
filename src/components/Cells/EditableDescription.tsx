@@ -40,6 +40,7 @@ const EditableDescription = ({
 				type='text'
 				placeholder='Enter a task description...'
 				name='description'
+				aria-label='description'
 				value={taskDescription as string}
 				onChange={(event) => handleEditFormChange(event)}
 				onKeyDown={(event) => handleEditFormKeyboard(event)}

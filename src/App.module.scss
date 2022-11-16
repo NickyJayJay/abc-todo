@@ -33,8 +33,9 @@
             cursor: pointer;
 
             &.completed {
+              background-color: #eceaea;
+              
                 td {
-                  background-color: $primaryColor;
                   background-clip: padding-box;
                 }
               }
@@ -72,7 +73,7 @@
                 }
 
                 &.completed {
-                  color: $accentColor;
+                  color: #6e6e6e;
                 }
               }
 
