@@ -478,6 +478,7 @@ const App = () => {
 				<TableForm
 					handleFormSubmit={handleFormSubmit}
 					editTask={editTask}
+					showMenu={editTask.showMenu}
 					outsideClickRef={outsideClickRef}
 					tasks={tasks}
 					taskDispatch={taskDispatch}
