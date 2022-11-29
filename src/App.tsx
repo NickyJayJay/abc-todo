@@ -332,7 +332,7 @@ const App = () => {
 			(prevFocusableEl as HTMLElement).click();
 		}
 
-		const fieldName = e.target.getAttribute('name');
+		const fieldName = (e.target as Element).getAttribute('name');
 		const fieldValue =
 			fieldName === 'priority'
 				? (e.target as HTMLInputElement | HTMLSelectElement).value.toUpperCase()

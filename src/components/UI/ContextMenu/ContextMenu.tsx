@@ -115,7 +115,7 @@ const ContextMenu = ({
 		<FocusLock returnFocus>
 			<div
 				role='menu'
-				className={`${classes.contextMenu} card`}
+				className={`${classes.contextMenu} card menu`}
 				style={{
 					top: yPos as string,
 					left: xPos as string,
