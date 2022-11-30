@@ -1,5 +1,5 @@
 const config = {
-	setupFilesAfterEnv: ['./src/setupTests.js'],
+	setupFilesAfterEnv: ['./src/setupTests.ts'],
 };
 
 module.exports = config;

@@ -1,7 +1,14 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import {
+	render,
+	screen,
+	fireEvent,
+	within,
+	waitFor,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import TableForm from '../../../TableForm';
+import ContextMenu from '../ContextMenu';
 
 const mockTasks = [
 	{
@@ -37,12 +44,11 @@ const mockEditTask = {
 	yPos: '0px',
 	xPosTouch: '0px',
 	yPosTouch: '0px',
-	showMenu: true,
+	showMenu: false,
 };
 
 describe('context menu', () => {
-	test('"In Process" updates properly when clicked', async () => {
-		const user = userEvent.setup();
+	test('Context menu hidden initially and display function (part of handleEditTask) is called when status cell is clicked', async () => {
 		const handleEditTaskMock = jest.fn();
 
 		render(
@@ -53,20 +59,63 @@ describe('context menu', () => {
 				handleFormSubmit={jest.fn((e) => e.preventDefault())}
 			/>
 		);
+
 		// check if context menu is hidden initially
 		expect(screen.queryByRole('menu')).not.toBeInTheDocument();
 
-		// click on status cell to trigger context menu
+		// click on a status cell to trigger context menu
 		const statusButtons = await screen.findAllByRole('button', {
 			name: /status/i,
 		});
 		const statusButton = statusButtons[0];
 		fireEvent.click(statusButton);
 
-		// check if context menu is displaying
+		// check if mock click handler has been called
 		expect(handleEditTaskMock).toHaveBeenCalled();
+	});
+
+	test('Clicking on "In Process" option calls handleMenuItemEvent and updates the icon in the status cell', async () => {
+		const editFormData = {
+			status: 'Completed',
+			letterPriority: 'A',
+			numberPriority: '1',
+			priority: 'A1',
+			description: '',
+		};
+		const handleMenuItemEvent = jest.fn();
+
+		render(
+			<TableForm
+				tasks={mockTasks}
+				editTask={mockEditTask}
+				handleFormSubmit={jest.fn((e) => e.preventDefault())}
+				showMenu={true} // setting to true so context menu is in the DOM
+			/>
+		);
+
+		render(
+			<ContextMenu
+				xPos={null}
+				yPos={null}
+				editTask={mockEditTask}
+				tasks={mockTasks}
+				taskDispatch={jest.fn()}
+				editFormData={editFormData}
+				setEditTask={jest.fn()}
+				setEditFormData={jest.fn()}
+			/>
+		);
+
+		// check if context menu is in the document
+		expect(screen.getAllByRole('menu')[0]).toBeInTheDocument();
 
 		// click on "In Process" option
+		const inProcess = screen.getAllByRole('menuitem')[0];
+		fireEvent.click(inProcess);
+
+		// check if mock click handler has been called
+		expect(handleMenuItemEvent).toHaveBeenCalled();
+
 		// check if status cell state updates to "In Process"
 		// check if status cell is populated with dot image
 	});

@@ -13,24 +13,6 @@ export const handlers = [
 						priority: 'A1',
 						status: 'In Process',
 					},
-					{
-						description: 'planning and solitude',
-						id: '2',
-						priority: 'B2',
-						status: 'Completed',
-					},
-					{
-						description: 'planning and solitude',
-						id: '3',
-						priority: 'C3',
-						status: 'Forwarded',
-					},
-					{
-						description: 'planning and solitude',
-						id: '4',
-						priority: 'A2',
-						status: 'Delegated',
-					},
 				])
 			);
 		}
