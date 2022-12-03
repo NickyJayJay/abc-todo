@@ -122,38 +122,38 @@ const ContextMenu = ({
 				}}
 			>
 				<ul onTouchStart={(event) => event.stopPropagation()}>
-					<li role='menuitem' onClick={(event) => handleMenuItemEvent(event)}>
-						<button>
+					<li role='menuitem'>
+						<button onClick={(event) => handleMenuItemEvent(event)}>
 							<span>In Process</span>
 							<img src={dot} alt='in process icon' />
 						</button>
 					</li>
-					<li role='menuitem' onClick={(event) => handleMenuItemEvent(event)}>
-						<button>
+					<li role='menuitem'>
+						<button onClick={(event) => handleMenuItemEvent(event)}>
 							<span className={classes.completed}>Completed</span>
 							<img src={checkmark} alt='completed icon' />
 						</button>
 					</li>
-					<li role='menuitem' onClick={(event) => handleMenuItemEvent(event)}>
-						<button>
+					<li role='menuitem'>
+						<button onClick={(event) => handleMenuItemEvent(event)}>
 							<span>Forwarded</span>
 							<img src={arrowRight} alt='forwarded icon' />
 						</button>
 					</li>
-					<li role='menuitem' onClick={(event) => handleMenuItemEvent(event)}>
-						<button>
+					<li role='menuitem'>
+						<button onClick={(event) => handleMenuItemEvent(event)}>
 							<span>Delegated</span>
 							<img src={add} alt='delegated icon' />
 						</button>
 					</li>
-					<li role='menuitem' onClick={(event) => handleMenuItemEvent(event)}>
-						<button>
+					<li role='menuitem'>
+						<button onClick={(event) => handleMenuItemEvent(event)}>
 							<span>Remove</span>
 							<img src={trash} alt='removed icon' />
 						</button>
 					</li>
-					<li role='menuitem' onClick={(event) => handleMenuItemEvent(event)}>
-						<button>
+					<li role='menuitem'>
+						<button onClick={(event) => handleMenuItemEvent(event)}>
 							<span>Cancel</span>
 							<img src={close} alt='close icon' />
 						</button>

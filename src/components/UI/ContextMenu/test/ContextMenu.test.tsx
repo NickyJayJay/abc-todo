@@ -107,14 +107,14 @@ describe('context menu', () => {
 		);
 
 		// check if context menu is in the document
-		expect(screen.getAllByRole('menu')[0]).toBeInTheDocument();
 
 		// click on "In Process" option
-		const inProcess = screen.getAllByRole('menuitem')[0];
-		fireEvent.click(inProcess);
+		const menuItem = screen.getAllByRole('menuitem')[0];
+		const inProcessBtn = within(menuItem).getByRole('button');
 
 		// check if mock click handler has been called
-		expect(handleMenuItemEvent).toHaveBeenCalled();
+		console.log(inProcessBtn.textContent);
+		fireEvent.click(inProcessBtn);
 
 		// check if status cell state updates to "In Process"
 		// check if status cell is populated with dot image
