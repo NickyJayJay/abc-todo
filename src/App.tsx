@@ -430,7 +430,7 @@ const App = () => {
 	if (state.httpError) {
 		return (
 			<section className={classes.tasksError}>
-				<p>{state.httpError}</p>
+				<p>Something went wrong...</p>
 			</section>
 		);
 	}
