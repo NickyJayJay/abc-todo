@@ -86,7 +86,7 @@ const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 			!(e as React.KeyboardEvent).shiftKey
 		) {
 			e.preventDefault();
-			props.setState({ isModal: true });
+			props.setState({ isModal: true, isLoading: false, httpError: null });
 		} else if (
 			((props.editTask.inputType === 'priority-input' ||
 				props.editTask.inputType === 'status-input') &&
@@ -109,7 +109,7 @@ const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 		e.preventDefault();
 		(e as React.MouseEvent).clientX !== 0 &&
 			(e as React.MouseEvent).clientY !== 0 &&
-			props.setState({ isModal: true });
+			props.setState({ isModal: true, isLoading: false, httpError: null });
 	};
 
 	return (

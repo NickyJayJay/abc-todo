@@ -19,45 +19,45 @@ const UpdateTaskPriority = () => {
 	} = useContext(PriorityContext);
 
 	useEffect(() => {
-		(editTask.inputType === 'priority-input' ||
-			editTask.inputType === 'priority-cell') &&
+		(editTask?.inputType === 'priority-input' ||
+			editTask?.inputType === 'priority-cell') &&
 			isModal &&
 			radioRef.current?.focus();
-	}, [isModal, editTask.inputType]);
+	}, [isModal, editTask?.inputType]);
 
 	const letterPriorityHandler = (e: React.FormEvent<HTMLInputElement>) => {
-		if (editTask.inputType === 'priority-cell') {
+		if (editTask?.inputType === 'priority-cell') {
 			const newFormData: EditFormData = {
 				...editFormData,
 				letterPriority: (e.target as HTMLInputElement).value,
 				priority: (e.target as HTMLInputElement).value + numberPriority,
 			};
-			setEditFormData(newFormData);
+			setEditFormData && setEditFormData(newFormData);
 		} else {
 			const newFormData = { ...addFormData };
 			newFormData.letterPriority = (e.target as HTMLInputElement).value;
-			setAddFormData(newFormData);
+			setAddFormData && setAddFormData(newFormData);
 		}
 	};
 
 	const numberPriorityHandler = (e: React.FormEvent<HTMLInputElement>) => {
-		if (editTask.inputType === 'priority-cell') {
+		if (editTask?.inputType === 'priority-cell') {
 			const newFormData: EditFormData = {
 				...editFormData,
 				numberPriority: Math.abs(
 					Number((e.target as HTMLInputElement).value.slice(0, 2))
 				).toString(),
 				priority:
-					letterPriority +
+					(letterPriority as string) +
 					parseInt((e.target as HTMLInputElement).value.slice(0, 2), 10),
 			};
-			setEditFormData(newFormData);
+			setEditFormData && setEditFormData(newFormData);
 		} else {
 			const newFormData = { ...addFormData };
 			newFormData.numberPriority = Math.abs(
 				Number((e.target as HTMLInputElement).value.slice(0, 2))
 			).toString();
-			setAddFormData(newFormData);
+			setAddFormData && setAddFormData(newFormData);
 		}
 	};
 
@@ -86,23 +86,24 @@ const UpdateTaskPriority = () => {
 	) => {
 		e.preventDefault();
 
-		if (editTask.inputType === 'priority-cell') {
-			isFormValid(e)
+		if (editTask?.inputType === 'priority-cell') {
+			isFormValid(e) && handleFormSubmit
 				? handleFormSubmit(e)
 				: alert("Priority input's integer value is invalid.");
 		} else {
 			const newFormData: EditFormData = {
 				...addFormData,
-				priority: `${addFormData.letterPriority}${addFormData.numberPriority}`,
+				priority: `${addFormData?.letterPriority}${addFormData?.numberPriority}`,
 				letterPriority: '',
 				numberPriority: '',
 			};
-			isFormValid(e)
+			isFormValid(e) && setAddFormData
 				? setAddFormData(newFormData)
 				: alert("Priority input's integer value is invalid.");
 		}
 		setTimeout(() => {
-			setState({ isModal: false });
+			setState &&
+				setState({ isModal: false, isLoading: false, httpError: null });
 		}, 250);
 	};
 
@@ -167,9 +168,9 @@ const UpdateTaskPriority = () => {
 					onChange={numberPriorityHandler}
 					name='priority'
 					value={
-						editTask.inputType === 'priority-cell'
-							? editFormData.numberPriority
-							: addFormData.numberPriority
+						editTask?.inputType === 'priority-cell'
+							? editFormData?.numberPriority
+							: addFormData?.numberPriority
 					}
 				/>
 			</fieldset>

@@ -8,8 +8,8 @@ interface Props {
 	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
 	taskId: string | null;
 	rowId: string | null;
-	inputType: string | null | undefined;
-	taskDescription: string | null;
+	inputType?: string | null;
+	taskDescription?: string | null;
 }
 
 const EditableDescription = ({

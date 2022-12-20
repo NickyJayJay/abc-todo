@@ -1,9 +1,8 @@
 import { Database, DatabaseReference } from 'firebase/database';
 import { Task, TaskActionShape } from './types';
-import { TaskActionType } from './enums';
 export interface EditTask {
 	rowId: string | null;
-	inputType: string | null | undefined;
+	inputType?: string | null;
 	xPos?: string | null;
 	yPos: string | null;
 	xPosTouch: string | null;
@@ -12,11 +11,11 @@ export interface EditTask {
 }
 
 export interface EditFormData {
-	status: string | null;
-	letterPriority: string;
-	numberPriority: string;
-	priority: string | null;
-	description: string | null;
+	status?: string | null;
+	letterPriority?: string;
+	numberPriority?: string;
+	priority?: string | null;
+	description?: string | null;
 }
 export interface ErrorsAndLoading {
 	isLoading?: boolean;

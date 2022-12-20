@@ -5,14 +5,15 @@ import FocusLock from 'react-focus-lock';
 import { PriorityContext } from '../../../context/priority-context';
 import classes from './Modal.module.scss';
 import Card from '../Card/Card';
-import UpdateTaskPriority from '../../Cells/Error/UpdateTaskPriority';
+import UpdateTaskPriority from '../../Cells/UpdateTaskPriority/UpdateTaskPriority';
 import Close from '../../../assets/SVG/close.svg';
 
 type Props = {
 	onHide: (e: React.MouseEvent | React.TouchEvent | KeyboardEvent) => void;
+	role?: string;
 };
 
-const Modal = ({ onHide }: Props) => {
+const Modal = ({ onHide, role }: Props) => {
 	const { editMode } = useContext(PriorityContext);
 
 	return (
@@ -26,7 +27,7 @@ const Modal = ({ onHide }: Props) => {
 				document.getElementById('backdrop-root')!
 			)}
 			{ReactDOM.createPortal(
-				<Card className={`${classes.modal} ${classes.active}`}>
+				<Card className={`${classes.modal} ${classes.active}`} role={role}>
 					<FocusLock returnFocus>
 						<button
 							className={classes.closeModal}

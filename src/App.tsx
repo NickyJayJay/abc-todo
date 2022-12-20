@@ -151,11 +151,15 @@ const App = () => {
 				type: TaskActionType.SET,
 				data: loadedTasks,
 			});
-			setState({ isLoading: false });
+			setState({ isModal: false, isLoading: false, httpError: null });
 		};
 
 		fetchTasks().catch((error) => {
-			setState({ isLoading: false, httpError: error.message });
+			setState({
+				isModal: false,
+				isLoading: false,
+				httpError: error.message,
+			});
 		});
 	}, [url]);
 
@@ -367,7 +371,7 @@ const App = () => {
 					(e as React.MouseEvent).clientY !== 0)) &&
 			priorityCell
 		) {
-			setState({ isModal: true });
+			setState({ isModal: true, isLoading: false, httpError: null });
 		}
 
 		e.stopPropagation();
@@ -423,7 +427,7 @@ const App = () => {
 			setAddFormData(newFormData);
 		}
 		setTimeout(() => {
-			setState({ isModal: false });
+			setState({ isModal: false, isLoading: false, httpError: null });
 		}, 250);
 	};
 
@@ -472,7 +476,7 @@ const App = () => {
 							isModal: state.isModal,
 						}}
 					>
-						<Modal onHide={hideModalHandler} />
+						<Modal onHide={hideModalHandler} role='dialog' />
 					</PriorityContext.Provider>
 				)}
 			<Card className={`${classes.card} card`}>
