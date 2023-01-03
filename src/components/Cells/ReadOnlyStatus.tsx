@@ -38,6 +38,7 @@ const ReadOnlyStatus = ({ handleEditTask, task, editTask }: Props) => {
 		>
 			<button
 				data-id='status-cell'
+				aria-label='status'
 				onClick={(event) => handleEditTask(event, task)}
 				onKeyDown={(event) => handleEditTask(event, task)}
 			>

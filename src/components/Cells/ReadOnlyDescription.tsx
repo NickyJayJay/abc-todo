@@ -21,6 +21,7 @@ const ReadOnlyDescription = ({ handleEditTask, task }: Props) => {
 		>
 			<button
 				data-id='description-cell'
+				aria-label='description'
 				className={task.status === 'Completed' ? classes.completed : ''}
 			>
 				{task.description}

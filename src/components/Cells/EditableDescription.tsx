@@ -8,8 +8,8 @@ interface Props {
 	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
 	taskId: string | null;
 	rowId: string | null;
-	inputType: string | null | undefined;
-	taskDescription: string | null;
+	inputType?: string | null;
+	taskDescription?: string | null;
 }
 
 const EditableDescription = ({
@@ -40,6 +40,7 @@ const EditableDescription = ({
 				type='text'
 				placeholder='Enter a task description...'
 				name='description'
+				aria-label='description'
 				value={taskDescription as string}
 				onChange={(event) => handleEditFormChange(event)}
 				onKeyDown={(event) => handleEditFormKeyboard(event)}

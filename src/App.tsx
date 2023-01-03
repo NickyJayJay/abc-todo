@@ -22,6 +22,7 @@ import { Task } from './ts/types';
 import { EditTask, EditFormData, ErrorsAndLoading } from './ts/interfaces';
 import { TaskActionType } from './ts/enums';
 import { taskReducer } from './reducers';
+import { handleMenuItemEvent } from './components/UI/ContextMenu/handleMenuItemEvent';
 
 export const sortList = (loadedTasks: Task[]) => {
 	loadedTasks.sort((a: Task, b: Task) => {
@@ -150,11 +151,15 @@ const App = () => {
 				type: TaskActionType.SET,
 				data: loadedTasks,
 			});
-			setState({ isLoading: false });
+			setState({ isModal: false, isLoading: false, httpError: null });
 		};
 
 		fetchTasks().catch((error) => {
-			setState({ isLoading: false, httpError: error.message });
+			setState({
+				isModal: false,
+				isLoading: false,
+				httpError: error.message,
+			});
 		});
 	}, [url]);
 
@@ -332,7 +337,7 @@ const App = () => {
 			(prevFocusableEl as HTMLElement).click();
 		}
 
-		const fieldName = e.target.getAttribute('name');
+		const fieldName = (e.target as Element).getAttribute('name');
 		const fieldValue =
 			fieldName === 'priority'
 				? (e.target as HTMLInputElement | HTMLSelectElement).value.toUpperCase()
@@ -366,7 +371,7 @@ const App = () => {
 					(e as React.MouseEvent).clientY !== 0)) &&
 			priorityCell
 		) {
-			setState({ isModal: true });
+			setState({ isModal: true, isLoading: false, httpError: null });
 		}
 
 		e.stopPropagation();
@@ -422,14 +427,14 @@ const App = () => {
 			setAddFormData(newFormData);
 		}
 		setTimeout(() => {
-			setState({ isModal: false });
+			setState({ isModal: false, isLoading: false, httpError: null });
 		}, 250);
 	};
 
 	if (state.httpError) {
 		return (
 			<section className={classes.tasksError}>
-				<p>{state.httpError}</p>
+				<p>Something went wrong...</p>
 			</section>
 		);
 	}
@@ -471,13 +476,14 @@ const App = () => {
 							isModal: state.isModal,
 						}}
 					>
-						<Modal onHide={hideModalHandler} />
+						<Modal onHide={hideModalHandler} role='dialog' />
 					</PriorityContext.Provider>
 				)}
 			<Card className={`${classes.card} card`}>
 				<TableForm
 					handleFormSubmit={handleFormSubmit}
 					editTask={editTask}
+					showMenu={editTask.showMenu}
 					outsideClickRef={outsideClickRef}
 					tasks={tasks}
 					taskDispatch={taskDispatch}
@@ -488,6 +494,7 @@ const App = () => {
 					handleEditFormKeyboard={handleEditFormKeyboard}
 					isModal={state.isModal as boolean}
 					setEditFormData={setEditFormData}
+					handleMenuItemEvent={handleMenuItemEvent}
 				/>
 
 				<AddTaskForm
