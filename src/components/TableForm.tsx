@@ -13,7 +13,7 @@ import { handleMenuItemEvent } from '../components/UI/ContextMenu/handleMenuItem
 
 interface Props {
 	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
-	editTask?: EditTask;
+	editTask: EditTask;
 	showMenu?: boolean;
 	outsideClickRef?: RefObject<HTMLTableSectionElement>;
 	tasks: Task[];

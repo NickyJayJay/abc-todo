@@ -1,6 +1,5 @@
 import React, {
 	useState,
-	useRef,
 	useCallback,
 	useEffect,
 	ChangeEvent,
@@ -13,9 +12,7 @@ import { getDatabase, ref, update } from 'firebase/database';
 import { PriorityContext } from './context/priority-context';
 import { firebaseConfig } from './firebaseConfig';
 import useOutsideClick from './hooks/useOutsideClick';
-import TableForm from './components/TableForm';
-import AddTaskForm from './components/AddTaskForm';
-import Card from './components/UI/Card/Card';
+import Main from './components/Main';
 import Modal from './components/UI/Modal/Modal';
 import classes from './App.module.scss';
 import { Task } from './ts/types';
@@ -94,14 +91,6 @@ const App = () => {
 	const db = getDatabase(app);
 	// const auth = getAuth();
 	const url = app.options.databaseURL;
-
-	const priorityInput = useRef<HTMLInputElement>(null);
-
-	useEffect(() => {
-		editTask.inputType === 'priority-input' &&
-			!state.isModal &&
-			priorityInput.current?.focus();
-	}, [state.isModal, editTask.inputType, priorityInput]);
 
 	useEffect(() => {
 		if (editTask.showMenu || state.isModal) {
@@ -479,35 +468,26 @@ const App = () => {
 						<Modal onHide={hideModalHandler} role='dialog' />
 					</PriorityContext.Provider>
 				)}
-			<Card className={`${classes.card} card`}>
-				<TableForm
-					handleFormSubmit={handleFormSubmit}
-					editTask={editTask}
-					showMenu={editTask.showMenu}
-					outsideClickRef={outsideClickRef}
-					tasks={tasks}
-					taskDispatch={taskDispatch}
-					handleEditTask={handleEditTask}
-					editFormData={editFormData}
-					setEditTask={setEditTask}
-					handleEditFormChange={handleEditFormChange}
-					handleEditFormKeyboard={handleEditFormKeyboard}
-					isModal={state.isModal as boolean}
-					setEditFormData={setEditFormData}
-					handleMenuItemEvent={handleMenuItemEvent}
-				/>
-
-				<AddTaskForm
-					handleAddFormChange={handleAddFormChange}
-					addFormData={addFormData}
-					ref={priorityInput}
-					taskDispatch={taskDispatch}
-					setAddFormData={setAddFormData}
-					editTask={editTask}
-					setState={setState}
-					isModal={state.isModal}
-				/>
-			</Card>
+			<Main
+				handleFormSubmit={handleFormSubmit}
+				editTask={editTask}
+				showMenu={editTask.showMenu}
+				outsideClickRef={outsideClickRef}
+				tasks={tasks}
+				taskDispatch={taskDispatch}
+				handleEditTask={handleEditTask}
+				editFormData={editFormData}
+				setEditTask={setEditTask}
+				handleEditFormChange={handleEditFormChange}
+				handleEditFormKeyboard={handleEditFormKeyboard}
+				isModal={state.isModal}
+				setEditFormData={setEditFormData}
+				handleMenuItemEvent={handleMenuItemEvent}
+				handleAddFormChange={handleAddFormChange}
+				addFormData={addFormData}
+				setAddFormData={setAddFormData}
+				setState={setState}
+			/>
 		</div>
 	);
 };
