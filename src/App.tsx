@@ -8,12 +8,9 @@ import React, {
 import { initializeApp } from 'firebase/app';
 // import { getAuth } from 'firebase/auth';
 import { getDatabase, ref, update } from 'firebase/database';
-
-import { PriorityContext } from './context/priority-context';
 import { firebaseConfig } from './firebaseConfig';
 import useOutsideClick from './hooks/useOutsideClick';
 import Main from './components/Main';
-import Modal from './components/UI/Modal/Modal';
 import classes from './App.module.scss';
 import { Task } from './ts/types';
 import { EditTask, EditFormData, ErrorsAndLoading } from './ts/interfaces';
@@ -438,39 +435,15 @@ const App = () => {
 
 	return (
 		<div className={classes.appContainer}>
-			{state.isModal &&
-				(editTask.inputType === 'priority-cell' ||
-					editTask.inputType === 'priority-input') && (
-					<PriorityContext.Provider
-						value={{
-							editTask: editTask,
-							editFormData: editFormData,
-							setEditFormData: setEditFormData,
-							addFormData: addFormData,
-							setAddFormData: setAddFormData,
-							setState: setState,
-							letterPriority:
-								editTask.inputType === 'priority-cell'
-									? editFormData.letterPriority
-									: addFormData.letterPriority,
-							numberPriority:
-								editTask.inputType === 'priority-cell'
-									? editFormData.numberPriority
-									: addFormData.numberPriority,
-							editMode: editTask.inputType,
-							handleFormSubmit,
-							handleAddFormChange,
-							tasks: tasks,
-							taskDispatch: taskDispatch,
-							isModal: state.isModal,
-						}}
-					>
-						<Modal onHide={hideModalHandler} role='dialog' />
-					</PriorityContext.Provider>
-				)}
 			<Main
 				handleFormSubmit={handleFormSubmit}
 				editTask={editTask}
+				rowId={editTask.rowId}
+				inputType={editTask.inputType}
+				xPos={editTask.xPos}
+				yPos={editTask.yPos}
+				xPosTouch={editTask.xPosTouch}
+				yPosTouch={editTask.yPosTouch}
 				showMenu={editTask.showMenu}
 				outsideClickRef={outsideClickRef}
 				tasks={tasks}
@@ -487,6 +460,7 @@ const App = () => {
 				addFormData={addFormData}
 				setAddFormData={setAddFormData}
 				setState={setState}
+				onHide={hideModalHandler}
 			/>
 		</div>
 	);

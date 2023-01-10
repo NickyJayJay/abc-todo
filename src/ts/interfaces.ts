@@ -4,9 +4,9 @@ export interface EditTask {
 	rowId: string | null;
 	inputType?: string | null;
 	xPos?: string | null;
-	yPos: string | null;
-	xPosTouch: string | null;
-	yPosTouch: string | null;
+	yPos?: string | null;
+	xPosTouch?: string | null;
+	yPosTouch?: string | null;
 	showMenu: boolean;
 }
 

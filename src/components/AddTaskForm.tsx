@@ -12,7 +12,7 @@ import { ErrorsAndLoading } from '../ts/interfaces';
 
 interface Props {
 	handleAddFormChange: (
-		e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+		e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>
 	) => void;
 	addFormData: EditFormData;
 	taskDispatch: React.Dispatch<TaskActionShape>;
