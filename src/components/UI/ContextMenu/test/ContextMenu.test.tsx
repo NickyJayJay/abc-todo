@@ -54,6 +54,7 @@ const editFormData = {
 };
 
 const editTask = mockEditTask;
+const rowId = null;
 const setEditTask = jest.fn();
 const setEditFormData = jest.fn();
 const sortList = jest.fn();
@@ -66,6 +67,7 @@ const remove = jest.fn();
 const handleEditTask = jest.fn();
 const handleMenuMockArgs = {
 	editTask,
+	rowId,
 	setEditTask,
 	editFormData,
 	setEditFormData,
@@ -84,6 +86,7 @@ describe('context menu', () => {
 			<TableForm
 				tasks={mockTasks}
 				editTask={mockEditTask}
+				rowId={null}
 				handleEditTask={handleEditTask}
 				handleFormSubmit={jest.fn((e) => e.preventDefault())}
 				handleMenuItemEvent={jest.fn()}

@@ -21,6 +21,7 @@ interface Props {
 	xPos?: string | null;
 	yPos?: string | null;
 	editTask: EditTask;
+	rowId?: string | null;
 	tasks: Task[];
 	taskDispatch: React.Dispatch<TaskActionShape>;
 	editFormData: EditFormData;
@@ -37,6 +38,7 @@ const ContextMenu = ({
 	xPos,
 	yPos,
 	editTask,
+	rowId,
 	tasks,
 	taskDispatch,
 	editFormData,
@@ -59,6 +61,7 @@ const ContextMenu = ({
 						<Button
 							onClick={handleMenuItemEvent({
 								editTask,
+								rowId,
 								setEditTask,
 								editFormData,
 								setEditFormData,
@@ -79,6 +82,7 @@ const ContextMenu = ({
 						<Button
 							onClick={handleMenuItemEvent({
 								editTask,
+								rowId,
 								setEditTask,
 								editFormData,
 								setEditFormData,
@@ -99,6 +103,7 @@ const ContextMenu = ({
 						<Button
 							onClick={handleMenuItemEvent({
 								editTask,
+								rowId,
 								setEditTask,
 								editFormData,
 								setEditFormData,
@@ -119,6 +124,7 @@ const ContextMenu = ({
 						<Button
 							onClick={handleMenuItemEvent({
 								editTask,
+								rowId,
 								setEditTask,
 								editFormData,
 								setEditFormData,
@@ -139,6 +145,7 @@ const ContextMenu = ({
 						<Button
 							onClick={handleMenuItemEvent({
 								editTask,
+								rowId,
 								setEditTask,
 								editFormData,
 								setEditFormData,
@@ -159,6 +166,7 @@ const ContextMenu = ({
 						<Button
 							onClick={handleMenuItemEvent({
 								editTask,
+								rowId,
 								setEditTask,
 								editFormData,
 								setEditFormData,

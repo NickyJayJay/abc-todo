@@ -24,6 +24,7 @@ export interface ErrorsAndLoading {
 }
 export interface Menu {
 	editTask: EditTask;
+	rowId?: string | null;
 	setEditTask: (a: React.SetStateAction<EditTask>) => void;
 	editFormData: EditFormData;
 	setEditFormData: (a: React.SetStateAction<EditFormData>) => void;

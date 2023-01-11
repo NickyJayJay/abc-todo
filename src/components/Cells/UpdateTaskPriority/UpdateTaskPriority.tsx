@@ -6,7 +6,7 @@ import { EditFormData } from '../../../ts/interfaces';
 
 const UpdateTaskPriority = () => {
 	const {
-		editTask,
+		inputType,
 		editFormData,
 		setEditFormData,
 		addFormData,
@@ -19,14 +19,13 @@ const UpdateTaskPriority = () => {
 	} = useContext(PriorityContext);
 
 	useEffect(() => {
-		(editTask?.inputType === 'priority-input' ||
-			editTask?.inputType === 'priority-cell') &&
+		(inputType === 'priority-input' || inputType === 'priority-cell') &&
 			isModal &&
 			radioRef.current?.focus();
-	}, [isModal, editTask?.inputType]);
+	}, [isModal, inputType]);
 
 	const letterPriorityHandler = (e: React.FormEvent<HTMLInputElement>) => {
-		if (editTask?.inputType === 'priority-cell') {
+		if (inputType === 'priority-cell') {
 			const newFormData: EditFormData = {
 				...editFormData,
 				letterPriority: (e.target as HTMLInputElement).value,
@@ -41,7 +40,7 @@ const UpdateTaskPriority = () => {
 	};
 
 	const numberPriorityHandler = (e: React.FormEvent<HTMLInputElement>) => {
-		if (editTask?.inputType === 'priority-cell') {
+		if (inputType === 'priority-cell') {
 			const newFormData: EditFormData = {
 				...editFormData,
 				numberPriority: Math.abs(
@@ -86,7 +85,7 @@ const UpdateTaskPriority = () => {
 	) => {
 		e.preventDefault();
 
-		if (editTask?.inputType === 'priority-cell') {
+		if (inputType === 'priority-cell') {
 			isFormValid(e) && handleFormSubmit
 				? handleFormSubmit(e)
 				: alert("Priority input's integer value is invalid.");
@@ -168,7 +167,7 @@ const UpdateTaskPriority = () => {
 					onChange={numberPriorityHandler}
 					name='priority'
 					value={
-						editTask?.inputType === 'priority-cell'
+						inputType === 'priority-cell'
 							? editFormData?.numberPriority
 							: addFormData?.numberPriority
 					}

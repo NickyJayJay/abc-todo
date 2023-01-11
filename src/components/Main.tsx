@@ -17,8 +17,6 @@ interface Props {
 	inputType?: string | null;
 	xPos?: string | null;
 	yPos?: string | null;
-	xPosTouch?: string | null;
-	yPosTouch?: string | null;
 	showMenu?: boolean;
 	outsideClickRef?: RefObject<HTMLTableSectionElement>;
 	tasks: Task[];
@@ -50,8 +48,6 @@ const Main = ({
 	inputType,
 	xPos,
 	yPos,
-	xPosTouch,
-	yPosTouch,
 	showMenu,
 	outsideClickRef,
 	tasks,
@@ -71,6 +67,14 @@ const Main = ({
 	onHide,
 }: Props) => {
 	const priorityInput = useRef<HTMLInputElement>(null);
+	const letterPriority =
+		inputType === 'priority-cell'
+			? editFormData.letterPriority
+			: addFormData.letterPriority;
+	const numberPriority =
+		inputType === 'priority-cell'
+			? editFormData.numberPriority
+			: addFormData.numberPriority;
 
 	useEffect(() => {
 		inputType === 'priority-input' && priorityInput.current?.focus();
@@ -82,25 +86,15 @@ const Main = ({
 				(inputType === 'priority-cell' || inputType === 'priority-input') && (
 					<PriorityContext.Provider
 						value={{
-							editTask: editTask,
+							inputType: inputType,
 							editFormData: editFormData,
 							setEditFormData: setEditFormData,
 							addFormData: addFormData,
 							setAddFormData: setAddFormData,
 							setState: setState,
-							letterPriority:
-								editTask.inputType === 'priority-cell'
-									? editFormData.letterPriority
-									: addFormData.letterPriority,
-							numberPriority:
-								editTask.inputType === 'priority-cell'
-									? editFormData.numberPriority
-									: addFormData.numberPriority,
-							editMode: editTask.inputType,
+							letterPriority: letterPriority,
+							numberPriority: numberPriority,
 							handleFormSubmit,
-							handleAddFormChange,
-							tasks: tasks,
-							taskDispatch: taskDispatch,
 							isModal: isModal,
 						}}
 					>
@@ -111,6 +105,9 @@ const Main = ({
 				<TableForm
 					handleFormSubmit={handleFormSubmit}
 					editTask={editTask}
+					xPos={xPos}
+					yPos={yPos}
+					rowId={rowId}
 					showMenu={showMenu}
 					outsideClickRef={outsideClickRef}
 					tasks={tasks}
@@ -130,7 +127,7 @@ const Main = ({
 					ref={priorityInput}
 					taskDispatch={taskDispatch}
 					setAddFormData={setAddFormData}
-					editTask={editTask}
+					inputType={inputType}
 					setState={setState}
 					isModal={isModal}
 				/>

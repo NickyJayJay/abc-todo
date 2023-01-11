@@ -6,8 +6,8 @@ interface Props {
 	handleEditFormChange: (e: ChangeEvent<HTMLInputElement>) => void;
 	handleFormSubmit: (e: React.FormEvent) => void;
 	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
-	taskId: string | null;
-	rowId: string | null;
+	taskId?: string | null;
+	rowId?: string | null;
 	inputType?: string | null;
 	taskDescription?: string | null;
 }

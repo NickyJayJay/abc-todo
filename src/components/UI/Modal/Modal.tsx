@@ -14,7 +14,7 @@ type Props = {
 };
 
 const Modal = ({ onHide, role }: Props) => {
-	const { editMode } = useContext(PriorityContext);
+	const { inputType } = useContext(PriorityContext);
 
 	return (
 		<>
@@ -37,8 +37,8 @@ const Modal = ({ onHide, role }: Props) => {
 						>
 							<img src={Close} alt='close icon' />
 						</button>
-						{(editMode === 'priority-cell' ||
-							editMode === 'priority-input') && <UpdateTaskPriority />}
+						{(inputType === 'priority-cell' ||
+							inputType === 'priority-input') && <UpdateTaskPriority />}
 					</FocusLock>
 				</Card>,
 				document.getElementById('overlay-root')!

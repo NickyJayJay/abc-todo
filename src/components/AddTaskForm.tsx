@@ -5,7 +5,7 @@ import { firebaseConfig } from '../firebaseConfig';
 
 import ButtonGradient from './UI/Button/ButtonGradient';
 import classes from '../App.module.scss';
-import { EditFormData, EditTask } from '../ts/interfaces';
+import { EditFormData } from '../ts/interfaces';
 import { TaskActionType } from '../ts/enums';
 import { TaskActionShape } from '../ts/types';
 import { ErrorsAndLoading } from '../ts/interfaces';
@@ -17,17 +17,16 @@ interface Props {
 	addFormData: EditFormData;
 	taskDispatch: React.Dispatch<TaskActionShape>;
 	setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
-	editTask: EditTask;
+	inputType?: string | null;
 	setState: React.Dispatch<React.SetStateAction<ErrorsAndLoading>>;
 	isModal: boolean | undefined;
 }
 
 const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 	useEffect(() => {
-		props.editTask.inputType === 'status-input' && selectRef.current?.focus();
-		props.editTask.inputType === 'description-input' &&
-			descriptionRef.current?.focus();
-	}, [props.editTask.inputType]);
+		props.inputType === 'status-input' && selectRef.current?.focus();
+		props.inputType === 'description-input' && descriptionRef.current?.focus();
+	}, [props.inputType]);
 
 	// Initialize Firebase and set bindings
 	const app = initializeApp(firebaseConfig);
@@ -81,15 +80,15 @@ const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 		if (!nextFocusableEl || !prevFocusableEl) return;
 
 		if (
-			props.editTask.inputType === 'priority-input' &&
+			props.inputType === 'priority-input' &&
 			(e as React.KeyboardEvent).key !== 'Tab' &&
 			!(e as React.KeyboardEvent).shiftKey
 		) {
 			e.preventDefault();
 			props.setState({ isModal: true, isLoading: false, httpError: null });
 		} else if (
-			((props.editTask.inputType === 'priority-input' ||
-				props.editTask.inputType === 'status-input') &&
+			((props.inputType === 'priority-input' ||
+				props.inputType === 'status-input') &&
 				(e as React.KeyboardEvent).key) === 'Tab' &&
 			!(e as React.KeyboardEvent).shiftKey
 		) {
@@ -148,9 +147,7 @@ const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 						aria-label='Enter task priority'
 						ref={ref}
 						className={
-							props.editTask.inputType === 'priority-input'
-								? classes.active
-								: ''
+							props.inputType === 'priority-input' ? classes.active : ''
 						}
 					></input>
 					<input
@@ -164,9 +161,7 @@ const AddTaskForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
 						aria-label='Enter task description'
 						maxLength={150}
 						className={
-							props.editTask.inputType === 'description-input'
-								? classes.active
-								: ''
+							props.inputType === 'description-input' ? classes.active : ''
 						}
 						ref={descriptionRef}
 					/>

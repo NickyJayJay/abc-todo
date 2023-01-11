@@ -14,6 +14,9 @@ import { handleMenuItemEvent } from '../components/UI/ContextMenu/handleMenuItem
 interface Props {
 	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
 	editTask: EditTask;
+	xPos?: string | null;
+	yPos?: string | null;
+	rowId?: string | null;
 	showMenu?: boolean;
 	outsideClickRef?: RefObject<HTMLTableSectionElement>;
 	tasks: Task[];
@@ -34,6 +37,9 @@ interface Props {
 const TableForm = ({
 	handleFormSubmit,
 	editTask,
+	xPos,
+	yPos,
+	rowId,
 	showMenu,
 	outsideClickRef,
 	tasks,
@@ -51,9 +57,10 @@ const TableForm = ({
 		<form onSubmit={handleFormSubmit}>
 			{showMenu && (
 				<ContextMenu
-					xPos={editTask!.xPos}
-					yPos={editTask!.yPos}
-					editTask={editTask!}
+					xPos={xPos}
+					yPos={yPos}
+					rowId={rowId}
+					editTask={editTask}
 					tasks={tasks}
 					taskDispatch={taskDispatch!}
 					editFormData={editFormData!}
@@ -91,13 +98,13 @@ const TableForm = ({
 								editTask={editTask!}
 							/>
 							{editTask!.inputType === 'description-cell' &&
-							editTask!.rowId === task.id ? (
+							rowId === task.id ? (
 								<EditableDescription
 									handleEditFormChange={handleEditFormChange!}
 									handleFormSubmit={handleFormSubmit!}
 									handleEditFormKeyboard={handleEditFormKeyboard!}
 									taskId={task.id}
-									rowId={editTask!.rowId}
+									rowId={rowId}
 									inputType={editTask!.inputType}
 									taskDescription={editFormData!.description}
 								/>

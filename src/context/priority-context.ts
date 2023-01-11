@@ -1,9 +1,9 @@
 import { ChangeEvent, createContext } from 'react';
-import { EditFormData, EditTask, ErrorsAndLoading } from '../ts/interfaces';
+import { EditFormData, ErrorsAndLoading } from '../ts/interfaces';
 import { Task, TaskActionShape } from '../ts/types';
 
 interface PriorityContextShape {
-	editTask?: EditTask;
+	inputType?: string | null;
 	editFormData?: EditFormData;
 	setEditFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
 	addFormData: EditFormData;

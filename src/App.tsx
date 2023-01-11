@@ -442,8 +442,6 @@ const App = () => {
 				inputType={editTask.inputType}
 				xPos={editTask.xPos}
 				yPos={editTask.yPos}
-				xPosTouch={editTask.xPosTouch}
-				yPosTouch={editTask.yPosTouch}
 				showMenu={editTask.showMenu}
 				outsideClickRef={outsideClickRef}
 				tasks={tasks}
