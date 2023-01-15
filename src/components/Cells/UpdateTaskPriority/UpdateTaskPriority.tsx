@@ -1,8 +1,12 @@
-import React, { useRef, useEffect, useContext } from 'react';
+import { useRef, useEffect, useContext } from 'react';
 import { PriorityContext } from '../../../context/priority-context';
 import Button from '../../UI/Button/Button';
 import classes from './UpdateTaskPriority.module.scss';
-import { EditFormData } from '../../../ts/interfaces';
+import {
+	letterPriorityHandler,
+	numberPriorityHandler,
+	updatePriorityHandler,
+} from './handlers';
 
 const UpdateTaskPriority = () => {
 	const {
@@ -18,95 +22,25 @@ const UpdateTaskPriority = () => {
 		isModal,
 	} = useContext(PriorityContext);
 
+	const options = {
+		inputType,
+		editFormData,
+		addFormData,
+		letterPriority,
+		numberPriority,
+		setEditFormData,
+		setAddFormData,
+		handleFormSubmit,
+		setState,
+	};
+
+	const radioRef = useRef<HTMLInputElement>(null);
+
 	useEffect(() => {
 		(inputType === 'priority-input' || inputType === 'priority-cell') &&
 			isModal &&
 			radioRef.current?.focus();
 	}, [isModal, inputType]);
-
-	const letterPriorityHandler = (e: React.FormEvent<HTMLInputElement>) => {
-		if (inputType === 'priority-cell') {
-			const newFormData: EditFormData = {
-				...editFormData,
-				letterPriority: (e.target as HTMLInputElement).value,
-				priority: (e.target as HTMLInputElement).value + numberPriority,
-			};
-			setEditFormData && setEditFormData(newFormData);
-		} else {
-			const newFormData = { ...addFormData };
-			newFormData.letterPriority = (e.target as HTMLInputElement).value;
-			setAddFormData && setAddFormData(newFormData);
-		}
-	};
-
-	const numberPriorityHandler = (e: React.FormEvent<HTMLInputElement>) => {
-		if (inputType === 'priority-cell') {
-			const newFormData: EditFormData = {
-				...editFormData,
-				numberPriority: Math.abs(
-					Number((e.target as HTMLInputElement).value.slice(0, 2))
-				).toString(),
-				priority:
-					(letterPriority as string) +
-					parseInt((e.target as HTMLInputElement).value.slice(0, 2), 10),
-			};
-			setEditFormData && setEditFormData(newFormData);
-		} else {
-			const newFormData = { ...addFormData };
-			newFormData.numberPriority = Math.abs(
-				Number((e.target as HTMLInputElement).value.slice(0, 2))
-			).toString();
-			setAddFormData && setAddFormData(newFormData);
-		}
-	};
-
-	const isFormValid = (
-		e: React.MouseEvent<Element> | React.TouchEvent<Element>
-	) => {
-		const formControls: HTMLInputElement[] = Array.from(
-			(e.target as HTMLFormElement).form
-		);
-		for (let control of formControls) {
-			if (
-				control.getAttribute('name') === 'priority' &&
-				control.value.length <= 2 &&
-				/^([1-9]?|[1-9][0-9])?$/i.test(control.value)
-			) {
-				return true;
-			} else {
-				continue;
-			}
-		}
-		return false;
-	};
-
-	const updatePriorityHandler = (
-		e: React.MouseEvent<Element> | React.TouchEvent<Element>
-	) => {
-		e.preventDefault();
-
-		if (inputType === 'priority-cell') {
-			isFormValid(e) && handleFormSubmit
-				? handleFormSubmit(e)
-				: alert("Priority input's integer value is invalid.");
-		} else {
-			const newFormData: EditFormData = {
-				...addFormData,
-				priority: `${addFormData?.letterPriority}${addFormData?.numberPriority}`,
-				letterPriority: '',
-				numberPriority: '',
-			};
-			isFormValid(e) && setAddFormData
-				? setAddFormData(newFormData)
-				: alert("Priority input's integer value is invalid.");
-		}
-		setTimeout(() => {
-			setState &&
-				setState({ isModal: false, isLoading: false, httpError: null });
-		}, 250);
-	};
-
-	const radioRef = useRef<HTMLInputElement>(null);
 
 	return (
 		<form
@@ -123,8 +57,8 @@ const UpdateTaskPriority = () => {
 						id='A'
 						name='letter'
 						value='A'
-						onChange={letterPriorityHandler}
-						onTouchStart={letterPriorityHandler}
+						onChange={letterPriorityHandler(options)}
+						onTouchStart={letterPriorityHandler(options)}
 						ref={radioRef}
 					/>
 					<label>
@@ -137,8 +71,8 @@ const UpdateTaskPriority = () => {
 						id='B'
 						name='letter'
 						value='B'
-						onChange={letterPriorityHandler}
-						onTouchStart={letterPriorityHandler}
+						onChange={letterPriorityHandler(options)}
+						onTouchStart={letterPriorityHandler(options)}
 					/>
 					<label>
 						B <span>(Important but not time sensitive)</span>
@@ -150,8 +84,8 @@ const UpdateTaskPriority = () => {
 						id='C'
 						name='letter'
 						value='C'
-						onChange={letterPriorityHandler}
-						onTouchStart={letterPriorityHandler}
+						onChange={letterPriorityHandler(options)}
+						onTouchStart={letterPriorityHandler(options)}
 					/>
 					<label>
 						C <span>(Not important)</span>
@@ -164,7 +98,7 @@ const UpdateTaskPriority = () => {
 					type='number'
 					min='1'
 					max='99'
-					onChange={numberPriorityHandler}
+					onChange={numberPriorityHandler(options)}
 					name='priority'
 					value={
 						inputType === 'priority-cell'
@@ -179,8 +113,8 @@ const UpdateTaskPriority = () => {
 			</div>
 			<Button
 				type='submit'
-				onTouchStart={(event) => updatePriorityHandler(event)}
-				onClick={(event) => updatePriorityHandler(event)}
+				onTouchStart={updatePriorityHandler(options)}
+				onClick={updatePriorityHandler(options)}
 				disabled={letterPriority ? false : true}
 			>
 				CONFIRM PRIORITY
