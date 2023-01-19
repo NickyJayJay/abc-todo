@@ -241,21 +241,6 @@ const App = () => {
 		[editTask.xPos, editTask.xPosTouch, editTask.yPos, editTask.yPosTouch]
 	);
 
-	const handleAddFormChange = (
-		e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>
-	) => {
-		e.preventDefault();
-
-		const fieldName = (e.target as HTMLInputElement).getAttribute('name');
-		if (!fieldName) return;
-		const fieldValue = (e.target as HTMLInputElement).value;
-
-		const newFormData = { ...addFormData };
-		newFormData[fieldName as keyof typeof newFormData] = fieldValue;
-
-		setAddFormData(newFormData);
-	};
-
 	const handleEditFormChange = (e: ChangeEvent<HTMLInputElement>) => {
 		e.preventDefault();
 
@@ -454,9 +439,9 @@ const App = () => {
 				isModal={state.isModal}
 				setEditFormData={setEditFormData}
 				handleMenuItemEvent={handleMenuItemEvent}
-				handleAddFormChange={handleAddFormChange}
 				addFormData={addFormData}
 				setAddFormData={setAddFormData}
+				state={state}
 				setState={setState}
 				onHide={hideModalHandler}
 			/>

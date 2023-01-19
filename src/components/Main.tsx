@@ -1,7 +1,7 @@
 import React, { ChangeEvent, RefObject, useRef, useEffect } from 'react';
 
 import TableForm from './TableForm';
-import AddTaskForm from './AddTaskForm';
+import AddTaskForm from '../AddTaskForm/AddTaskForm';
 import Card from './UI/Card/Card';
 import Modal from './UI/Modal/Modal';
 import classes from '../App.module.scss';
@@ -32,12 +32,10 @@ interface Props {
 	isModal?: boolean;
 	setEditFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
 	handleMenuItemEvent: typeof handleMenuItemEvent;
-	handleAddFormChange: (
-		e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>
-	) => void;
 	addFormData: EditFormData;
 	setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 	setState: React.Dispatch<React.SetStateAction<ErrorsAndLoading>>;
+	state: ErrorsAndLoading;
 	onHide: (e: React.MouseEvent | React.TouchEvent | KeyboardEvent) => void;
 }
 
@@ -60,10 +58,10 @@ const Main = ({
 	isModal,
 	setEditFormData,
 	handleMenuItemEvent,
-	handleAddFormChange,
 	addFormData,
 	setAddFormData,
 	setState,
+	state,
 	onHide,
 }: Props) => {
 	const priorityInput = useRef<HTMLInputElement>(null);
@@ -122,13 +120,13 @@ const Main = ({
 					handleMenuItemEvent={handleMenuItemEvent}
 				/>
 				<AddTaskForm
-					handleAddFormChange={handleAddFormChange}
 					addFormData={addFormData}
 					ref={priorityInput}
 					taskDispatch={taskDispatch}
 					setAddFormData={setAddFormData}
 					inputType={inputType}
 					setState={setState}
+					state={state}
 					isModal={isModal}
 				/>
 			</Card>
