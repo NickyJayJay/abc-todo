@@ -1,6 +1,6 @@
 import React from 'react';
 
-import classes from '../../App.module.scss';
+import classes from '../App/App.module.scss';
 import { Task } from '../../ts/types';
 interface Props {
 	handleEditTask: (

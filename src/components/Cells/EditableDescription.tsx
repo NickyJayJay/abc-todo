@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, ChangeEvent } from 'react';
 
-import classes from '../../App.module.scss';
+import classes from '../App/App.module.scss';
 
 interface Props {
 	handleEditFormChange: (e: ChangeEvent<HTMLInputElement>) => void;

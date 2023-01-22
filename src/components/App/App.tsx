@@ -8,15 +8,15 @@ import React, {
 import { initializeApp } from 'firebase/app';
 // import { getAuth } from 'firebase/auth';
 import { getDatabase, ref, update } from 'firebase/database';
-import { firebaseConfig } from './firebaseConfig';
-import useOutsideClick from './hooks/useOutsideClick';
-import Main from './components/Main';
+import { firebaseConfig } from '../../firebaseConfig';
+import useOutsideClick from '../../hooks/useOutsideClick';
+import Main from '../Main';
 import classes from './App.module.scss';
-import { Task } from './ts/types';
-import { EditTask, EditFormData, ErrorsAndLoading } from './ts/interfaces';
-import { TaskActionType } from './ts/enums';
-import { taskReducer } from './reducers';
-import { handleMenuItemEvent } from './components/UI/ContextMenu/handleMenuItemEvent';
+import { Task } from '../../ts/types';
+import { EditTask, EditFormData, ErrorsAndLoading } from '../../ts/interfaces';
+import { TaskActionType } from '../../ts/enums';
+import { taskReducer } from '../../reducers';
+import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
 
 export const sortList = (loadedTasks: Task[]) => {
 	loadedTasks.sort((a: Task, b: Task) => {

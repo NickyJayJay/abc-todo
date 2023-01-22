@@ -1,5 +1,5 @@
 import { Reducer } from 'react';
-import { sortList } from './App';
+import { sortList } from './components/App/App';
 import { Task, TaskActionShape } from './ts/types';
 import { TaskActionType } from './ts/enums';
 

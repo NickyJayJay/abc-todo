@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 
-import classes from '../../App.module.scss';
+import classes from '../App/App.module.scss';
 import { Task } from '../../ts/types';
 import { EditTask } from '../../ts/interfaces';
 interface Props {

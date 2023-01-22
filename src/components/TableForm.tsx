@@ -6,7 +6,7 @@ import ReadOnlyPriority from './Cells/ReadOnlyPriority';
 import ReadOnlyDescription from './Cells/ReadOnlyDescription';
 import ContextMenu from './UI/ContextMenu/ContextMenu';
 import checkBox from '../assets/SVG/checkBox.svg';
-import classes from '../App.module.scss';
+import classes from './App/App.module.scss';
 import { EditTask, EditFormData } from '../ts/interfaces';
 import { Task, TaskActionShape } from '../ts/types';
 import { handleMenuItemEvent } from '../components/UI/ContextMenu/handleMenuItemEvent';

@@ -1,11 +1,11 @@
 import React, { ChangeEvent } from 'react';
 import { nanoid } from 'nanoid';
 import { initializeApp } from 'firebase/app';
-import { firebaseConfig } from '../firebaseConfig';
+import { firebaseConfig } from '../../firebaseConfig';
 
-import { ErrorsAndLoading, EditFormData } from '../ts/interfaces';
-import { TaskActionShape } from '../ts/types';
-import { TaskActionType } from '../ts/enums';
+import { ErrorsAndLoading, EditFormData } from '../../ts/interfaces';
+import { TaskActionShape } from '../../ts/types';
+import { TaskActionType } from '../../ts/enums';
 
 export interface Options {
 	addFormData: EditFormData;

@@ -1,10 +1,10 @@
 import React, { ChangeEvent, RefObject, useRef, useEffect } from 'react';
 
 import TableForm from './TableForm';
-import AddTaskForm from '../AddTaskForm/AddTaskForm';
+import AddTaskForm from './AddTaskForm/AddTaskForm';
 import Card from './UI/Card/Card';
 import Modal from './UI/Modal/Modal';
-import classes from '../App.module.scss';
+import classes from './App/App.module.scss';
 import { EditTask, EditFormData, ErrorsAndLoading } from '../ts/interfaces';
 import { Task, TaskActionShape } from '../ts/types';
 import { handleMenuItemEvent } from './UI/ContextMenu/handleMenuItemEvent';

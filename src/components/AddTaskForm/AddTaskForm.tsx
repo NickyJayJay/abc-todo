@@ -1,7 +1,7 @@
 import React, { forwardRef, useRef, useEffect } from 'react';
 
-import ButtonGradient from '../components/UI/Button/ButtonGradient';
-import classes from '../App.module.scss';
+import ButtonGradient from '../UI/Button/ButtonGradient';
+import classes from '../App/App.module.scss';
 import { Options } from './handlers';
 import {
 	handleAddFormSubmit,

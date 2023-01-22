@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 
-import classes from '../../App.module.scss';
+import classes from '../App/App.module.scss';
 import checkmark from '../../assets/SVG/checkmark.svg';
 import add from '../../assets/SVG/add.svg';
 import arrowRight from '../../assets/SVG/arrow-right.svg';
