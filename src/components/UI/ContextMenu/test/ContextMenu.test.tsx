@@ -3,7 +3,7 @@ import { initializeApp } from 'firebase/app';
 import { getDatabase, ref } from 'firebase/database';
 import { firebaseConfig } from '../../../../firebaseConfig';
 
-import TableForm from '../../../TableForm';
+import TableForm from '../../../TableForm/TableForm';
 import ContextMenu from '../ContextMenu';
 import { handleMenuItemEvent } from '../handleMenuItemEvent';
 import Button from '../../Button/Button';
