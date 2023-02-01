@@ -69,9 +69,7 @@ const App = () => {
 			document.body.classList.remove('lockScroll');
 			document.body.style.top = '';
 		}
-	}, [editTask.showMenu, state.isModal]);
 
-	useEffect(() => {
 		const close = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
 				state.isModal && hideModalHandler(e);
@@ -347,31 +345,32 @@ const App = () => {
 		setEditFormData(formValues);
 	};
 
-	const hideModalHandler = (
-		e: React.MouseEvent | React.TouchEvent | KeyboardEvent
-	) => {
-		e.stopPropagation();
-		if ((e as KeyboardEvent).key === 'Tab') return;
+	const hideModalHandler = useCallback(
+		(e: React.MouseEvent | React.TouchEvent | KeyboardEvent) => {
+			e.stopPropagation();
+			if ((e as KeyboardEvent).key === 'Tab') return;
 
-		if (editTask.inputType === 'priority-cell') {
-			const newFormData = {
-				...editFormData,
-				letterPriority: '',
-				numberPriority: '',
-			};
-			setEditFormData(newFormData);
-		} else {
-			const newFormData = {
-				...addFormData,
-				letterPriority: '',
-				numberPriority: '',
-			};
-			setAddFormData(newFormData);
-		}
-		setTimeout(() => {
-			setState({ isModal: false, isLoading: false, httpError: null });
-		}, 250);
-	};
+			if (editTask.inputType === 'priority-cell') {
+				const newFormData = {
+					...editFormData,
+					letterPriority: '',
+					numberPriority: '',
+				};
+				setEditFormData(newFormData);
+			} else {
+				const newFormData = {
+					...addFormData,
+					letterPriority: '',
+					numberPriority: '',
+				};
+				setAddFormData(newFormData);
+			}
+			setTimeout(() => {
+				setState({ isModal: false, isLoading: false, httpError: null });
+			}, 250);
+		},
+		[editFormData, addFormData, editTask.inputType]
+	);
 
 	if (state.httpError) {
 		return (
