@@ -13,7 +13,7 @@ import trash from '../../../assets/SVG/trash.svg';
 import close from '../../../assets/SVG/close-regular.svg';
 import { Task, TaskActionShape } from '../../../ts/types';
 import { EditTask, EditFormData } from '../../../ts/interfaces';
-import { sortList } from '../../App/handlers';
+import sortList from '../../../utilities/sortList';
 import { handleMenuItemEvent } from './handleMenuItemEvent';
 import Button from '../Button/Button';
 

@@ -17,7 +17,7 @@ import { EditTask, EditFormData, ErrorsAndLoading } from '../../ts/interfaces';
 import { TaskActionType } from '../../ts/enums';
 import { taskReducer } from '../../reducers';
 import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
-import { sortList } from './handlers';
+import sortList from '../../utilities/sortList';
 
 const App = () => {
 	const [tasks, taskDispatch] = useReducer(taskReducer, []);
