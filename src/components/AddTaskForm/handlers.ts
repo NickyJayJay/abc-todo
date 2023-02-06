@@ -1,8 +1,7 @@
 import React, { ChangeEvent } from 'react';
 import { nanoid } from 'nanoid';
-import { initializeApp } from 'firebase/app';
-import { firebaseConfig } from '../../firebaseConfig';
 
+import { url } from '../../firebaseConfig';
 import { ErrorsAndLoading, EditFormData } from '../../ts/interfaces';
 import { TaskActionShape } from '../../ts/types';
 import { TaskActionType } from '../../ts/enums';
@@ -16,10 +15,6 @@ export interface Options {
 	state: ErrorsAndLoading;
 	isModal: boolean | undefined;
 }
-
-// Initialize Firebase and set bindings
-const app = initializeApp(firebaseConfig);
-const url = app.options.databaseURL;
 
 export const handleAddFormSubmit = (options: Options) => {
 	const { taskDispatch, addFormData, setAddFormData }: Options = options;

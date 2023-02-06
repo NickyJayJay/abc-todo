@@ -1,8 +1,7 @@
 import React from 'react';
 import FocusLock from 'react-focus-lock';
-import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, remove, update } from 'firebase/database';
-import { firebaseConfig } from '../../../firebaseConfig';
+import { ref, remove, update } from 'firebase/database';
+import { db } from '../../../firebaseConfig';
 
 import classes from './ContextMenu.module.scss';
 import checkmark from '../../../assets/SVG/checkmark-green.svg';
@@ -29,10 +28,6 @@ interface Props {
 	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 	handleMenuItemEvent: typeof handleMenuItemEvent;
 }
-
-// Initialize Firebase and set bindings
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
 
 const ContextMenu = ({
 	xPos,

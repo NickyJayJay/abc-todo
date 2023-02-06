@@ -1,8 +1,7 @@
 import { render, screen, fireEvent, within } from '@testing-library/react';
-import { initializeApp } from 'firebase/app';
-import { getDatabase, ref } from 'firebase/database';
-import { firebaseConfig } from '../../../../firebaseConfig';
+import { ref } from 'firebase/database';
 
+import { db } from '../../../../firebaseConfig';
 import TableForm from '../../../TableForm/TableForm';
 import ContextMenu from '../ContextMenu';
 import { handleMenuItemEvent } from '../handleMenuItemEvent';
@@ -60,8 +59,6 @@ const setEditFormData = jest.fn();
 const sortList = jest.fn();
 const tasks = mockTasks;
 const taskDispatch = jest.fn();
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
 const update = jest.fn();
 const remove = jest.fn();
 const handleEditTask = jest.fn();

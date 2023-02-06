@@ -5,10 +5,9 @@ import React, {
 	ChangeEvent,
 	useReducer,
 } from 'react';
-import { initializeApp } from 'firebase/app';
-// import { getAuth } from 'firebase/auth';
-import { getDatabase, ref, update } from 'firebase/database';
-import { firebaseConfig } from '../../firebaseConfig';
+import { ref, update } from 'firebase/database';
+
+import { db, url } from '../../firebaseConfig';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import Main from '../Main/Main';
 import classes from './App.module.scss';
@@ -53,12 +52,6 @@ const App = () => {
 		yPosTouch: '0px',
 		showMenu: false,
 	});
-
-	// Initialize Firebase and set bindings
-	const app = initializeApp(firebaseConfig);
-	const db = getDatabase(app);
-	// const auth = getAuth();
-	const url = app.options.databaseURL;
 
 	useEffect(() => {
 		if (editTask.showMenu || state.isModal) {
@@ -116,7 +109,7 @@ const App = () => {
 				httpError: error.message,
 			});
 		});
-	}, [url]);
+	}, []);
 
 	const setX = useCallback(
 		(e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => {
