@@ -1,11 +1,11 @@
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import { ref } from 'firebase/database';
 
-import { db } from '../../../../firebaseConfig';
-import TableForm from '../../../TableForm/TableForm';
-import ContextMenu from '../ContextMenu';
-import { handleMenuItemEvent } from '../handleMenuItemEvent';
-import Button from '../../Button/Button';
+import { db } from '../../../firebaseConfig';
+import TableForm from '../../TableForm/TableForm';
+import ContextMenu from './ContextMenu';
+import { handleMenuItemEvent } from './handleMenuItemEvent';
+import Button from '../Button/Button';
 
 const mockTasks = [
 	{
@@ -88,6 +88,8 @@ describe('context menu', () => {
 				handleFormSubmit={jest.fn((e) => e.preventDefault())}
 				handleMenuItemEvent={jest.fn()}
 				showMenu={false}
+				setEditFormData={setEditFormData}
+				editFormData={editFormData}
 			/>
 		);
 
@@ -118,6 +120,8 @@ describe('context menu', () => {
 				handleFormSubmit={jest.fn((e) => e.preventDefault())}
 				handleMenuItemEvent={jest.fn()}
 				showMenu={true}
+				setEditFormData={setEditFormData}
+				editFormData={editFormData}
 			/>
 		);
 

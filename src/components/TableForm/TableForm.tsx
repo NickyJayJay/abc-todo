@@ -1,4 +1,4 @@
-import React, { ChangeEvent, RefObject } from 'react';
+import React, { RefObject } from 'react';
 
 import EditableDescription from '../Cells/EditableDescription';
 import ReadOnlyStatus from '../Cells/ReadOnlyStatus';
@@ -25,12 +25,11 @@ interface Props {
 		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
 		b: Task
 	) => void;
-	editFormData?: EditFormData;
+	editFormData: EditFormData;
 	setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
-	handleEditFormChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 	handleEditFormKeyboard?: (e: React.KeyboardEvent) => void;
 	isModal?: boolean;
-	setEditFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
+	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 	handleMenuItemEvent: typeof handleMenuItemEvent;
 }
 
@@ -47,7 +46,6 @@ const TableForm = ({
 	handleEditTask,
 	editFormData,
 	setEditTask,
-	handleEditFormChange,
 	handleEditFormKeyboard,
 	isModal,
 	setEditFormData,
@@ -100,13 +98,14 @@ const TableForm = ({
 							{editTask!.inputType === 'description-cell' &&
 							rowId === task.id ? (
 								<EditableDescription
-									handleEditFormChange={handleEditFormChange!}
 									handleFormSubmit={handleFormSubmit!}
 									handleEditFormKeyboard={handleEditFormKeyboard!}
 									taskId={task.id}
 									rowId={rowId}
 									inputType={editTask!.inputType}
 									taskDescription={editFormData!.description}
+									editFormData={editFormData}
+									setEditFormData={setEditFormData}
 								/>
 							) : (
 								<ReadOnlyDescription

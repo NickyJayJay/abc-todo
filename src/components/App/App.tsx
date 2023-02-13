@@ -1,10 +1,4 @@
-import React, {
-	useState,
-	useCallback,
-	useEffect,
-	ChangeEvent,
-	useReducer,
-} from 'react';
+import React, { useState, useCallback, useEffect, useReducer } from 'react';
 import { ref, update } from 'firebase/database';
 
 import { db, url } from '../../firebaseConfig';
@@ -208,18 +202,6 @@ const App = () => {
 		[editTask.xPos, editTask.xPosTouch, editTask.yPos, editTask.yPosTouch]
 	);
 
-	const handleEditFormChange = (e: ChangeEvent<HTMLInputElement>) => {
-		e.preventDefault();
-
-		const fieldName = e.target.getAttribute('name');
-		const fieldValue = e.target.value;
-
-		const newFormData = { ...editFormData };
-		newFormData[fieldName as keyof typeof newFormData] = fieldValue;
-
-		setEditFormData(newFormData);
-	};
-
 	const handleFormSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 
@@ -402,7 +384,6 @@ const App = () => {
 				handleEditTask={handleEditTask}
 				editFormData={editFormData}
 				setEditTask={setEditTask}
-				handleEditFormChange={handleEditFormChange}
 				handleEditFormKeyboard={handleEditFormKeyboard}
 				isModal={state.isModal}
 				setEditFormData={setEditFormData}

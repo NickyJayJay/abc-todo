@@ -1,4 +1,4 @@
-import React, { ChangeEvent, RefObject, useRef, useEffect } from 'react';
+import React, { RefObject, useRef, useEffect } from 'react';
 
 import TableForm from '../TableForm/TableForm';
 import AddTaskForm from '../AddTaskForm/AddTaskForm';
@@ -27,10 +27,9 @@ interface Props {
 	) => void;
 	editFormData: EditFormData;
 	setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
-	handleEditFormChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 	handleEditFormKeyboard?: (e: React.KeyboardEvent) => void;
 	isModal?: boolean;
-	setEditFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
+	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 	handleMenuItemEvent: typeof handleMenuItemEvent;
 	addFormData: EditFormData;
 	setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
@@ -53,7 +52,6 @@ const Main = ({
 	handleEditTask,
 	editFormData,
 	setEditTask,
-	handleEditFormChange,
 	handleEditFormKeyboard,
 	isModal,
 	setEditFormData,
@@ -113,7 +111,6 @@ const Main = ({
 					handleEditTask={handleEditTask}
 					editFormData={editFormData}
 					setEditTask={setEditTask}
-					handleEditFormChange={handleEditFormChange}
 					handleEditFormKeyboard={handleEditFormKeyboard}
 					isModal={isModal}
 					setEditFormData={setEditFormData}

@@ -1,11 +1,14 @@
-import React, { useEffect, useRef, ChangeEvent } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import classes from '../App/App.module.scss';
+import { handleEditFormChange } from '../TableForm/handlers';
+import { EditFormData } from '../../ts/interfaces';
 
 interface Props {
-	handleEditFormChange: (e: ChangeEvent<HTMLInputElement>) => void;
 	handleFormSubmit: (e: React.FormEvent) => void;
 	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
+	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
+	editFormData: EditFormData;
 	taskId?: string | null;
 	rowId?: string | null;
 	inputType?: string | null;
@@ -13,10 +16,11 @@ interface Props {
 }
 
 const EditableDescription = ({
-	handleEditFormChange,
 	taskId,
 	handleFormSubmit,
 	handleEditFormKeyboard,
+	setEditFormData,
+	editFormData,
 	rowId,
 	inputType,
 	taskDescription,
@@ -42,7 +46,10 @@ const EditableDescription = ({
 				name='description'
 				aria-label='description'
 				value={taskDescription as string}
-				onChange={(event) => handleEditFormChange(event)}
+				onChange={handleEditFormChange({
+					editFormData,
+					setEditFormData,
+				})}
 				onKeyDown={(event) => handleEditFormKeyboard(event)}
 				onBlur={(event) => handleFormSubmit(event)}
 				ref={inputRef}
