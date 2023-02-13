@@ -75,40 +75,45 @@ const App = () => {
 
 	useEffect(() => {
 		const fetchTasks = async () => {
-			const response = await fetch(`${url}/tasks.json`);
+			try {
+				const response = await fetch(`${url}/tasks.json`);
 
-			if (!response.ok) {
-				throw new Error('Something went wrong!');
-			}
+				if (!response.ok) {
+					throw new Error('Something went wrong!');
+				}
 
-			const responseData = await response.json();
-			const loadedTasks: Task[] = [];
+				const responseData = await response.json();
+				const loadedTasks: Task[] = [];
 
-			for (const key in responseData) {
-				loadedTasks.push({
-					id: key,
-					status: responseData[key].status,
-					priority: responseData[key].priority,
-					description: responseData[key].description,
+				for (const key in responseData) {
+					loadedTasks.push({
+						id: key,
+						status: responseData[key].status,
+						priority: responseData[key].priority,
+						description: responseData[key].description,
+					});
+				}
+
+				sortList(loadedTasks);
+
+				taskDispatch({
+					type: TaskActionType.SET,
+					data: loadedTasks,
 				});
+				setState({ isModal: false, isLoading: false, httpError: null });
+			} catch (error) {
+				if (error instanceof Error) {
+					setState({
+						isModal: false,
+						isLoading: false,
+						httpError: error.message,
+					});
+				} else {
+					console.log('Unexpected error', error);
+				}
 			}
-
-			sortList(loadedTasks);
-
-			taskDispatch({
-				type: TaskActionType.SET,
-				data: loadedTasks,
-			});
-			setState({ isModal: false, isLoading: false, httpError: null });
 		};
-
-		fetchTasks().catch((error) => {
-			setState({
-				isModal: false,
-				isLoading: false,
-				httpError: error.message,
-			});
-		});
+		fetchTasks();
 	}, []);
 
 	const setX = useCallback(
