@@ -1,4 +1,4 @@
-import { EditFormData, ErrorsAndLoading } from '../../../ts/interfaces';
+import { EditFormData, ErrorsAndLoading } from '../../ts/interfaces';
 
 interface Options {
 	inputType?: string | null;

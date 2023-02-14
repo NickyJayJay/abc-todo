@@ -5,7 +5,7 @@ import FocusLock from 'react-focus-lock';
 import { PriorityContext } from '../../../context/priority-context';
 import classes from './Modal.module.scss';
 import Card from '../Card/Card';
-import UpdateTaskPriority from '../../Cells/UpdateTaskPriority/UpdateTaskPriority';
+import UpdateTaskPriority from '../../UpdateTaskPriority/UpdateTaskPriority';
 import Close from '../../../assets/SVG/close.svg';
 
 type Props = {
