@@ -14,7 +14,7 @@ interface Props {
 	editTask: EditTask;
 }
 
-const ReadOnlyPriority = ({
+const Priority = ({
 	handleEditTask,
 	task,
 	isModal,
@@ -54,4 +54,4 @@ const ReadOnlyPriority = ({
 	);
 };
 
-export default ReadOnlyPriority;
+export default Priority;

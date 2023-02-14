@@ -16,7 +16,7 @@ interface Props {
 	editTask: EditTask;
 }
 
-const ReadOnlyStatus = ({ handleEditTask, task, editTask }: Props) => {
+const Status = ({ handleEditTask, task, editTask }: Props) => {
 	const cellRef = useRef<HTMLTableCellElement>(null);
 
 	useEffect(() => {
@@ -59,4 +59,4 @@ const ReadOnlyStatus = ({ handleEditTask, task, editTask }: Props) => {
 	);
 };
 
-export default ReadOnlyStatus;
+export default Status;

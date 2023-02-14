@@ -47,6 +47,28 @@ const App = () => {
 		showMenu: false,
 	});
 
+	const handleOutsideClick = useCallback(
+		(e: MouseEvent | TouchEvent | KeyboardEvent) => {
+			setEditTask({
+				rowId: null,
+				inputType: (e.target as HTMLElement).dataset.id || null,
+				xPos: null,
+				yPos: null,
+				xPosTouch: null,
+				yPosTouch: null,
+				showMenu:
+					((editTask.xPos && editTask.yPos) ||
+						(editTask.xPosTouch && editTask.yPosTouch)) &&
+					(e.target as HTMLButtonElement).dataset.id === 'status-cell'
+						? true
+						: false,
+			});
+		},
+		[editTask.xPos, editTask.xPosTouch, editTask.yPos, editTask.yPosTouch]
+	);
+
+	const outsideClickRef = useOutsideClick((e) => handleOutsideClick(e));
+
 	useEffect(() => {
 		if (editTask.showMenu || state.isModal) {
 			document.body.classList.add('lockScroll');
@@ -103,7 +125,7 @@ const App = () => {
 						httpError: error.message,
 					});
 				} else {
-					console.log('Unexpected error', error);
+					console.log('Unexpected error: ', error);
 				}
 			}
 		};
@@ -124,8 +146,6 @@ const App = () => {
 		},
 		[]
 	);
-
-	const outsideClickRef = useOutsideClick((e) => handleOutsideClick(e));
 
 	const setY = useCallback(
 		(e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => {
@@ -180,26 +200,6 @@ const App = () => {
 			}
 		},
 		[outsideClickRef]
-	);
-
-	const handleOutsideClick = useCallback(
-		(e: MouseEvent | TouchEvent | KeyboardEvent) => {
-			setEditTask({
-				rowId: null,
-				inputType: (e.target as HTMLElement).dataset.id || null,
-				xPos: null,
-				yPos: null,
-				xPosTouch: null,
-				yPosTouch: null,
-				showMenu:
-					((editTask.xPos && editTask.yPos) ||
-						(editTask.xPosTouch && editTask.yPosTouch)) &&
-					(e.target as HTMLButtonElement).dataset.id === 'status-cell'
-						? true
-						: false,
-			});
-		},
-		[editTask.xPos, editTask.xPosTouch, editTask.yPos, editTask.yPosTouch]
 	);
 
 	const handleFormSubmit = (e: React.FormEvent) => {
