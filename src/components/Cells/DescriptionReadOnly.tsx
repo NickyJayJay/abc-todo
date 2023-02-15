@@ -10,7 +10,7 @@ interface Props {
 	task: Task;
 }
 
-const ReadOnlyDescription = ({ handleEditTask, task }: Props) => {
+const DescriptionReadOnly = ({ handleEditTask, task }: Props) => {
 	return (
 		<td
 			data-id='description-cell'
@@ -30,4 +30,4 @@ const ReadOnlyDescription = ({ handleEditTask, task }: Props) => {
 	);
 };
 
-export default ReadOnlyDescription;
+export default DescriptionReadOnly;

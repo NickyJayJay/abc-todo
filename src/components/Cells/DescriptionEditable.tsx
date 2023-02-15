@@ -15,7 +15,7 @@ interface Props {
 	taskDescription?: string | null;
 }
 
-const EditableDescription = ({
+const DescriptionEditable = ({
 	taskId,
 	handleFormSubmit,
 	handleEditFormKeyboard,
@@ -59,4 +59,4 @@ const EditableDescription = ({
 	);
 };
 
-export default EditableDescription;
+export default DescriptionEditable;

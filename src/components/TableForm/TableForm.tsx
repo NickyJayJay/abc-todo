@@ -1,9 +1,9 @@
 import React, { RefObject } from 'react';
 
-import EditableDescription from '../Cells/DescriptionEditable';
+import DescriptionEditable from '../Cells/DescriptionEditable';
 import Status from '../Cells/Status';
 import Priority from '../Cells/Priority';
-import ReadOnlyDescription from '../Cells/DescriptionReadOnly';
+import DescriptionReadOnly from '../Cells/DescriptionReadOnly';
 import ContextMenu from '../UI/ContextMenu/ContextMenu';
 import checkBox from '../../assets/SVG/checkBox.svg';
 import classes from '../App/App.module.scss';
@@ -97,7 +97,7 @@ const TableForm = ({
 							/>
 							{editTask!.inputType === 'description-cell' &&
 							rowId === task.id ? (
-								<EditableDescription
+								<DescriptionEditable
 									handleFormSubmit={handleFormSubmit!}
 									handleEditFormKeyboard={handleEditFormKeyboard!}
 									taskId={task.id}
@@ -108,7 +108,7 @@ const TableForm = ({
 									setEditFormData={setEditFormData}
 								/>
 							) : (
-								<ReadOnlyDescription
+								<DescriptionReadOnly
 									task={task}
 									handleEditTask={handleEditTask!}
 								/>
