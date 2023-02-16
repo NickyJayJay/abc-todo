@@ -11,6 +11,7 @@ import { TaskActionType } from '../../ts/enums';
 import { taskReducer } from '../../reducers';
 import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
 import sortList from '../../utilities/sortList';
+import useCoordinates from '../../hooks/useCoordinates';
 
 const App = () => {
 	const [tasks, taskDispatch] = useReducer(taskReducer, []);
@@ -46,6 +47,8 @@ const App = () => {
 		yPosTouch: '0px',
 		showMenu: false,
 	});
+
+	const [setX, setY, tableRef] = useCoordinates();
 
 	const handleOutsideClick = useCallback(
 		(e: MouseEvent | TouchEvent | KeyboardEvent) => {
@@ -131,76 +134,6 @@ const App = () => {
 		};
 		fetchTasks();
 	}, []);
-
-	const setX = useCallback(
-		(e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => {
-			if (e.type === 'click') {
-				return `${(e as React.MouseEvent).pageX}px`;
-			} else if (e.type === 'touchstart') {
-				return `${(e as React.TouchEvent).touches[0].pageX}px`;
-			} else if (e.type === 'keydown') {
-				return `${(e.target as HTMLElement).getBoundingClientRect().x + 35}px`;
-			} else {
-				return null;
-			}
-		},
-		[]
-	);
-
-	const setY = useCallback(
-		(e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => {
-			const containerBottom = (
-				outsideClickRef.current as HTMLElement
-			).getBoundingClientRect().bottom;
-			const menuBottom: number =
-				(e as React.MouseEvent).pageY + 224 - window.scrollY ||
-				((e as React.TouchEvent).touches &&
-					(e as React.TouchEvent).touches[0].pageY + 224 - window.scrollY) ||
-				(e.target as HTMLElement).getBoundingClientRect().y + 224;
-			if (e.type === 'click' && menuBottom <= containerBottom) {
-				return `${(e as React.MouseEvent).pageY}px`;
-			} else if (e.type === 'click' && menuBottom > containerBottom) {
-				return `${
-					(e as React.MouseEvent).pageY - (menuBottom - containerBottom)
-				}px`;
-			} else if (
-				e.type === 'touchstart' &&
-				(e as React.TouchEvent).touches &&
-				(e as React.TouchEvent).touches[0].pageY &&
-				menuBottom <= containerBottom
-			) {
-				return `${(e as React.TouchEvent).touches[0].pageY}px`;
-			} else if (
-				e.type === 'touchstart' &&
-				(e as React.TouchEvent).touches &&
-				(e as React.TouchEvent).touches[0].pageY &&
-				menuBottom > containerBottom
-			) {
-				return `${
-					(e as React.TouchEvent).touches[0].pageY -
-					(menuBottom - containerBottom)
-				}px`;
-			} else if (
-				e.type === 'keydown' &&
-				(e.target as HTMLElement).getBoundingClientRect() &&
-				menuBottom <= containerBottom
-			) {
-				return `${(e.target as HTMLElement).getBoundingClientRect().y + 35}px`;
-			} else if (
-				e.type === 'keydown' &&
-				(e.target as HTMLElement).getBoundingClientRect() &&
-				menuBottom > containerBottom
-			) {
-				return `${
-					(e.target as HTMLElement).getBoundingClientRect().y -
-					(menuBottom - containerBottom)
-				}px`;
-			} else {
-				return null;
-			}
-		},
-		[outsideClickRef]
-	);
 
 	const handleFormSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -379,6 +312,7 @@ const App = () => {
 				yPos={editTask.yPos}
 				showMenu={editTask.showMenu}
 				outsideClickRef={outsideClickRef}
+				tableRef={tableRef}
 				tasks={tasks}
 				taskDispatch={taskDispatch}
 				handleEditTask={handleEditTask}

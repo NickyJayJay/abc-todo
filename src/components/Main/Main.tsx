@@ -18,6 +18,7 @@ interface Props {
 	xPos?: string | null;
 	yPos?: string | null;
 	showMenu?: boolean;
+	tableRef: RefObject<HTMLTableElement>;
 	outsideClickRef?: RefObject<HTMLTableSectionElement>;
 	tasks: Task[];
 	taskDispatch: React.Dispatch<TaskActionShape>;
@@ -47,6 +48,7 @@ const Main = ({
 	yPos,
 	showMenu,
 	outsideClickRef,
+	tableRef,
 	tasks,
 	taskDispatch,
 	handleEditTask,
@@ -106,6 +108,7 @@ const Main = ({
 					rowId={rowId}
 					showMenu={showMenu}
 					outsideClickRef={outsideClickRef}
+					tableRef={tableRef}
 					tasks={tasks}
 					taskDispatch={taskDispatch}
 					handleEditTask={handleEditTask}

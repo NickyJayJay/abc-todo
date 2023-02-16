@@ -19,6 +19,7 @@ interface Props {
 	rowId?: string | null;
 	showMenu?: boolean;
 	outsideClickRef?: RefObject<HTMLTableSectionElement>;
+	tableRef?: RefObject<HTMLTableElement>;
 	tasks: Task[];
 	taskDispatch?: React.Dispatch<TaskActionShape>;
 	handleEditTask?: (
@@ -41,6 +42,7 @@ const TableForm = ({
 	rowId,
 	showMenu,
 	outsideClickRef,
+	tableRef,
 	tasks,
 	taskDispatch,
 	handleEditTask,
@@ -67,7 +69,7 @@ const TableForm = ({
 					handleMenuItemEvent={handleMenuItemEvent}
 				/>
 			)}
-			<table>
+			<table ref={tableRef}>
 				<thead>
 					<tr>
 						<th className={classes.statusTitle}>
