@@ -16,10 +16,11 @@ import useCoordinates from '../../hooks/useCoordinates';
 const App = () => {
 	const [tasks, taskDispatch] = useReducer(taskReducer, []);
 
+	const [isModal, setModal] = useState(false);
+
 	const [state, setState] = useState<ErrorsAndLoading>({
 		isLoading: true,
 		httpError: null,
-		isModal: false,
 	});
 
 	const [addFormData, setAddFormData] = useState<EditFormData>({
@@ -73,18 +74,18 @@ const App = () => {
 	const outsideClickRef = useOutsideClick((e) => handleOutsideClick(e));
 
 	useEffect(() => {
-		if (editTask.showMenu || state.isModal) {
+		if (editTask.showMenu || isModal) {
 			document.body.classList.add('lockScroll');
 			document.body.style.top = `-${window.scrollY}px`;
 		}
-		if (!editTask.showMenu && !state.isModal) {
+		if (!editTask.showMenu && !isModal) {
 			document.body.classList.remove('lockScroll');
 			document.body.style.top = '';
 		}
 
 		const close = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
-				state.isModal && hideModalHandler(e);
+				isModal && hideModalHandler(e);
 				editTask.showMenu && setEditTask({ ...editTask, showMenu: false });
 			}
 		};
@@ -119,11 +120,10 @@ const App = () => {
 					type: TaskActionType.SET,
 					data: loadedTasks,
 				});
-				setState({ isModal: false, isLoading: false, httpError: null });
+				setState({ isLoading: false, httpError: null });
 			} catch (error) {
 				if (error instanceof Error) {
 					setState({
-						isModal: false,
 						isLoading: false,
 						httpError: error.message,
 					});
@@ -224,7 +224,7 @@ const App = () => {
 					(e as React.MouseEvent).clientY !== 0)) &&
 			priorityCell
 		) {
-			setState({ isModal: true, isLoading: false, httpError: null });
+			setModal(true);
 		}
 
 		e.stopPropagation();
@@ -279,7 +279,7 @@ const App = () => {
 				setAddFormData(newFormData);
 			}
 			setTimeout(() => {
-				setState({ isModal: false, isLoading: false, httpError: null });
+				setModal(false);
 			}, 250);
 		},
 		[editFormData, addFormData, editTask.inputType]
@@ -319,7 +319,8 @@ const App = () => {
 				editFormData={editFormData}
 				setEditTask={setEditTask}
 				handleEditFormKeyboard={handleEditFormKeyboard}
-				isModal={state.isModal}
+				isModal={isModal}
+				setModal={setModal}
 				setEditFormData={setEditFormData}
 				handleMenuItemEvent={handleMenuItemEvent}
 				addFormData={addFormData}

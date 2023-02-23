@@ -1,4 +1,4 @@
-import { EditFormData, ErrorsAndLoading } from '../../ts/interfaces';
+import { EditFormData } from '../../ts/interfaces';
 
 interface Options {
 	inputType?: string | null;
@@ -9,7 +9,7 @@ interface Options {
 	setEditFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
 	setAddFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
 	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
-	setState?: React.Dispatch<React.SetStateAction<ErrorsAndLoading>>;
+	setModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const letterPriorityHandler = (options: Options) => {
@@ -96,7 +96,7 @@ export const updatePriorityHandler = (options: Options) => {
 		addFormData,
 		setAddFormData,
 		handleFormSubmit,
-		setState,
+		setModal,
 	}: Options = options;
 
 	return (e: React.MouseEvent<Element> | React.TouchEvent<Element>) => {
@@ -118,8 +118,7 @@ export const updatePriorityHandler = (options: Options) => {
 				: alert("Priority input's integer value is invalid.");
 		}
 		setTimeout(() => {
-			setState &&
-				setState({ isModal: false, isLoading: false, httpError: null });
+			setModal && setModal(false);
 		}, 250);
 	};
 };

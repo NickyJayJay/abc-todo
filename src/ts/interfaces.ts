@@ -20,7 +20,6 @@ export interface EditFormData {
 export interface ErrorsAndLoading {
 	isLoading?: boolean;
 	httpError?: string | null;
-	isModal?: boolean;
 }
 export interface Menu {
 	editTask: EditTask;

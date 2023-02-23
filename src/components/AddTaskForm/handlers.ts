@@ -2,7 +2,7 @@ import React, { ChangeEvent } from 'react';
 import { nanoid } from 'nanoid';
 
 import { url } from '../../firebaseConfig';
-import { ErrorsAndLoading, EditFormData } from '../../ts/interfaces';
+import { EditFormData } from '../../ts/interfaces';
 import { TaskActionShape } from '../../ts/types';
 import { TaskActionType } from '../../ts/enums';
 
@@ -11,9 +11,7 @@ export interface Options {
 	taskDispatch: React.Dispatch<TaskActionShape>;
 	setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 	inputType?: string | null;
-	setState: React.Dispatch<React.SetStateAction<ErrorsAndLoading>>;
-	state: ErrorsAndLoading;
-	isModal: boolean | undefined;
+	setModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const handleAddFormSubmit = (options: Options) => {
@@ -53,7 +51,7 @@ export const handleAddFormSubmit = (options: Options) => {
 };
 
 export const handleAddFormKeydown = (options: Options) => {
-	const { inputType, setState }: Options = options;
+	const { inputType, setModal }: Options = options;
 
 	return (e: React.KeyboardEvent | ChangeEvent) => {
 		(e as React.KeyboardEvent).key === 'Enter' && e.preventDefault();
@@ -73,7 +71,7 @@ export const handleAddFormKeydown = (options: Options) => {
 			!(e as React.KeyboardEvent).shiftKey
 		) {
 			e.preventDefault();
-			setState({ isModal: true, isLoading: false, httpError: null });
+			setModal(true);
 		} else if (
 			((inputType === 'priority-input' || inputType === 'status-input') &&
 				(e as React.KeyboardEvent).key) === 'Tab' &&
@@ -93,13 +91,13 @@ export const handleAddFormKeydown = (options: Options) => {
 };
 
 export const handlePriorityEvent = (options: Options) => {
-	const { setState, state }: Options = options;
+	const { setModal }: Options = options;
 
 	return (e: React.MouseEvent | React.TouchEvent) => {
 		e.preventDefault();
 		(e as React.MouseEvent).clientX !== 0 &&
 			(e as React.MouseEvent).clientY !== 0 &&
-			setState({ ...state, isModal: true });
+			setModal(true);
 	};
 };
 
