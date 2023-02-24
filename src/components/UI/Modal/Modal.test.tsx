@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 
-import App from '../../../App';
+import App from '../../App/App';
 
 describe('Modal', () => {
 	test('Modal hidden if isModal state is false and element being edited is not a priority cell in the table or the priority input in the AddTaskForm', async () => {

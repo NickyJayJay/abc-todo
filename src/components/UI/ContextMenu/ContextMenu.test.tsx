@@ -1,12 +1,11 @@
 import { render, screen, fireEvent, within } from '@testing-library/react';
-import { initializeApp } from 'firebase/app';
-import { getDatabase, ref } from 'firebase/database';
-import { firebaseConfig } from '../../../../firebaseConfig';
+import { ref } from 'firebase/database';
 
-import TableForm from '../../../TableForm';
-import ContextMenu from '../ContextMenu';
-import { handleMenuItemEvent } from '../handleMenuItemEvent';
-import Button from '../../Button/Button';
+import { db } from '../../../firebaseConfig';
+import TableForm from '../../TableForm/TableForm';
+import ContextMenu from './ContextMenu';
+import { handleMenuItemEvent } from './handleMenuItemEvent';
+import Button from '../Button/Button';
 
 const mockTasks = [
 	{
@@ -54,18 +53,18 @@ const editFormData = {
 };
 
 const editTask = mockEditTask;
+const rowId = null;
 const setEditTask = jest.fn();
 const setEditFormData = jest.fn();
 const sortList = jest.fn();
 const tasks = mockTasks;
 const taskDispatch = jest.fn();
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
 const update = jest.fn();
 const remove = jest.fn();
 const handleEditTask = jest.fn();
 const handleMenuMockArgs = {
 	editTask,
+	rowId,
 	setEditTask,
 	editFormData,
 	setEditFormData,
@@ -84,10 +83,13 @@ describe('context menu', () => {
 			<TableForm
 				tasks={mockTasks}
 				editTask={mockEditTask}
+				rowId={null}
 				handleEditTask={handleEditTask}
 				handleFormSubmit={jest.fn((e) => e.preventDefault())}
 				handleMenuItemEvent={jest.fn()}
 				showMenu={false}
+				setEditFormData={setEditFormData}
+				editFormData={editFormData}
 			/>
 		);
 
@@ -118,6 +120,8 @@ describe('context menu', () => {
 				handleFormSubmit={jest.fn((e) => e.preventDefault())}
 				handleMenuItemEvent={jest.fn()}
 				showMenu={true}
+				setEditFormData={setEditFormData}
+				editFormData={editFormData}
 			/>
 		);
 

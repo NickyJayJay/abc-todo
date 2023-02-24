@@ -4,9 +4,9 @@ export interface EditTask {
 	rowId: string | null;
 	inputType?: string | null;
 	xPos?: string | null;
-	yPos: string | null;
-	xPosTouch: string | null;
-	yPosTouch: string | null;
+	yPos?: string | null;
+	xPosTouch?: string | null;
+	yPosTouch?: string | null;
 	showMenu: boolean;
 }
 
@@ -20,10 +20,10 @@ export interface EditFormData {
 export interface ErrorsAndLoading {
 	isLoading?: boolean;
 	httpError?: string | null;
-	isModal?: boolean;
 }
 export interface Menu {
 	editTask: EditTask;
+	rowId?: string | null;
 	setEditTask: (a: React.SetStateAction<EditTask>) => void;
 	editFormData: EditFormData;
 	setEditFormData: (a: React.SetStateAction<EditFormData>) => void;

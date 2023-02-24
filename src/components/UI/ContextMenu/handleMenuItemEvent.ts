@@ -5,6 +5,7 @@ import { TaskActionType } from '../../../ts/enums';
 export const handleMenuItemEvent = (options: Menu) => {
 	const {
 		editTask,
+		rowId,
 		setEditTask,
 		editFormData,
 		setEditFormData,
@@ -38,13 +39,13 @@ export const handleMenuItemEvent = (options: Menu) => {
 		}
 
 		if (menuValue === 'Remove') {
-			const index = tasks.findIndex((task) => task.id === editTask.rowId);
+			const index = tasks.findIndex((task) => task.id === rowId);
 
 			taskDispatch({
 				type: TaskActionType.REMOVE,
 				index: index,
 			});
-			const dbRef = ref(db, `tasks/${editTask.rowId}`);
+			const dbRef = ref(db, `tasks/${rowId}`);
 			remove(dbRef);
 			setEditTask({ ...editTask, showMenu: false });
 			return;
@@ -60,20 +61,20 @@ export const handleMenuItemEvent = (options: Menu) => {
 		}
 
 		const editedTask: Task = {
-			id: editTask.rowId,
+			id: rowId,
 			status: menuValue || null,
 			priority: menuValue !== 'Completed' ? editFormData.priority! : '',
 			description: editFormData.description,
 		};
 
 		const newTasks = [...tasks];
-		const index = tasks.findIndex((task) => task.id === editTask.rowId);
+		const index = tasks.findIndex((task) => task.id === rowId);
 		newTasks[index] = editedTask;
 		taskDispatch({
 			type: TaskActionType.SET,
 			data: newTasks,
 		});
-		const dbRef = ref(db, `tasks/${editTask.rowId}`);
+		const dbRef = ref(db, `tasks/${rowId}`);
 		update(dbRef, editedTask);
 
 		setEditTask({ ...editTask, showMenu: false });

@@ -1,8 +1,7 @@
 import React from 'react';
 import FocusLock from 'react-focus-lock';
-import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, remove, update } from 'firebase/database';
-import { firebaseConfig } from '../../../firebaseConfig';
+import { ref, remove, update } from 'firebase/database';
+import { db } from '../../../firebaseConfig';
 
 import classes from './ContextMenu.module.scss';
 import checkmark from '../../../assets/SVG/checkmark-green.svg';
@@ -13,7 +12,7 @@ import trash from '../../../assets/SVG/trash.svg';
 import close from '../../../assets/SVG/close-regular.svg';
 import { Task, TaskActionShape } from '../../../ts/types';
 import { EditTask, EditFormData } from '../../../ts/interfaces';
-import { sortList } from '../../../App';
+import sortList from '../../../utilities/sortList';
 import { handleMenuItemEvent } from './handleMenuItemEvent';
 import Button from '../Button/Button';
 
@@ -21,6 +20,7 @@ interface Props {
 	xPos?: string | null;
 	yPos?: string | null;
 	editTask: EditTask;
+	rowId?: string | null;
 	tasks: Task[];
 	taskDispatch: React.Dispatch<TaskActionShape>;
 	editFormData: EditFormData;
@@ -29,14 +29,11 @@ interface Props {
 	handleMenuItemEvent: typeof handleMenuItemEvent;
 }
 
-// Initialize Firebase and set bindings
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
 const ContextMenu = ({
 	xPos,
 	yPos,
 	editTask,
+	rowId,
 	tasks,
 	taskDispatch,
 	editFormData,
@@ -59,6 +56,7 @@ const ContextMenu = ({
 						<Button
 							onClick={handleMenuItemEvent({
 								editTask,
+								rowId,
 								setEditTask,
 								editFormData,
 								setEditFormData,
@@ -79,6 +77,7 @@ const ContextMenu = ({
 						<Button
 							onClick={handleMenuItemEvent({
 								editTask,
+								rowId,
 								setEditTask,
 								editFormData,
 								setEditFormData,
@@ -99,6 +98,7 @@ const ContextMenu = ({
 						<Button
 							onClick={handleMenuItemEvent({
 								editTask,
+								rowId,
 								setEditTask,
 								editFormData,
 								setEditFormData,
@@ -119,6 +119,7 @@ const ContextMenu = ({
 						<Button
 							onClick={handleMenuItemEvent({
 								editTask,
+								rowId,
 								setEditTask,
 								editFormData,
 								setEditFormData,
@@ -139,6 +140,7 @@ const ContextMenu = ({
 						<Button
 							onClick={handleMenuItemEvent({
 								editTask,
+								rowId,
 								setEditTask,
 								editFormData,
 								setEditFormData,
@@ -159,6 +161,7 @@ const ContextMenu = ({
 						<Button
 							onClick={handleMenuItemEvent({
 								editTask,
+								rowId,
 								setEditTask,
 								editFormData,
 								setEditFormData,

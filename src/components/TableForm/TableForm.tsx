@@ -1,47 +1,53 @@
-import React, { ChangeEvent, RefObject } from 'react';
+import React, { RefObject } from 'react';
 
-import EditableDescription from './Cells/EditableDescription';
-import ReadOnlyStatus from './Cells/ReadOnlyStatus';
-import ReadOnlyPriority from './Cells/ReadOnlyPriority';
-import ReadOnlyDescription from './Cells/ReadOnlyDescription';
-import ContextMenu from './UI/ContextMenu/ContextMenu';
-import checkBox from '../assets/SVG/checkBox.svg';
-import classes from '../App.module.scss';
-import { EditTask, EditFormData } from '../ts/interfaces';
-import { Task, TaskActionShape } from '../ts/types';
-import { handleMenuItemEvent } from '../components/UI/ContextMenu/handleMenuItemEvent';
+import DescriptionEditable from '../Cells/DescriptionEditable';
+import Status from '../Cells/Status';
+import Priority from '../Cells/Priority';
+import DescriptionReadOnly from '../Cells/DescriptionReadOnly';
+import ContextMenu from '../UI/ContextMenu/ContextMenu';
+import checkBox from '../../assets/SVG/checkBox.svg';
+import classes from '../App/App.module.scss';
+import { EditTask, EditFormData } from '../../ts/interfaces';
+import { Task, TaskActionShape } from '../../ts/types';
+import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
 
 interface Props {
 	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
-	editTask?: EditTask;
+	editTask: EditTask;
+	xPos?: string | null;
+	yPos?: string | null;
+	rowId?: string | null;
 	showMenu?: boolean;
 	outsideClickRef?: RefObject<HTMLTableSectionElement>;
+	tableRef?: RefObject<HTMLTableElement>;
 	tasks: Task[];
 	taskDispatch?: React.Dispatch<TaskActionShape>;
 	handleEditTask?: (
 		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
 		b: Task
 	) => void;
-	editFormData?: EditFormData;
+	editFormData: EditFormData;
 	setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
-	handleEditFormChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 	handleEditFormKeyboard?: (e: React.KeyboardEvent) => void;
 	isModal?: boolean;
-	setEditFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
+	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 	handleMenuItemEvent: typeof handleMenuItemEvent;
 }
 
 const TableForm = ({
 	handleFormSubmit,
 	editTask,
+	xPos,
+	yPos,
+	rowId,
 	showMenu,
 	outsideClickRef,
+	tableRef,
 	tasks,
 	taskDispatch,
 	handleEditTask,
 	editFormData,
 	setEditTask,
-	handleEditFormChange,
 	handleEditFormKeyboard,
 	isModal,
 	setEditFormData,
@@ -51,9 +57,10 @@ const TableForm = ({
 		<form onSubmit={handleFormSubmit}>
 			{showMenu && (
 				<ContextMenu
-					xPos={editTask!.xPos}
-					yPos={editTask!.yPos}
-					editTask={editTask!}
+					xPos={xPos}
+					yPos={yPos}
+					rowId={rowId}
+					editTask={editTask}
 					tasks={tasks}
 					taskDispatch={taskDispatch!}
 					editFormData={editFormData!}
@@ -62,7 +69,7 @@ const TableForm = ({
 					handleMenuItemEvent={handleMenuItemEvent}
 				/>
 			)}
-			<table>
+			<table ref={tableRef}>
 				<thead>
 					<tr>
 						<th className={classes.statusTitle}>
@@ -78,12 +85,12 @@ const TableForm = ({
 							key={task.id}
 							className={task.status === 'Completed' ? classes.completed : ''}
 						>
-							<ReadOnlyStatus
+							<Status
 								task={task}
 								handleEditTask={handleEditTask!}
 								editTask={editTask!}
 							/>
-							<ReadOnlyPriority
+							<Priority
 								task={task}
 								handleEditTask={handleEditTask!}
 								handleEditFormKeyboard={handleEditFormKeyboard!}
@@ -91,18 +98,19 @@ const TableForm = ({
 								editTask={editTask!}
 							/>
 							{editTask!.inputType === 'description-cell' &&
-							editTask!.rowId === task.id ? (
-								<EditableDescription
-									handleEditFormChange={handleEditFormChange!}
+							rowId === task.id ? (
+								<DescriptionEditable
 									handleFormSubmit={handleFormSubmit!}
 									handleEditFormKeyboard={handleEditFormKeyboard!}
 									taskId={task.id}
-									rowId={editTask!.rowId}
+									rowId={rowId}
 									inputType={editTask!.inputType}
 									taskDescription={editFormData!.description}
+									editFormData={editFormData}
+									setEditFormData={setEditFormData}
 								/>
 							) : (
-								<ReadOnlyDescription
+								<DescriptionReadOnly
 									task={task}
 									handleEditTask={handleEditTask!}
 								/>

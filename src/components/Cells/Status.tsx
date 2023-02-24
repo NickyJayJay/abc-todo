@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 
-import classes from '../../App.module.scss';
+import classes from '../App/App.module.scss';
 import checkmark from '../../assets/SVG/checkmark.svg';
 import add from '../../assets/SVG/add.svg';
 import arrowRight from '../../assets/SVG/arrow-right.svg';
@@ -16,7 +16,7 @@ interface Props {
 	editTask: EditTask;
 }
 
-const ReadOnlyStatus = ({ handleEditTask, task, editTask }: Props) => {
+const Status = ({ handleEditTask, task, editTask }: Props) => {
 	const cellRef = useRef<HTMLTableCellElement>(null);
 
 	useEffect(() => {
@@ -59,4 +59,4 @@ const ReadOnlyStatus = ({ handleEditTask, task, editTask }: Props) => {
 	);
 };
 
-export default ReadOnlyStatus;
+export default Status;

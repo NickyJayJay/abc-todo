@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 
-import classes from '../../App.module.scss';
+import classes from '../App/App.module.scss';
 import { Task } from '../../ts/types';
 import { EditTask } from '../../ts/interfaces';
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 	editTask: EditTask;
 }
 
-const ReadOnlyPriority = ({
+const Priority = ({
 	handleEditTask,
 	task,
 	isModal,
@@ -54,4 +54,4 @@ const ReadOnlyPriority = ({
 	);
 };
 
-export default ReadOnlyPriority;
+export default Priority;
