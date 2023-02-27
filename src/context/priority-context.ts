@@ -16,7 +16,7 @@ interface PriorityContextShape {
 	tasks?: Task[];
 	taskDispatch?: React.Dispatch<TaskActionShape>;
 	isModal?: boolean;
-	setModal: React.Dispatch<React.SetStateAction<boolean>>;
+	toggleModal: (input: boolean) => void;
 }
 
 export const PriorityContext = createContext({} as PriorityContextShape);

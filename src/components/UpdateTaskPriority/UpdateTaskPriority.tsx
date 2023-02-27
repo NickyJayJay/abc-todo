@@ -19,7 +19,7 @@ const UpdateTaskPriority = () => {
 		numberPriority,
 		handleFormSubmit,
 		isModal,
-		setModal,
+		toggleModal,
 	} = useContext(PriorityContext);
 
 	const options = {
@@ -31,7 +31,7 @@ const UpdateTaskPriority = () => {
 		setEditFormData,
 		setAddFormData,
 		handleFormSubmit,
-		setModal,
+		toggleModal,
 	};
 
 	const radioRef = useRef<HTMLInputElement>(null);

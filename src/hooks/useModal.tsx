@@ -11,11 +11,17 @@ type Props = {
 	role?: string;
 };
 
-const useModal = () => {
+type ReturnType = [
+	() => (({ children, role }: Props) => JSX.Element) | null,
+	(input: boolean) => void,
+	boolean
+];
+
+const useModal = (): ReturnType => {
 	const [isModal, setModal] = useState(false);
 
-	const toggleModal = () => {
-		setModal(!isModal);
+	const toggleModal = (input: boolean) => {
+		setModal(input);
 	};
 
 	const modalContent = ({ children, role }: Props) => {
@@ -24,8 +30,8 @@ const useModal = () => {
 				{ReactDOM.createPortal(
 					<div
 						className={classes.backdrop}
-						onClick={() => toggleModal()}
-						onTouchStart={() => toggleModal()}
+						onClick={() => toggleModal(false)}
+						onTouchStart={() => toggleModal(false)}
 					></div>,
 					document.getElementById('backdrop-root')!
 				)}
@@ -35,8 +41,8 @@ const useModal = () => {
 							<button
 								className={classes.closeModal}
 								tab-index='0'
-								onClick={() => toggleModal()}
-								onTouchStart={() => toggleModal()}
+								onClick={() => toggleModal(false)}
+								onTouchStart={() => toggleModal(false)}
 							>
 								<img src={Close} alt='close icon' />
 							</button>

@@ -30,7 +30,7 @@ interface Props {
 	setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
 	handleEditFormKeyboard?: (e: React.KeyboardEvent) => void;
 	isModal?: boolean;
-	setModal: React.Dispatch<React.SetStateAction<boolean>>;
+	toggleModal: (input: boolean) => void;
 	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 	handleMenuItemEvent: typeof handleMenuItemEvent;
 	addFormData: EditFormData;
@@ -57,7 +57,7 @@ const Main = ({
 	setEditTask,
 	handleEditFormKeyboard,
 	isModal,
-	setModal,
+	toggleModal,
 	setEditFormData,
 	handleMenuItemEvent,
 	addFormData,
@@ -96,7 +96,7 @@ const Main = ({
 							numberPriority: numberPriority,
 							handleFormSubmit,
 							isModal: isModal,
-							setModal: setModal,
+							toggleModal: toggleModal,
 						}}
 					>
 						<Modal onHide={(e) => onHide(e)} role='dialog' />
@@ -128,7 +128,7 @@ const Main = ({
 					taskDispatch={taskDispatch}
 					setAddFormData={setAddFormData}
 					inputType={inputType}
-					setModal={setModal}
+					toggleModal={toggleModal}
 				/>
 			</Card>
 		</>
