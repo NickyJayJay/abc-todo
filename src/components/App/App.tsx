@@ -12,11 +12,10 @@ import { taskReducer } from '../../reducers';
 import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
 import sortList from '../../utilities/sortList';
 import useCoordinates from '../../hooks/useCoordinates';
+import useModal from '../../hooks/useModal';
 
 const App = () => {
 	const [tasks, taskDispatch] = useReducer(taskReducer, []);
-
-	const [isModal, setModal] = useState(false);
 
 	const [state, setState] = useState<ErrorsAndLoading>({
 		isLoading: true,
@@ -72,6 +71,8 @@ const App = () => {
 	);
 
 	const outsideClickRef = useOutsideClick((e) => handleOutsideClick(e));
+
+	const [, toggleModal, isModal] = useModal();
 
 	useEffect(() => {
 		if (editTask.showMenu || isModal) {
@@ -224,7 +225,7 @@ const App = () => {
 					(e as React.MouseEvent).clientY !== 0)) &&
 			priorityCell
 		) {
-			setModal(true);
+			toggleModal();
 		}
 
 		e.stopPropagation();
@@ -279,10 +280,10 @@ const App = () => {
 				setAddFormData(newFormData);
 			}
 			setTimeout(() => {
-				setModal(false);
+				toggleModal();
 			}, 250);
 		},
-		[editFormData, addFormData, editTask.inputType]
+		[toggleModal, editFormData, addFormData, editTask.inputType]
 	);
 
 	if (state.httpError) {
@@ -320,14 +321,12 @@ const App = () => {
 				setEditTask={setEditTask}
 				handleEditFormKeyboard={handleEditFormKeyboard}
 				isModal={isModal}
-				setModal={setModal}
+				toggleModal={toggleModal}
+				onHide={hideModalHandler}
 				setEditFormData={setEditFormData}
 				handleMenuItemEvent={handleMenuItemEvent}
 				addFormData={addFormData}
 				setAddFormData={setAddFormData}
-				state={state}
-				setState={setState}
-				onHide={hideModalHandler}
 			/>
 		</div>
 	);

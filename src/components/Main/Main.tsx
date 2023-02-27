@@ -3,13 +3,13 @@ import React, { RefObject, useRef, useEffect } from 'react';
 import TableForm from '../TableForm/TableForm';
 import AddTaskForm from '../AddTaskForm/AddTaskForm';
 import Card from '../UI/Card/Card';
-import Modal from '../UI/Modal/Modal';
 import classes from '../App/App.module.scss';
 import { EditTask, EditFormData, ErrorsAndLoading } from '../../ts/interfaces';
 import { Task, TaskActionShape } from '../../ts/types';
 import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
 import { PriorityContext } from '../../context/priority-context';
-
+import UpdateTaskPriority from '../UpdateTaskPriority/UpdateTaskPriority';
+import useModal from '../../hooks/useModal';
 interface Props {
 	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
 	editTask: EditTask;
@@ -30,14 +30,12 @@ interface Props {
 	setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
 	handleEditFormKeyboard?: (e: React.KeyboardEvent) => void;
 	isModal?: boolean;
-	setModal: React.Dispatch<React.SetStateAction<boolean>>;
+	toggleModal: () => void;
+	onHide: (e: React.MouseEvent | React.TouchEvent | KeyboardEvent) => void;
 	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 	handleMenuItemEvent: typeof handleMenuItemEvent;
 	addFormData: EditFormData;
 	setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
-	setState: React.Dispatch<React.SetStateAction<ErrorsAndLoading>>;
-	state: ErrorsAndLoading;
-	onHide: (e: React.MouseEvent | React.TouchEvent | KeyboardEvent) => void;
 }
 
 const Main = ({
@@ -57,14 +55,12 @@ const Main = ({
 	setEditTask,
 	handleEditFormKeyboard,
 	isModal,
-	setModal,
+	toggleModal,
+	onHide,
 	setEditFormData,
 	handleMenuItemEvent,
 	addFormData,
 	setAddFormData,
-	setState,
-	state,
-	onHide,
 }: Props) => {
 	const priorityInput = useRef<HTMLInputElement>(null);
 	const letterPriority =
@@ -80,28 +76,33 @@ const Main = ({
 		inputType === 'priority-input' && priorityInput.current?.focus();
 	}, [inputType, priorityInput]);
 
+	const [Modal, ,] = useModal();
+
+	let modal = isModal ? (
+		<Modal role='dialog' onHide={onHide}>
+			{(inputType === 'priority-cell' || inputType === 'priority-input') && (
+				<PriorityContext.Provider
+					value={{
+						inputType: inputType,
+						editFormData: editFormData,
+						setEditFormData: setEditFormData,
+						addFormData: addFormData,
+						setAddFormData: setAddFormData,
+						letterPriority: letterPriority,
+						numberPriority: numberPriority,
+						handleFormSubmit,
+						toggleModal: toggleModal,
+					}}
+				>
+					<UpdateTaskPriority />
+				</PriorityContext.Provider>
+			)}
+		</Modal>
+	) : null;
+
 	return (
 		<>
-			{isModal &&
-				(inputType === 'priority-cell' || inputType === 'priority-input') && (
-					<PriorityContext.Provider
-						value={{
-							inputType: inputType,
-							editFormData: editFormData,
-							setEditFormData: setEditFormData,
-							addFormData: addFormData,
-							setAddFormData: setAddFormData,
-							setState: setState,
-							letterPriority: letterPriority,
-							numberPriority: numberPriority,
-							handleFormSubmit,
-							isModal: isModal,
-							setModal: setModal,
-						}}
-					>
-						<Modal onHide={(e) => onHide(e)} role='dialog' />
-					</PriorityContext.Provider>
-				)}
+			{modal}
 			<Card className={`${classes.card} card`}>
 				<TableForm
 					handleFormSubmit={handleFormSubmit}
@@ -128,7 +129,7 @@ const Main = ({
 					taskDispatch={taskDispatch}
 					setAddFormData={setAddFormData}
 					inputType={inputType}
-					setModal={setModal}
+					toggleModal={toggleModal}
 				/>
 			</Card>
 		</>
