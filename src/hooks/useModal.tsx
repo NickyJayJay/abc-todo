@@ -11,11 +11,7 @@ type Props = {
 	role?: string;
 };
 
-type ReturnType = [
-	() => (({ children, role }: Props) => JSX.Element) | null,
-	(input: boolean) => void,
-	boolean
-];
+type ReturnType = [React.ElementType, (input: boolean) => void, boolean];
 
 const useModal = (): ReturnType => {
 	const [isModal, setModal] = useState(false);
@@ -24,7 +20,7 @@ const useModal = (): ReturnType => {
 		setModal(input);
 	};
 
-	const modalContent = ({ children, role }: Props) => {
+	const Modal = ({ children, role }: Props) => {
 		return (
 			<>
 				{ReactDOM.createPortal(
@@ -53,10 +49,6 @@ const useModal = (): ReturnType => {
 				)}
 			</>
 		);
-	};
-
-	const Modal = () => {
-		return isModal ? modalContent : null;
 	};
 
 	return [Modal, toggleModal, isModal];

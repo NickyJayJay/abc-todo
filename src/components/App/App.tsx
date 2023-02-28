@@ -72,7 +72,7 @@ const App = () => {
 
 	const outsideClickRef = useOutsideClick((e) => handleOutsideClick(e));
 
-	const [, toggleModal, isModal] = useModal();
+	const [Modal, toggleModal, isModal] = useModal();
 
 	useEffect(() => {
 		if (editTask.showMenu || isModal) {
@@ -326,9 +326,7 @@ const App = () => {
 				handleMenuItemEvent={handleMenuItemEvent}
 				addFormData={addFormData}
 				setAddFormData={setAddFormData}
-				state={state}
 				setState={setState}
-				onHide={hideModalHandler}
 			/>
 		</div>
 	);

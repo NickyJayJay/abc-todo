@@ -3,13 +3,13 @@ import React, { RefObject, useRef, useEffect } from 'react';
 import TableForm from '../TableForm/TableForm';
 import AddTaskForm from '../AddTaskForm/AddTaskForm';
 import Card from '../UI/Card/Card';
-import Modal from '../UI/Modal/Modal';
 import classes from '../App/App.module.scss';
 import { EditTask, EditFormData, ErrorsAndLoading } from '../../ts/interfaces';
 import { Task, TaskActionShape } from '../../ts/types';
 import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
 import { PriorityContext } from '../../context/priority-context';
-
+import UpdateTaskPriority from '../UpdateTaskPriority/UpdateTaskPriority';
+import useModal from '../../hooks/useModal';
 interface Props {
 	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
 	editTask: EditTask;
@@ -36,8 +36,6 @@ interface Props {
 	addFormData: EditFormData;
 	setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 	setState: React.Dispatch<React.SetStateAction<ErrorsAndLoading>>;
-	state: ErrorsAndLoading;
-	onHide: (e: React.MouseEvent | React.TouchEvent | KeyboardEvent) => void;
 }
 
 const Main = ({
@@ -63,8 +61,6 @@ const Main = ({
 	addFormData,
 	setAddFormData,
 	setState,
-	state,
-	onHide,
 }: Props) => {
 	const priorityInput = useRef<HTMLInputElement>(null);
 	const letterPriority =
@@ -79,6 +75,8 @@ const Main = ({
 	useEffect(() => {
 		inputType === 'priority-input' && priorityInput.current?.focus();
 	}, [inputType, priorityInput]);
+
+	const [Modal, ,] = useModal();
 
 	return (
 		<>
@@ -99,7 +97,10 @@ const Main = ({
 							toggleModal: toggleModal,
 						}}
 					>
-						<Modal onHide={(e) => onHide(e)} role='dialog' />
+						<Modal role='dialog'>
+							{(inputType === 'priority-cell' ||
+								inputType === 'priority-input') && <UpdateTaskPriority />}
+						</Modal>
 					</PriorityContext.Provider>
 				)}
 			<Card className={`${classes.card} card`}>
