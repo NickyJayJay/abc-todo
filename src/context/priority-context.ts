@@ -16,7 +16,8 @@ interface PriorityContextShape {
 	tasks?: Task[];
 	taskDispatch?: React.Dispatch<TaskActionShape>;
 	isModal?: boolean;
-	toggleModal: (input: boolean) => void;
+	toggleModal: () => void;
+	onHide: (e: React.MouseEvent | React.TouchEvent | KeyboardEvent) => void;
 }
 
 export const PriorityContext = createContext({} as PriorityContextShape);

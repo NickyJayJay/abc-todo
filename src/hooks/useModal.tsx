@@ -9,25 +9,26 @@ import Close from '../assets/SVG/close.svg';
 type Props = {
 	children: React.ReactNode;
 	role?: string;
+	onHide: (e: React.MouseEvent | React.TouchEvent | KeyboardEvent) => void;
 };
 
-type ReturnType = [React.ElementType, (input: boolean) => void, boolean];
+type ReturnType = [React.ElementType, () => void, boolean];
 
 const useModal = (): ReturnType => {
 	const [isModal, setModal] = useState(false);
 
-	const toggleModal = (input: boolean) => {
-		setModal(input);
+	const toggleModal = () => {
+		setModal(!isModal);
 	};
 
-	const Modal = ({ children, role }: Props) => {
+	const Modal = ({ children, role, onHide }: Props) => {
 		return (
 			<>
 				{ReactDOM.createPortal(
 					<div
 						className={classes.backdrop}
-						onClick={() => toggleModal(false)}
-						onTouchStart={() => toggleModal(false)}
+						onClick={(e) => onHide(e)}
+						onTouchStart={(e) => onHide(e)}
 					></div>,
 					document.getElementById('backdrop-root')!
 				)}
@@ -37,8 +38,8 @@ const useModal = (): ReturnType => {
 							<button
 								className={classes.closeModal}
 								tab-index='0'
-								onClick={() => toggleModal(false)}
-								onTouchStart={() => toggleModal(false)}
+								onClick={(e) => onHide(e)}
+								onTouchStart={(e) => onHide(e)}
 							>
 								<img src={Close} alt='close icon' />
 							</button>

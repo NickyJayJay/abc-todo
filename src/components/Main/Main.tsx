@@ -30,7 +30,8 @@ interface Props {
 	setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
 	handleEditFormKeyboard?: (e: React.KeyboardEvent) => void;
 	isModal?: boolean;
-	toggleModal: (input: boolean) => void;
+	toggleModal: () => void;
+	onHide: (e: React.MouseEvent | React.TouchEvent | KeyboardEvent) => void;
 	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 	handleMenuItemEvent: typeof handleMenuItemEvent;
 	addFormData: EditFormData;
@@ -56,6 +57,7 @@ const Main = ({
 	handleEditFormKeyboard,
 	isModal,
 	toggleModal,
+	onHide,
 	setEditFormData,
 	handleMenuItemEvent,
 	addFormData,
@@ -95,6 +97,7 @@ const Main = ({
 							handleFormSubmit,
 							isModal: isModal,
 							toggleModal: toggleModal,
+							onHide: onHide,
 						}}
 					>
 						<Modal role='dialog'>

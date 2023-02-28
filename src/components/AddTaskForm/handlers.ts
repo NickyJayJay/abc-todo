@@ -11,7 +11,7 @@ export interface Options {
 	taskDispatch: React.Dispatch<TaskActionShape>;
 	setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 	inputType?: string | null;
-	toggleModal: (input: boolean) => void;
+	toggleModal: () => void;
 }
 
 export const handleAddFormSubmit = (options: Options) => {
@@ -71,7 +71,7 @@ export const handleAddFormKeydown = (options: Options) => {
 			!(e as React.KeyboardEvent).shiftKey
 		) {
 			e.preventDefault();
-			toggleModal(true);
+			toggleModal();
 		} else if (
 			((inputType === 'priority-input' || inputType === 'status-input') &&
 				(e as React.KeyboardEvent).key) === 'Tab' &&
@@ -97,7 +97,7 @@ export const handlePriorityEvent = (options: Options) => {
 		e.preventDefault();
 		(e as React.MouseEvent).clientX !== 0 &&
 			(e as React.MouseEvent).clientY !== 0 &&
-			toggleModal(true);
+			toggleModal();
 	};
 };
 

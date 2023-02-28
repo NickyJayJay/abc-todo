@@ -72,7 +72,7 @@ const App = () => {
 
 	const outsideClickRef = useOutsideClick((e) => handleOutsideClick(e));
 
-	const [Modal, toggleModal, isModal] = useModal();
+	const [, toggleModal, isModal] = useModal();
 
 	useEffect(() => {
 		if (editTask.showMenu || isModal) {
@@ -225,7 +225,7 @@ const App = () => {
 					(e as React.MouseEvent).clientY !== 0)) &&
 			priorityCell
 		) {
-			toggleModal(true);
+			toggleModal();
 		}
 
 		e.stopPropagation();
@@ -280,7 +280,7 @@ const App = () => {
 				setAddFormData(newFormData);
 			}
 			setTimeout(() => {
-				toggleModal(false);
+				toggleModal();
 			}, 250);
 		},
 		[toggleModal, editFormData, addFormData, editTask.inputType]
@@ -322,6 +322,7 @@ const App = () => {
 				handleEditFormKeyboard={handleEditFormKeyboard}
 				isModal={isModal}
 				toggleModal={toggleModal}
+				onHide={hideModalHandler}
 				setEditFormData={setEditFormData}
 				handleMenuItemEvent={handleMenuItemEvent}
 				addFormData={addFormData}
