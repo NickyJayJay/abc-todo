@@ -9,7 +9,7 @@ interface Options {
 	setEditFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
 	setAddFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
 	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
-	setModal?: React.Dispatch<React.SetStateAction<boolean>>;
+	toggleModal: () => void;
 }
 
 export const letterPriorityHandler = (options: Options) => {
@@ -96,7 +96,7 @@ export const updatePriorityHandler = (options: Options) => {
 		addFormData,
 		setAddFormData,
 		handleFormSubmit,
-		setModal,
+		toggleModal,
 	}: Options = options;
 
 	return (e: React.MouseEvent<Element> | React.TouchEvent<Element>) => {
@@ -118,7 +118,7 @@ export const updatePriorityHandler = (options: Options) => {
 				: alert("Priority input's integer value is invalid.");
 		}
 		setTimeout(() => {
-			setModal && setModal(false);
+			toggleModal();
 		}, 250);
 	};
 };

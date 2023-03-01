@@ -100,7 +100,7 @@ const Main = ({
 							onHide: onHide,
 						}}
 					>
-						<Modal role='dialog'>
+						<Modal role='dialog' onHide={onHide}>
 							{(inputType === 'priority-cell' ||
 								inputType === 'priority-input') && <UpdateTaskPriority />}
 						</Modal>
