@@ -36,7 +36,6 @@ interface Props {
 	handleMenuItemEvent: typeof handleMenuItemEvent;
 	addFormData: EditFormData;
 	setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
-	setState: React.Dispatch<React.SetStateAction<ErrorsAndLoading>>;
 }
 
 const Main = ({
@@ -62,7 +61,6 @@ const Main = ({
 	handleMenuItemEvent,
 	addFormData,
 	setAddFormData,
-	setState,
 }: Props) => {
 	const priorityInput = useRef<HTMLInputElement>(null);
 	const letterPriority =
@@ -80,32 +78,31 @@ const Main = ({
 
 	const [Modal, ,] = useModal();
 
+	let modal = isModal ? (
+		<Modal role='dialog' onHide={onHide}>
+			{(inputType === 'priority-cell' || inputType === 'priority-input') && (
+				<PriorityContext.Provider
+					value={{
+						inputType: inputType,
+						editFormData: editFormData,
+						setEditFormData: setEditFormData,
+						addFormData: addFormData,
+						setAddFormData: setAddFormData,
+						letterPriority: letterPriority,
+						numberPriority: numberPriority,
+						handleFormSubmit,
+						toggleModal: toggleModal,
+					}}
+				>
+					<UpdateTaskPriority />
+				</PriorityContext.Provider>
+			)}
+		</Modal>
+	) : null;
+
 	return (
 		<>
-			{isModal &&
-				(inputType === 'priority-cell' || inputType === 'priority-input') && (
-					<PriorityContext.Provider
-						value={{
-							inputType: inputType,
-							editFormData: editFormData,
-							setEditFormData: setEditFormData,
-							addFormData: addFormData,
-							setAddFormData: setAddFormData,
-							setState: setState,
-							letterPriority: letterPriority,
-							numberPriority: numberPriority,
-							handleFormSubmit,
-							isModal: isModal,
-							toggleModal: toggleModal,
-							onHide: onHide,
-						}}
-					>
-						<Modal role='dialog' onHide={onHide}>
-							{(inputType === 'priority-cell' ||
-								inputType === 'priority-input') && <UpdateTaskPriority />}
-						</Modal>
-					</PriorityContext.Provider>
-				)}
+			{modal}
 			<Card className={`${classes.card} card`}>
 				<TableForm
 					handleFormSubmit={handleFormSubmit}

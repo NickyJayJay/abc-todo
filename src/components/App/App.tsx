@@ -327,7 +327,6 @@ const App = () => {
 				handleMenuItemEvent={handleMenuItemEvent}
 				addFormData={addFormData}
 				setAddFormData={setAddFormData}
-				setState={setState}
 			/>
 		</div>
 	);
