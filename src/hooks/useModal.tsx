@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import FocusLock from 'react-focus-lock';
 
@@ -21,7 +21,7 @@ const useModal = (): ReturnType => {
 		setModal(!isModal);
 	};
 
-	const Modal = ({ children, role, onHide }: Props) => {
+	const Modal = useCallback(({ children, role, onHide }: Props) => {
 		return (
 			<>
 				{ReactDOM.createPortal(
@@ -50,7 +50,7 @@ const useModal = (): ReturnType => {
 				)}
 			</>
 		);
-	};
+	}, []);
 
 	return [Modal, toggleModal, isModal];
 };
