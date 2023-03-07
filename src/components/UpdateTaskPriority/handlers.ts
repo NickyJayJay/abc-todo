@@ -9,7 +9,7 @@ interface Options {
 	setEditFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
 	setAddFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
 	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
-	toggleModal: () => void;
+	toggleModal?: () => void;
 }
 
 export const letterPriorityHandler = (options: Options) => {
@@ -118,7 +118,7 @@ export const updatePriorityHandler = (options: Options) => {
 				: alert("Priority input's integer value is invalid.");
 		}
 		setTimeout(() => {
-			toggleModal();
+			toggleModal && toggleModal();
 		}, 250);
 	};
 };
