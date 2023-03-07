@@ -9,7 +9,9 @@ import Close from '../assets/SVG/close.svg';
 type Props = {
 	children: React.ReactNode;
 	role?: string;
-	onHide: (e: React.MouseEvent | React.TouchEvent | KeyboardEvent) => void;
+	hideModalHandler: (
+		e: React.MouseEvent | React.TouchEvent | KeyboardEvent
+	) => void;
 };
 
 type ReturnType = [React.ElementType, () => void, boolean];
@@ -21,14 +23,14 @@ const useModal = (): ReturnType => {
 		setModal(!isModal);
 	};
 
-	const Modal = useCallback(({ children, role, onHide }: Props) => {
+	const Modal = useCallback(({ children, role, hideModalHandler }: Props) => {
 		return (
 			<>
 				{ReactDOM.createPortal(
 					<div
 						className={classes.backdrop}
-						onClick={(e) => onHide(e)}
-						onTouchStart={(e) => onHide(e)}
+						onClick={(e) => hideModalHandler(e)}
+						onTouchStart={(e) => hideModalHandler(e)}
 					></div>,
 					document.getElementById('backdrop-root')!
 				)}
@@ -38,8 +40,8 @@ const useModal = (): ReturnType => {
 							<button
 								className={classes.closeModal}
 								tab-index='0'
-								onClick={(e) => onHide(e)}
-								onTouchStart={(e) => onHide(e)}
+								onClick={(e) => hideModalHandler(e)}
+								onTouchStart={(e) => hideModalHandler(e)}
 							>
 								<img src={Close} alt='close icon' />
 							</button>

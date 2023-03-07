@@ -4,14 +4,15 @@ import TableForm from '../TableForm/TableForm';
 import AddTaskForm from '../AddTaskForm/AddTaskForm';
 import Card from '../UI/Card/Card';
 import classes from '../App/App.module.scss';
-import { EditTask, EditFormData, ErrorsAndLoading } from '../../ts/interfaces';
+import { EditTask, EditFormData } from '../../ts/interfaces';
 import { Task, TaskActionShape } from '../../ts/types';
 import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
 import { PriorityContext } from '../../context/priority-context';
 import UpdateTaskPriority from '../UpdateTaskPriority/UpdateTaskPriority';
 import useModal from '../../hooks/useModal';
+import { Options } from '../App/handlers';
 interface Props {
-	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
+	handleFormSubmit?: (e: React.FormEvent, options?: Options) => void;
 	editTask: EditTask;
 	rowId?: string | null;
 	inputType?: string | null;
@@ -19,19 +20,27 @@ interface Props {
 	yPos?: string | null;
 	showMenu?: boolean;
 	tableRef: RefObject<HTMLTableElement>;
+	setX: (
+		e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
+	) => string | null;
+	setY: (
+		e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
+	) => string | null;
 	outsideClickRef?: RefObject<HTMLTableSectionElement>;
 	tasks: Task[];
 	taskDispatch: React.Dispatch<TaskActionShape>;
 	handleEditTask?: (
-		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
-		b: Task
+		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent,
+		options?: Options
 	) => void;
 	editFormData: EditFormData;
 	setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
-	handleEditFormKeyboard?: (e: React.KeyboardEvent) => void;
+	handleEditFormKeyboard?: (e: React.KeyboardEvent, options?: Options) => void;
 	isModal?: boolean;
 	toggleModal: () => void;
-	onHide: (e: React.MouseEvent | React.TouchEvent | KeyboardEvent) => void;
+	hideModalHandler: (
+		e: React.MouseEvent | React.TouchEvent | KeyboardEvent
+	) => void;
 	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 	handleMenuItemEvent: typeof handleMenuItemEvent;
 	addFormData: EditFormData;
@@ -56,11 +65,13 @@ const Main = ({
 	handleEditFormKeyboard,
 	isModal,
 	toggleModal,
-	onHide,
+	hideModalHandler,
 	setEditFormData,
 	handleMenuItemEvent,
 	addFormData,
 	setAddFormData,
+	setX,
+	setY,
 }: Props) => {
 	const priorityInput = useRef<HTMLInputElement>(null);
 	const letterPriority =
@@ -79,7 +90,7 @@ const Main = ({
 	const [Modal, ,] = useModal();
 
 	let modal = isModal ? (
-		<Modal role='dialog' onHide={onHide}>
+		<Modal role='dialog' hideModalHandler={hideModalHandler}>
 			{(inputType === 'priority-cell' || inputType === 'priority-input') && (
 				<PriorityContext.Provider
 					value={{
@@ -90,8 +101,10 @@ const Main = ({
 						setAddFormData: setAddFormData,
 						letterPriority: letterPriority,
 						numberPriority: numberPriority,
-						handleFormSubmit,
 						toggleModal: toggleModal,
+						editTask: editTask,
+						tasks: tasks,
+						taskDispatch: taskDispatch,
 					}}
 				>
 					<UpdateTaskPriority />
@@ -113,6 +126,8 @@ const Main = ({
 					showMenu={showMenu}
 					outsideClickRef={outsideClickRef}
 					tableRef={tableRef}
+					setX={setX}
+					setY={setY}
 					tasks={tasks}
 					taskDispatch={taskDispatch}
 					handleEditTask={handleEditTask}
@@ -122,6 +137,7 @@ const Main = ({
 					isModal={isModal}
 					setEditFormData={setEditFormData}
 					handleMenuItemEvent={handleMenuItemEvent}
+					toggleModal={toggleModal}
 				/>
 				<AddTaskForm
 					addFormData={addFormData}
