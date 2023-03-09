@@ -1,4 +1,7 @@
 import { useContext } from 'react';
+import { ref, update } from 'firebase/database';
+import { db } from '../../firebaseConfig';
+
 import { PriorityContext } from '../../context/priority-context';
 import Button from '../UI/Button/Button';
 import classes from './UpdateTaskPriority.module.scss';
@@ -7,6 +10,7 @@ import {
 	numberPriorityHandler,
 	updatePriorityHandler,
 } from './handlers';
+import sortList from '../../utilities/sortList';
 
 const UpdateTaskPriority = () => {
 	const {
@@ -19,18 +23,43 @@ const UpdateTaskPriority = () => {
 		numberPriority,
 		handleFormSubmit,
 		toggleModal,
+		editTask,
+		tasks,
+		taskDispatch,
 	} = useContext(PriorityContext);
 
-	const options = {
+	const numberPriorityOptions = {
 		inputType,
 		editFormData,
 		addFormData,
 		letterPriority,
+		setEditFormData,
+		setAddFormData,
+	};
+
+	const letterPriorityOptions = {
+		inputType,
+		editFormData,
+		addFormData,
 		numberPriority,
 		setEditFormData,
 		setAddFormData,
+	};
+
+	const updatePriorityOptions = {
+		inputType,
+		addFormData,
+		setAddFormData,
 		handleFormSubmit,
 		toggleModal,
+		editTask,
+		editFormData,
+		tasks,
+		taskDispatch,
+		sortList,
+		ref,
+		db,
+		update,
 	};
 
 	return (
@@ -48,8 +77,8 @@ const UpdateTaskPriority = () => {
 						id='A'
 						name='letter'
 						value='A'
-						onChange={letterPriorityHandler(options)}
-						onTouchStart={letterPriorityHandler(options)}
+						onChange={letterPriorityHandler(letterPriorityOptions)}
+						onTouchStart={letterPriorityHandler(letterPriorityOptions)}
 						checked={letterPriority === 'A'}
 					/>
 					<label>
@@ -62,8 +91,8 @@ const UpdateTaskPriority = () => {
 						id='B'
 						name='letter'
 						value='B'
-						onChange={letterPriorityHandler(options)}
-						onTouchStart={letterPriorityHandler(options)}
+						onChange={letterPriorityHandler(letterPriorityOptions)}
+						onTouchStart={letterPriorityHandler(letterPriorityOptions)}
 						checked={letterPriority === 'B'}
 					/>
 					<label>
@@ -76,8 +105,8 @@ const UpdateTaskPriority = () => {
 						id='C'
 						name='letter'
 						value='C'
-						onChange={letterPriorityHandler(options)}
-						onTouchStart={letterPriorityHandler(options)}
+						onChange={letterPriorityHandler(letterPriorityOptions)}
+						onTouchStart={letterPriorityHandler(letterPriorityOptions)}
 						checked={letterPriority === 'C'}
 					/>
 					<label>
@@ -91,7 +120,7 @@ const UpdateTaskPriority = () => {
 					type='number'
 					min='1'
 					max='99'
-					onChange={numberPriorityHandler(options)}
+					onChange={numberPriorityHandler(numberPriorityOptions)}
 					name='priority'
 					value={
 						inputType === 'priority-cell'
@@ -106,8 +135,8 @@ const UpdateTaskPriority = () => {
 			</div>
 			<Button
 				type='submit'
-				onTouchStart={updatePriorityHandler(options)}
-				onClick={updatePriorityHandler(options)}
+				// onTouchStart={updatePriorityHandler(updatePriorityOptions)}
+				onClick={updatePriorityHandler(updatePriorityOptions)}
 				disabled={letterPriority ? false : true}
 			>
 				CONFIRM PRIORITY

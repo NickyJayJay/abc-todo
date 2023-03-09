@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useReducer } from 'react';
 import { ref, update } from 'firebase/database';
-
 import { db, url } from '../../firebaseConfig';
+
 import useOutsideClick from '../../hooks/useOutsideClick';
 import Main from '../Main/Main';
 import classes from './App.module.scss';
@@ -13,6 +13,7 @@ import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
 import sortList from '../../utilities/sortList';
 import useCoordinates from '../../hooks/useCoordinates';
 import useModal from '../../hooks/useModal';
+import { handleFormSubmit } from './handlers';
 
 const App = () => {
 	const [tasks, taskDispatch] = useReducer(taskReducer, []);
@@ -136,31 +137,6 @@ const App = () => {
 		fetchTasks();
 	}, []);
 
-	const handleFormSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-
-		const editedTask = {
-			id: editTask.rowId,
-			status: editFormData.status,
-			priority: editFormData.priority,
-			description: editFormData.description,
-		};
-
-		const newTasks = [...tasks];
-		const index = tasks.findIndex((task) => task.id === editTask.rowId);
-		newTasks[index] = editedTask;
-
-		taskDispatch({
-			type: TaskActionType.SET,
-			data: newTasks,
-		});
-
-		sortList(newTasks);
-
-		const dbRef = ref(db, `tasks/${editTask.rowId}`);
-		update(dbRef, editedTask);
-	};
-
 	const handleEditFormKeyboard = (e: React.KeyboardEvent) => {
 		const form = (e.target as HTMLInputElement).form;
 		const focusableElements = document.querySelectorAll(
@@ -179,7 +155,16 @@ const App = () => {
 			(e.key === 'Enter' || (e.key === 'Tab' && !e.shiftKey))
 		) {
 			e.preventDefault();
-			handleFormSubmit(e);
+			handleFormSubmit({
+				editTask,
+				editFormData,
+				tasks,
+				taskDispatch,
+				sortList,
+				ref,
+				db,
+				update,
+			});
 			(nextFocusableEl as HTMLElement).click();
 		} else if (
 			e.key === 'Tab' &&

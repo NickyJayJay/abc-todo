@@ -5,7 +5,7 @@ import { handleEditFormChange } from '../TableForm/handlers';
 import { EditFormData } from '../../ts/interfaces';
 
 interface Props {
-	handleFormSubmit: (e: React.FormEvent) => void;
+	handleFormSubmit?: (e: React.FormEvent) => void;
 	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
 	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 	editFormData: EditFormData;
@@ -51,7 +51,7 @@ const DescriptionEditable = ({
 					setEditFormData,
 				})}
 				onKeyDown={(event) => handleEditFormKeyboard(event)}
-				onBlur={(event) => handleFormSubmit(event)}
+				onBlur={(event) => handleFormSubmit && handleFormSubmit(event)}
 				ref={inputRef}
 				maxLength={150}
 			></input>

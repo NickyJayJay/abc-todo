@@ -1,4 +1,6 @@
 import React, { RefObject } from 'react';
+import { ref, update } from 'firebase/database';
+import { db } from '../../firebaseConfig';
 
 import DescriptionEditable from '../Cells/DescriptionEditable';
 import Status from '../Cells/Status';
@@ -10,9 +12,11 @@ import classes from '../App/App.module.scss';
 import { EditTask, EditFormData } from '../../ts/interfaces';
 import { Task, TaskActionShape } from '../../ts/types';
 import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
+import { Options } from '../App/handlers';
+import sortList from '../../utilities/sortList';
 
 interface Props {
-	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
+	handleFormSubmit?: (options: Options) => (e: React.FormEvent) => void;
 	editTask: EditTask;
 	xPos?: string | null;
 	yPos?: string | null;
@@ -54,7 +58,21 @@ const TableForm = ({
 	handleMenuItemEvent,
 }: Props) => {
 	return (
-		<form onSubmit={handleFormSubmit}>
+		<form
+			onSubmit={
+				handleFormSubmit &&
+				handleFormSubmit({
+					editTask,
+					editFormData,
+					tasks,
+					taskDispatch,
+					sortList,
+					ref,
+					db,
+					update,
+				})
+			}
+		>
 			{showMenu && (
 				<ContextMenu
 					xPos={xPos}
@@ -100,7 +118,19 @@ const TableForm = ({
 							{editTask!.inputType === 'description-cell' &&
 							rowId === task.id ? (
 								<DescriptionEditable
-									handleFormSubmit={handleFormSubmit!}
+									handleFormSubmit={
+										handleFormSubmit &&
+										handleFormSubmit({
+											editTask,
+											editFormData,
+											tasks,
+											taskDispatch,
+											sortList,
+											ref,
+											db,
+											update,
+										})
+									}
 									handleEditFormKeyboard={handleEditFormKeyboard!}
 									taskId={task.id}
 									rowId={rowId}

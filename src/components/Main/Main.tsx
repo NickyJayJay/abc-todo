@@ -4,14 +4,15 @@ import TableForm from '../TableForm/TableForm';
 import AddTaskForm from '../AddTaskForm/AddTaskForm';
 import Card from '../UI/Card/Card';
 import classes from '../App/App.module.scss';
-import { EditTask, EditFormData, ErrorsAndLoading } from '../../ts/interfaces';
+import { EditTask, EditFormData } from '../../ts/interfaces';
 import { Task, TaskActionShape } from '../../ts/types';
 import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
 import { PriorityContext } from '../../context/priority-context';
 import UpdateTaskPriority from '../UpdateTaskPriority/UpdateTaskPriority';
 import useModal from '../../hooks/useModal';
+import { Options } from '../App/handlers';
 interface Props {
-	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
+	handleFormSubmit?: (options: Options) => (e: React.FormEvent) => void;
 	editTask: EditTask;
 	rowId?: string | null;
 	inputType?: string | null;
@@ -90,8 +91,11 @@ const Main = ({
 						setAddFormData: setAddFormData,
 						letterPriority: letterPriority,
 						numberPriority: numberPriority,
-						handleFormSubmit,
+						handleFormSubmit: handleFormSubmit,
 						toggleModal: toggleModal,
+						editTask: editTask,
+						tasks: tasks,
+						taskDispatch: taskDispatch,
 					}}
 				>
 					<UpdateTaskPriority />
