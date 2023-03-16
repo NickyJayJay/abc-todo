@@ -1,5 +1,9 @@
-import { EditFormData } from '../../ts/interfaces';
-
+import { EditFormData, EditTask } from '../../ts/interfaces';
+import { TaskActionType } from '../../ts/enums';
+import { Task, TaskActionShape } from '../../ts/types';
+import sortList from '../../utilities/sortList';
+import { db } from '../../firebaseConfig';
+import { ref, update } from 'firebase/database';
 interface Options {
 	inputType?: string | null;
 	editFormData?: EditFormData;
@@ -8,8 +12,10 @@ interface Options {
 	numberPriority?: string | null;
 	setEditFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
 	setAddFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
-	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
-	toggleModal: () => void;
+	toggleModal?: () => void;
+	editTask?: EditTask;
+	tasks?: Task[];
+	taskDispatch?: React.Dispatch<TaskActionShape>;
 }
 
 export const letterPriorityHandler = (options: Options) => {
@@ -95,18 +101,38 @@ export const updatePriorityHandler = (options: Options) => {
 		inputType,
 		addFormData,
 		setAddFormData,
-		handleFormSubmit,
 		toggleModal,
+		editTask,
+		editFormData,
+		tasks,
+		taskDispatch,
 	}: Options = options;
 
 	return (e: React.MouseEvent<Element> | React.TouchEvent<Element>) => {
 		e.preventDefault();
 
-		if (inputType === 'priority-cell') {
-			isFormValid(e) && handleFormSubmit
-				? handleFormSubmit(e)
-				: alert("Priority input's integer value is invalid.");
-		} else {
+		if (inputType === 'priority-cell' && isFormValid(e)) {
+			const editedTask = {
+				id: editTask!.rowId,
+				status: editFormData!.status,
+				priority: editFormData!.priority,
+				description: editFormData!.description,
+			};
+
+			const newTasks = [...tasks!];
+			const index = tasks!.findIndex((task: Task) => task.id === editTask!.rowId);
+			newTasks[index] = editedTask;
+
+			taskDispatch!({
+				type: TaskActionType.SET,
+				data: newTasks,
+			});
+
+			sortList(newTasks);
+
+			const dbRef = ref(db, `tasks/${editTask!.rowId}`);
+			update(dbRef, editedTask);
+		} else if (inputType === 'priority-input') {
 			const newFormData: EditFormData = {
 				...addFormData,
 				priority: `${addFormData?.letterPriority}${addFormData?.numberPriority}`,
@@ -118,7 +144,7 @@ export const updatePriorityHandler = (options: Options) => {
 				: alert("Priority input's integer value is invalid.");
 		}
 		setTimeout(() => {
-			toggleModal();
+			toggleModal!();
 		}, 250);
 	};
 };

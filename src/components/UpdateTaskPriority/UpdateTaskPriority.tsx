@@ -19,6 +19,9 @@ const UpdateTaskPriority = () => {
 		numberPriority,
 		handleFormSubmit,
 		toggleModal,
+		editTask,
+		tasks,
+		taskDispatch,
 	} = useContext(PriorityContext);
 
 	const options = {
@@ -31,6 +34,9 @@ const UpdateTaskPriority = () => {
 		setAddFormData,
 		handleFormSubmit,
 		toggleModal,
+		editTask,
+		tasks,
+		taskDispatch,
 	};
 
 	return (

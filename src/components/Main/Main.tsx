@@ -4,7 +4,7 @@ import TableForm from '../TableForm/TableForm';
 import AddTaskForm from '../AddTaskForm/AddTaskForm';
 import Card from '../UI/Card/Card';
 import classes from '../App/App.module.scss';
-import { EditTask, EditFormData, ErrorsAndLoading } from '../../ts/interfaces';
+import { EditTask, EditFormData } from '../../ts/interfaces';
 import { Task, TaskActionShape } from '../../ts/types';
 import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
 import { PriorityContext } from '../../context/priority-context';
@@ -83,15 +83,18 @@ const Main = ({
 			{(inputType === 'priority-cell' || inputType === 'priority-input') && (
 				<PriorityContext.Provider
 					value={{
-						inputType: inputType,
-						editFormData: editFormData,
-						setEditFormData: setEditFormData,
-						addFormData: addFormData,
-						setAddFormData: setAddFormData,
-						letterPriority: letterPriority,
-						numberPriority: numberPriority,
+						inputType,
+						editFormData,
+						setEditFormData,
+						addFormData,
+						setAddFormData,
+						letterPriority,
+						numberPriority,
 						handleFormSubmit,
-						toggleModal: toggleModal,
+						toggleModal,
+						editTask,
+						tasks,
+						taskDispatch,
 					}}
 				>
 					<UpdateTaskPriority />
