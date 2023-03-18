@@ -10,8 +10,9 @@ import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
 import { PriorityContext } from '../../context/priority-context';
 import UpdateTaskPriority from '../UpdateTaskPriority/UpdateTaskPriority';
 import useModal from '../../hooks/useModal';
+import { Options } from '../App/handlers';
 interface Props {
-	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
+	handleFormSubmit: (options: Options) => (e: React.FormEvent) => void;
 	editTask: EditTask;
 	rowId?: string | null;
 	inputType?: string | null;

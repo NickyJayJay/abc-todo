@@ -2,10 +2,12 @@ import React, { useEffect, useRef } from 'react';
 
 import classes from '../App/App.module.scss';
 import { handleEditFormChange } from '../TableForm/handlers';
-import { EditFormData } from '../../ts/interfaces';
+import { EditFormData, EditTask } from '../../ts/interfaces';
+import { Options } from '../App/handlers';
+import { Task, TaskActionShape } from '../../ts/types';
 
 interface Props {
-	handleFormSubmit: (e: React.FormEvent) => void;
+	handleFormSubmit: (options: Options) => (e: React.FormEvent) => void;
 	handleEditFormKeyboard: (e: React.KeyboardEvent) => void;
 	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 	editFormData: EditFormData;
@@ -13,6 +15,9 @@ interface Props {
 	rowId?: string | null;
 	inputType?: string | null;
 	taskDescription?: string | null;
+	editTask: EditTask;
+	tasks: Task[];
+	taskDispatch: React.Dispatch<TaskActionShape>;
 }
 
 const DescriptionEditable = ({
@@ -24,6 +29,9 @@ const DescriptionEditable = ({
 	rowId,
 	inputType,
 	taskDescription,
+	editTask,
+	tasks,
+	taskDispatch,
 }: Props) => {
 	const inputRef = useRef<HTMLInputElement>(null);
 
@@ -51,7 +59,12 @@ const DescriptionEditable = ({
 					setEditFormData,
 				})}
 				onKeyDown={(event) => handleEditFormKeyboard(event)}
-				onBlur={(event) => handleFormSubmit(event)}
+				onBlur={handleFormSubmit({
+					editTask,
+					editFormData,
+					tasks,
+					taskDispatch,
+				})}
 				ref={inputRef}
 				maxLength={150}
 			></input>

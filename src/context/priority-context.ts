@@ -2,6 +2,7 @@ import { createContext } from 'react';
 import { EditFormData, EditTask } from '../ts/interfaces';
 import { Task } from '../ts/types';
 import { TaskActionShape } from '../ts/types';
+import { Options } from '../components/App/handlers';
 
 interface PriorityContextShape {
 	inputType?: string | null;
@@ -11,7 +12,7 @@ interface PriorityContextShape {
 	setAddFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
 	letterPriority?: string;
 	numberPriority?: string;
-	handleFormSubmit?: (e: React.FormEvent) => void;
+	handleFormSubmit: (options: Options) => (e: React.FormEvent) => void;
 	toggleModal: () => void;
 	editTask: EditTask;
 	tasks: Task[];

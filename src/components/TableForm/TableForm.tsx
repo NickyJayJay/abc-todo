@@ -10,9 +10,10 @@ import classes from '../App/App.module.scss';
 import { EditTask, EditFormData } from '../../ts/interfaces';
 import { Task, TaskActionShape } from '../../ts/types';
 import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
+import { Options } from '../App/handlers';
 
 interface Props {
-	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
+	handleFormSubmit: (options: Options) => (e: React.FormEvent) => void;
 	editTask: EditTask;
 	xPos?: string | null;
 	yPos?: string | null;
@@ -21,7 +22,7 @@ interface Props {
 	outsideClickRef?: RefObject<HTMLTableSectionElement>;
 	tableRef?: RefObject<HTMLTableElement>;
 	tasks: Task[];
-	taskDispatch?: React.Dispatch<TaskActionShape>;
+	taskDispatch: React.Dispatch<TaskActionShape>;
 	handleEditTask?: (
 		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
 		b: Task
@@ -54,7 +55,14 @@ const TableForm = ({
 	handleMenuItemEvent,
 }: Props) => {
 	return (
-		<form onSubmit={handleFormSubmit}>
+		<form
+			onSubmit={handleFormSubmit!({
+				editTask,
+				editFormData,
+				tasks,
+				taskDispatch,
+			})}
+		>
 			{showMenu && (
 				<ContextMenu
 					xPos={xPos}
@@ -100,7 +108,7 @@ const TableForm = ({
 							{editTask!.inputType === 'description-cell' &&
 							rowId === task.id ? (
 								<DescriptionEditable
-									handleFormSubmit={handleFormSubmit!}
+									handleFormSubmit={handleFormSubmit}
 									handleEditFormKeyboard={handleEditFormKeyboard!}
 									taskId={task.id}
 									rowId={rowId}
@@ -108,6 +116,9 @@ const TableForm = ({
 									taskDescription={editFormData!.description}
 									editFormData={editFormData}
 									setEditFormData={setEditFormData}
+									editTask={editTask}
+									tasks={tasks}
+									taskDispatch={taskDispatch}
 								/>
 							) : (
 								<DescriptionReadOnly

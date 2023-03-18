@@ -62,6 +62,7 @@ const taskDispatch = jest.fn();
 const update = jest.fn();
 const remove = jest.fn();
 const handleEditTask = jest.fn();
+const handleFormSubmit = (e: any) => e.preventDefault();
 const handleMenuMockArgs = {
 	editTask,
 	rowId,
@@ -85,11 +86,12 @@ describe('context menu', () => {
 				editTask={mockEditTask}
 				rowId={null}
 				handleEditTask={handleEditTask}
-				handleFormSubmit={jest.fn((e) => e.preventDefault())}
+				handleFormSubmit={handleFormSubmit}
 				handleMenuItemEvent={jest.fn()}
 				showMenu={false}
 				setEditFormData={setEditFormData}
 				editFormData={editFormData}
+				taskDispatch={taskDispatch}
 			/>
 		);
 
@@ -117,11 +119,12 @@ describe('context menu', () => {
 				tasks={mockTasks}
 				editTask={mockEditTask}
 				handleEditTask={handleEditTask}
-				handleFormSubmit={jest.fn((e) => e.preventDefault())}
+				handleFormSubmit={handleFormSubmit}
 				handleMenuItemEvent={jest.fn()}
 				showMenu={true}
 				setEditFormData={setEditFormData}
 				editFormData={editFormData}
+				taskDispatch={taskDispatch}
 			/>
 		);
 

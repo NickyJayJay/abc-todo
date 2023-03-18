@@ -1,23 +1,21 @@
-import { Database, DatabaseReference } from 'firebase/database';
 import React from 'react';
 
 import { TaskActionType } from '../../ts/enums';
 import { EditFormData, EditTask } from '../../ts/interfaces';
 import { Task, TaskActionShape } from '../../ts/types';
+import sortList from '../../utilities/sortList';
+import { db } from '../../firebaseConfig';
+import { ref, update } from 'firebase/database';
 
 export interface Options {
     editTask: EditTask;
     editFormData: EditFormData;
     tasks: Task[];
     taskDispatch: React.Dispatch<TaskActionShape>;
-    sortList: (a: Task[]) => void;
-    ref: (a: Database, b: string) => DatabaseReference;
-    db: Database;
-    update: (a: DatabaseReference, b: object) => Promise<void>;
 }
 
 export const handleFormSubmit = (options: Options) => {
-    const { editTask, editFormData, tasks, taskDispatch, sortList, ref, db, update }: Options = options;
+    const { editTask, editFormData, tasks, taskDispatch }: Options = options;
 
     return (e: React.FormEvent) => {
         e.preventDefault();
