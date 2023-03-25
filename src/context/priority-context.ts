@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { EditFormData, ErrorsAndLoading } from '../ts/interfaces';
+import { EditFormData, EditTask } from '../ts/interfaces';
 import { Task, TaskActionShape } from '../ts/types';
 
 interface PriorityContextShape {
@@ -8,15 +8,14 @@ interface PriorityContextShape {
 	setEditFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
 	addFormData: EditFormData;
 	setAddFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
-	setState?: React.Dispatch<React.SetStateAction<ErrorsAndLoading>>;
 	letterPriority?: string;
 	numberPriority?: string;
-	editMode?: string | null;
 	handleFormSubmit?: (e: React.FormEvent) => void;
-	tasks?: Task[];
-	taskDispatch?: React.Dispatch<TaskActionShape>;
-	isModal?: boolean;
-	setModal: React.Dispatch<React.SetStateAction<boolean>>;
+	toggleModal: () => void;
+	editTask: EditTask;
+	tasks: Task[];
+	taskDispatch: React.Dispatch<TaskActionShape>;
+
 }
 
 export const PriorityContext = createContext({} as PriorityContextShape);

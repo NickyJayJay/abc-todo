@@ -11,7 +11,10 @@ import {
 } from './handlers';
 
 const AddTaskForm = forwardRef<HTMLInputElement, Options>(
-	({ addFormData, taskDispatch, setAddFormData, inputType, setModal }, ref) => {
+	(
+		{ addFormData, taskDispatch, setAddFormData, inputType, toggleModal },
+		ref
+	) => {
 		useEffect(() => {
 			inputType === 'status-input' && selectRef.current?.focus();
 			inputType === 'description-input' && descriptionRef.current?.focus();
@@ -24,7 +27,7 @@ const AddTaskForm = forwardRef<HTMLInputElement, Options>(
 			taskDispatch,
 			setAddFormData,
 			inputType,
-			setModal,
+			toggleModal,
 		};
 
 		return (

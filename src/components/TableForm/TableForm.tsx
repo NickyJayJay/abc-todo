@@ -10,9 +10,10 @@ import classes from '../App/App.module.scss';
 import { EditTask, EditFormData } from '../../ts/interfaces';
 import { Task, TaskActionShape } from '../../ts/types';
 import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
+import { Options } from '../App/handlers';
 
 interface Props {
-	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
+	handleFormSubmit?: (e: React.FormEvent, options?: Options) => void;
 	editTask: EditTask;
 	xPos?: string | null;
 	yPos?: string | null;
@@ -20,18 +21,25 @@ interface Props {
 	showMenu?: boolean;
 	outsideClickRef?: RefObject<HTMLTableSectionElement>;
 	tableRef?: RefObject<HTMLTableElement>;
+	setX: (
+		e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
+	) => string | null;
+	setY: (
+		e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
+	) => string | null;
 	tasks: Task[];
 	taskDispatch?: React.Dispatch<TaskActionShape>;
 	handleEditTask?: (
-		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
-		b: Task
+		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent,
+		options?: Options
 	) => void;
 	editFormData: EditFormData;
 	setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
-	handleEditFormKeyboard?: (e: React.KeyboardEvent) => void;
+	handleEditFormKeyboard?: (e: React.KeyboardEvent, options?: Options) => void;
 	isModal?: boolean;
 	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 	handleMenuItemEvent: typeof handleMenuItemEvent;
+	toggleModal: () => void;
 }
 
 const TableForm = ({
@@ -52,6 +60,9 @@ const TableForm = ({
 	isModal,
 	setEditFormData,
 	handleMenuItemEvent,
+	toggleModal,
+	setX,
+	setY,
 }: Props) => {
 	return (
 		<form onSubmit={handleFormSubmit}>
@@ -89,6 +100,11 @@ const TableForm = ({
 								task={task}
 								handleEditTask={handleEditTask!}
 								editTask={editTask!}
+								toggleModal={toggleModal}
+								setEditTask={setEditTask}
+								setX={setX}
+								setY={setY}
+								setEditFormData={setEditFormData}
 							/>
 							<Priority
 								task={task}
@@ -96,6 +112,14 @@ const TableForm = ({
 								handleEditFormKeyboard={handleEditFormKeyboard!}
 								isModal={isModal!}
 								editTask={editTask!}
+								editFormData={editFormData}
+								setEditFormData={setEditFormData}
+								tasks={tasks}
+								taskDispatch={taskDispatch}
+								toggleModal={toggleModal}
+								setEditTask={setEditTask}
+								setX={setX}
+								setY={setY}
 							/>
 							{editTask!.inputType === 'description-cell' &&
 							rowId === task.id ? (
@@ -108,11 +132,19 @@ const TableForm = ({
 									taskDescription={editFormData!.description}
 									editFormData={editFormData}
 									setEditFormData={setEditFormData}
+									editTask={editTask}
+									tasks={tasks}
+									taskDispatch={taskDispatch}
 								/>
 							) : (
 								<DescriptionReadOnly
 									task={task}
 									handleEditTask={handleEditTask!}
+									toggleModal={toggleModal}
+									setEditTask={setEditTask}
+									setX={setX}
+									setY={setY}
+									setEditFormData={setEditFormData}
 								/>
 							)}
 						</tr>

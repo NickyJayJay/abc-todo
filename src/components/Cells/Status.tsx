@@ -6,17 +6,36 @@ import add from '../../assets/SVG/add.svg';
 import arrowRight from '../../assets/SVG/arrow-right.svg';
 import dot from '../../assets/SVG/dot.svg';
 import { Task } from '../../ts/types';
-import { EditTask } from '../../ts/interfaces';
+import { EditFormData, EditTask } from '../../ts/interfaces';
+import { Options } from '../App/handlers';
 interface Props {
 	handleEditTask: (
-		a: React.MouseEvent | React.TouchEvent | React.KeyboardEvent,
-		b: Task
+		e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent,
+		options?: Options
 	) => void;
 	task: Task;
 	editTask: EditTask;
+	toggleModal: () => void;
+	setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
+	setX: (
+		e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
+	) => string | null;
+	setY: (
+		e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
+	) => string | null;
+	setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 }
 
-const Status = ({ handleEditTask, task, editTask }: Props) => {
+const Status = ({
+	handleEditTask,
+	task,
+	editTask,
+	toggleModal,
+	setEditTask,
+	setX,
+	setY,
+	setEditFormData,
+}: Props) => {
 	const cellRef = useRef<HTMLTableCellElement>(null);
 
 	useEffect(() => {
@@ -39,8 +58,26 @@ const Status = ({ handleEditTask, task, editTask }: Props) => {
 			<button
 				data-id='status-cell'
 				aria-label='status'
-				onClick={(event) => handleEditTask(event, task)}
-				onKeyDown={(event) => handleEditTask(event, task)}
+				onClick={(event) =>
+					handleEditTask(event, {
+						toggleModal,
+						setEditTask,
+						task,
+						setX,
+						setY,
+						setEditFormData,
+					})
+				}
+				onKeyDown={(event) =>
+					handleEditTask(event, {
+						toggleModal,
+						setEditTask,
+						task,
+						setX,
+						setY,
+						setEditFormData,
+					})
+				}
 			>
 				{task.status === 'In Process' && (
 					<img src={dot} alt='in process icon' data-id='status-cell' />

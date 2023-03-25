@@ -1,4 +1,7 @@
-import { EditFormData } from '../../ts/interfaces';
+import { EditFormData, EditTask } from '../../ts/interfaces';
+import { Task, TaskActionShape } from '../../ts/types';
+import { handleFormSubmit } from '../App/handlers';
+import { Options as AppOptions } from '../App/handlers';
 
 interface Options {
 	inputType?: string | null;
@@ -8,8 +11,10 @@ interface Options {
 	numberPriority?: string | null;
 	setEditFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
 	setAddFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
-	handleFormSubmit?: (e: React.FormEvent<Element>) => void;
-	setModal?: React.Dispatch<React.SetStateAction<boolean>>;
+	toggleModal: () => void;
+	editTask?: EditTask;
+	tasks?: Task[];
+	taskDispatch?: React.Dispatch<TaskActionShape>;
 }
 
 export const letterPriorityHandler = (options: Options) => {
@@ -95,8 +100,11 @@ export const updatePriorityHandler = (options: Options) => {
 		inputType,
 		addFormData,
 		setAddFormData,
-		handleFormSubmit,
-		setModal,
+		toggleModal,
+		editTask,
+		editFormData,
+		tasks,
+		taskDispatch
 	}: Options = options;
 
 	return (e: React.MouseEvent<Element> | React.TouchEvent<Element>) => {
@@ -104,7 +112,7 @@ export const updatePriorityHandler = (options: Options) => {
 
 		if (inputType === 'priority-cell') {
 			isFormValid(e) && handleFormSubmit
-				? handleFormSubmit(e)
+				? handleFormSubmit(e, { editTask, editFormData, tasks, taskDispatch } as AppOptions)
 				: alert("Priority input's integer value is invalid.");
 		} else {
 			const newFormData: EditFormData = {
@@ -118,7 +126,7 @@ export const updatePriorityHandler = (options: Options) => {
 				: alert("Priority input's integer value is invalid.");
 		}
 		setTimeout(() => {
-			setModal && setModal(false);
+			toggleModal();
 		}, 250);
 	};
 };

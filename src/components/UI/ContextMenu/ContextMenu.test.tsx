@@ -62,6 +62,9 @@ const taskDispatch = jest.fn();
 const update = jest.fn();
 const remove = jest.fn();
 const handleEditTask = jest.fn();
+const setX = jest.fn();
+const setY = jest.fn();
+const toggleModal = jest.fn();
 const handleMenuMockArgs = {
 	editTask,
 	rowId,
@@ -90,6 +93,10 @@ describe('context menu', () => {
 				showMenu={false}
 				setEditFormData={setEditFormData}
 				editFormData={editFormData}
+				setX={setX}
+				setY={setY}
+				toggleModal={toggleModal}
+				setEditTask={setEditTask}
 			/>
 		);
 
@@ -105,12 +112,16 @@ describe('context menu', () => {
 
 		// check if handleEditTask has been called
 		expect(handleEditTask).toHaveBeenCalledTimes(1);
-		expect(handleEditTask.mock.calls[0][1]).toStrictEqual({
-			description: 'test',
-			id: '1',
-			priority: 'A1',
-			status: 'In Process',
-		});
+		expect(handleEditTask.mock.calls[0][1]).toEqual(
+			expect.objectContaining({
+				setEditFormData: expect.anything(),
+				setEditTask: expect.anything(),
+				setX: expect.anything(),
+				setY: expect.anything(),
+				task: expect.anything(),
+				toggleModal: expect.anything(),
+			})
+		);
 
 		render(
 			<TableForm
@@ -122,6 +133,10 @@ describe('context menu', () => {
 				showMenu={true}
 				setEditFormData={setEditFormData}
 				editFormData={editFormData}
+				setX={setX}
+				setY={setY}
+				toggleModal={toggleModal}
+				setEditTask={setEditTask}
 			/>
 		);
 

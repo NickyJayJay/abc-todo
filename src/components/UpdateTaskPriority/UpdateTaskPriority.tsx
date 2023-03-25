@@ -1,4 +1,4 @@
-import { useRef, useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import { PriorityContext } from '../../context/priority-context';
 import Button from '../UI/Button/Button';
 import classes from './UpdateTaskPriority.module.scss';
@@ -17,9 +17,10 @@ const UpdateTaskPriority = () => {
 		setAddFormData,
 		letterPriority,
 		numberPriority,
-		handleFormSubmit,
-		isModal,
-		setModal,
+		toggleModal,
+		editTask,
+		tasks,
+		taskDispatch,
 	} = useContext(PriorityContext);
 
 	const options = {
@@ -30,17 +31,11 @@ const UpdateTaskPriority = () => {
 		numberPriority,
 		setEditFormData,
 		setAddFormData,
-		handleFormSubmit,
-		setModal,
+		toggleModal,
+		editTask,
+		tasks,
+		taskDispatch,
 	};
-
-	const radioRef = useRef<HTMLInputElement>(null);
-
-	useEffect(() => {
-		(inputType === 'priority-input' || inputType === 'priority-cell') &&
-			isModal &&
-			radioRef.current?.focus();
-	}, [isModal, inputType]);
 
 	return (
 		<form
@@ -59,7 +54,7 @@ const UpdateTaskPriority = () => {
 						value='A'
 						onChange={letterPriorityHandler(options)}
 						onTouchStart={letterPriorityHandler(options)}
-						ref={radioRef}
+						checked={letterPriority === 'A'}
 					/>
 					<label>
 						A <span>(Important and time sensitive)</span>
@@ -73,6 +68,7 @@ const UpdateTaskPriority = () => {
 						value='B'
 						onChange={letterPriorityHandler(options)}
 						onTouchStart={letterPriorityHandler(options)}
+						checked={letterPriority === 'B'}
 					/>
 					<label>
 						B <span>(Important but not time sensitive)</span>
@@ -86,6 +82,7 @@ const UpdateTaskPriority = () => {
 						value='C'
 						onChange={letterPriorityHandler(options)}
 						onTouchStart={letterPriorityHandler(options)}
+						checked={letterPriority === 'C'}
 					/>
 					<label>
 						C <span>(Not important)</span>
