@@ -33,10 +33,10 @@
             cursor: pointer;
 
             &.completed {
-              background-color: #eceaea;
               
                 td {
                   background-clip: padding-box;
+                  background-color: #eceaea;
                 }
               }
     
@@ -69,7 +69,6 @@
     
                 &:focus-visible {
                   background-color: $highlightColor;
-                  outline: 3px solid $accentColor;
                 }
 
                 &.completed {
@@ -79,11 +78,10 @@
 
               &.active {
                 background-color: $highlightColor;
-                outline: 3px solid $accentColor;
 
-                input {
+                input, button {
                   background-color: $highlightColor;
-                  outline: 1px solid $accentColor;
+                  border: 2px solid #008002;
                 }
               }
             }
@@ -94,7 +92,6 @@
 
               &.active {
                   background-color: $highlightColor;
-                  outline: 3px solid $accentColor;
               }
 
               .statusIcon {
@@ -107,6 +104,11 @@
                 top: 50%;
                 transform: translate(-50%, -50%);
                 left: 50%;
+              }
+
+              button {
+                left: 49%;
+                box-sizing: content-box;
               }
             }
     
@@ -125,6 +127,11 @@
                 margin-top: .5px;
                 font-weight: bold;
                 text-indent: 0;
+              }
+
+              button {
+                top: 49%;
+                box-sizing: content-box;
               }
             }
     
@@ -146,7 +153,8 @@
     
               input {
                 width: 100%;
-                height: 100%;
+                max-height: 30px;
+                      height: 100%;
                 text-indent: 6px;
                 border: none;
                 padding: 0;
@@ -238,10 +246,6 @@
         font-weight: bold;
         border: 1px solid $accentColor;
         text-align: center;
-
-        &:focus-visible {
-          outline: 3px solid $accentColor;
-        }
       }
 
       input[name=priority] {
@@ -259,12 +263,10 @@
 
          &:focus-visible {
           background-color: $highlightColor;
-          outline: 3px solid $accentColor;
         }
 
         &.active {
             background-color: $highlightColor;
-            outline: 3px solid $accentColor;
         }
       }
 
@@ -286,7 +288,6 @@
 
         &:focus-visible {
           background-color: $highlightColor;
-          outline: 3px solid $accentColor;
         }
       }
 

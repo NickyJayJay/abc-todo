@@ -39,7 +39,7 @@ describe('app', () => {
 		expect(taskPriority).toBeInTheDocument();
 	});
 
-	test('error message should appear if fetch call is unsuccesful', async () => {
+	test('error message should appear if fetch call is unsuccessful', async () => {
 		server.use(
 			rest.get(
 				'https://benny-32eaa-default-rtdb.firebaseio.com/tasks.json',
