@@ -68,7 +68,13 @@ const DescriptionReadOnly = ({
 			<button
 				data-id='description-cell'
 				aria-label='description'
-				className={task.status === 'Completed' ? classes.completed : ''}
+				className={
+					task.status === 'Delegated'
+						? classes.delegated
+						: '' || task.status === 'Completed'
+						? classes.completed
+						: ''
+				}
 			>
 				{task.description}
 			</button>

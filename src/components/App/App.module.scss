@@ -32,7 +32,8 @@
           tr {
             cursor: pointer;
 
-            &.completed {
+            &.completed,
+            &.delegated {
               
                 td {
                   background-clip: padding-box;
@@ -71,7 +72,8 @@
                   background-color: $highlightColor;
                 }
 
-                &.completed {
+                &.completed,
+                &.delegated {
                   color: #6e6e6e;
                 }
               }

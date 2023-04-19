@@ -94,7 +94,13 @@ const TableForm = ({
 					{tasks!.map((task) => (
 						<tr
 							key={task.id}
-							className={task.status === 'Completed' ? classes.completed : ''}
+							className={
+								task.status === 'Delegated'
+									? classes.delegated
+									: '' || task.status === 'Completed'
+									? classes.completed
+									: ''
+							}
 						>
 							<Status
 								task={task}

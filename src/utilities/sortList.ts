@@ -11,11 +11,14 @@ const sortList = (loadedTasks: Task[]) => {
 		const priorityNumberA = Number(numA);
 		const priorityNumberB = Number(numB);
 
-		if (priorityA === '' && priorityB !== '') return 1;
-		if (priorityB === '' && priorityA !== '') return -1;
+		if (statusA === 'Delegated' && statusB !== 'Delegated') return 1;
+		if (statusA !== 'Delegated' && statusB === 'Delegated') return -1;
 
 		if (statusA === 'Completed' && statusB !== 'Completed') return 1;
 		if (statusA !== 'Completed' && statusB === 'Completed') return -1;
+
+		if (priorityA === '' && priorityB !== '') return 1;
+		if (priorityB === '' && priorityA !== '') return -1;
 
 		if (letterA > letterB) return 1;
 		if (letterA < letterB) return -1;
