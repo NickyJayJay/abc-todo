@@ -2,7 +2,6 @@ import { TaskActionType } from './enums';
 
 export type Task = {
 	id?: string | null;
-	key?: string | null;
 	status?: string | null;
 	priority?: string | null;
 	description?: string | null;

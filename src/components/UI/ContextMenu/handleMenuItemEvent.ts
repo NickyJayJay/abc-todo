@@ -11,11 +11,7 @@ export const handleMenuItemEvent = (options: Menu) => {
 		setEditFormData,
 		sortList,
 		tasks,
-		taskDispatch,
-		ref,
-		db,
-		update,
-		remove,
+		taskDispatch
 	}: Menu = options;
 
 	return (e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent) => {
@@ -45,8 +41,8 @@ export const handleMenuItemEvent = (options: Menu) => {
 				type: TaskActionType.REMOVE,
 				index: index,
 			});
-			const dbRef = ref(db, `tasks/${rowId}`);
-			remove(dbRef);
+
+			localStorage.removeItem(rowId!.toString());
 			setEditTask({ ...editTask, showMenu: false });
 			return;
 		}
@@ -74,9 +70,8 @@ export const handleMenuItemEvent = (options: Menu) => {
 			type: TaskActionType.SET,
 			data: newTasks,
 		});
-		const dbRef = ref(db, `tasks/${rowId}`);
-		update(dbRef, editedTask);
 
+		localStorage.setItem(rowId!.toString(), JSON.stringify(editedTask as string));
 		setEditTask({ ...editTask, showMenu: false });
 		sortList(newTasks);
 	};
