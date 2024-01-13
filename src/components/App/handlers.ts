@@ -1,6 +1,4 @@
 import React from 'react';
-import { ref, update } from 'firebase/database';
-import { db } from '../../firebaseConfig';
 
 import { TaskActionType } from '../../ts/enums';
 import { EditFormData, EditTask } from '../../ts/interfaces';
@@ -10,7 +8,7 @@ import sortList from '../../utilities/sortList';
 export interface Options {
     editTask?: EditTask;
     editFormData?: EditFormData;
-    task?: Task
+    task?: Task;
     tasks?: Task[];
     taskDispatch?: React.Dispatch<TaskActionShape>;
     setEditFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
@@ -25,7 +23,7 @@ export const handleFormSubmit = (e: React.FormEvent, options: Options = {} as Op
 
     e.preventDefault();
 
-    const editedTask = {
+    const editedTask: Task = {
         id: editTask!.rowId,
         status: editFormData!.status,
         priority: editFormData!.priority,
@@ -42,9 +40,7 @@ export const handleFormSubmit = (e: React.FormEvent, options: Options = {} as Op
     });
 
     sortList(newTasks);
-
-    const dbRef = ref(db, `tasks/${editTask!.rowId}`);
-    update(dbRef, editedTask);
+    localStorage.setItem(editTask!.rowId!.toString(), JSON.stringify(editedTask as string));
 };
 
 export const handleEditFormKeyboard = (e: React.KeyboardEvent, options: Options = {} as Options) => {

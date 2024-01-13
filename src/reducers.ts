@@ -15,7 +15,6 @@ export const taskReducer: Reducer<Task[], TaskActionShape> = (
 				...state,
 				{
 					id: action.payload.id,
-					key: action.payload.key,
 					status: action.payload.status,
 					priority: action.payload.priority,
 					description: action.payload.description,

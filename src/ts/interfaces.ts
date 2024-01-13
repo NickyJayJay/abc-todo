@@ -1,4 +1,3 @@
-import { Database, DatabaseReference } from 'firebase/database';
 import { Task, TaskActionShape } from './types';
 export interface EditTask {
 	rowId: string | null;
@@ -30,8 +29,4 @@ export interface Menu {
 	sortList: (a: Task[]) => void;
 	tasks: Task[];
 	taskDispatch: (a: TaskActionShape) => void;
-	ref: (a: Database, b: string) => DatabaseReference;
-	db: Database;
-	update: (a: DatabaseReference, b: object) => Promise<void>;
-	remove: (a: DatabaseReference) => Promise<void>;
 }
