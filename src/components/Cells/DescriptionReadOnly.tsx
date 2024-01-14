@@ -74,6 +74,8 @@ const DescriptionReadOnly = ({
             ? classes.delegated
             : '' || task.status === 'Completed'
             ? classes.completed
+            : '' || task.status === 'Forwarded'
+            ? classes.forwarded
             : ''
         }
       >
