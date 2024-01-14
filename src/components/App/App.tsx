@@ -134,6 +134,26 @@ const App = () => {
           }
         }
 
+        if (localStorage.length === 0) {
+          const taskId = nanoid();
+
+          localStorage.setItem(
+            taskId,
+            JSON.stringify({
+              status: 'In Process',
+              priority: 'A1',
+              description: 'Planning and solitude',
+            })
+          );
+
+          loadedTasks.push({
+            id: taskId,
+            status: 'In Process',
+            priority: 'A1',
+            description: 'Planning and solitude',
+          });
+        }
+
         if (localStorage.length < 16) {
           while (localStorage.length < 16) {
             const taskId = nanoid();
