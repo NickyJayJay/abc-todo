@@ -4,8 +4,7 @@ import React, {
   useEffect,
   useReducer,
 } from 'react';
-
-// import { url } from '../../firebaseConfig';
+import { nanoid } from 'nanoid';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import Main from '../Main/Main';
 import classes from './App.module.scss';
@@ -118,23 +117,7 @@ const App = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        // const response = await fetch(`${url}/tasks.json`);
-
-        // if (!response.ok) {
-        //   throw new Error('Something went wrong!');
-        // }
-
-        // const responseData = await response.json();
         const loadedTasks: Task[] = [];
-
-        // for (const key in responseData) {
-        // loadedTasks.push({
-        //   id: key,
-        //   status: responseData[key].status,
-        //   priority: responseData[key].priority,
-        //   description: responseData[key].description,
-        // });
-        // }
 
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i);
@@ -147,6 +130,28 @@ const App = () => {
               status: task.status,
               priority: task.priority,
               description: task.description,
+            });
+          }
+        }
+
+        if (localStorage.length < 16) {
+          while (localStorage.length < 16) {
+            const taskId = nanoid();
+
+            localStorage.setItem(
+              taskId,
+              JSON.stringify({
+                status: addFormData.status,
+                priority: addFormData.priority,
+                description: addFormData.description,
+              })
+            );
+
+            loadedTasks.push({
+              id: taskId,
+              status: '',
+              priority: '',
+              description: '',
             });
           }
         }
