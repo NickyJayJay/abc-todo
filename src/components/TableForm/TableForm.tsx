@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react';
+import React, { RefObject, useEffect } from 'react';
 
 import DescriptionEditable from '../Cells/DescriptionEditable';
 import Status from '../Cells/Status';
@@ -34,7 +34,7 @@ interface Props {
     options?: Options
   ) => void;
   editFormData: EditFormData;
-  setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
+  setEditTask: React.Dispatch<React.SetStateAction<EditTask>>;
   handleEditFormKeyboard?: (
     e: React.KeyboardEvent,
     options?: Options
@@ -67,6 +67,18 @@ const TableForm = ({
   setX,
   setY,
 }: Props) => {
+  useEffect(() => {
+    const handleResize = () => {
+      setEditTask({ ...editTask, showMenu: false });
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <form onSubmit={handleFormSubmit}>
       {showMenu && (
