@@ -18,7 +18,7 @@ import { TaskActionType } from '../../ts/enums';
 import { taskReducer } from '../../reducers';
 import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
 import sortList from '../../utilities/sortList';
-import useCoordinates from '../../hooks/useCoordinates';
+import useMenuCoords from '../../hooks/useMenuCoords';
 import useModal from '../../hooks/useModal';
 import {
   handleFormSubmit,
@@ -60,7 +60,7 @@ const App = () => {
     showMenu: false,
   });
 
-  const [setX, setY, tableRef] = useCoordinates();
+  const [setX, setY, tableRef] = useMenuCoords();
 
   const handleOutsideClick = useCallback(
     (e: MouseEvent | TouchEvent | KeyboardEvent) => {
