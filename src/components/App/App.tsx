@@ -18,7 +18,6 @@ import { TaskActionType } from '../../ts/enums';
 import { taskReducer } from '../../reducers';
 import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
 import sortList from '../../utilities/sortList';
-import useMenuCoords from '../../hooks/useMenuCoords';
 import useModal from '../../hooks/useModal';
 import {
   handleFormSubmit,
@@ -59,8 +58,6 @@ const App = () => {
     yPosTouch: '0px',
     showMenu: false,
   });
-
-  const [setX, setY, tableRef] = useMenuCoords();
 
   const handleOutsideClick = useCallback(
     (e: MouseEvent | TouchEvent | KeyboardEvent) => {
@@ -251,9 +248,6 @@ const App = () => {
         yPos={editTask.yPos}
         showMenu={editTask.showMenu}
         outsideClickRef={outsideClickRef}
-        tableRef={tableRef}
-        setX={setX}
-        setY={setY}
         tasks={tasks}
         taskDispatch={taskDispatch}
         handleEditTask={handleEditTask}

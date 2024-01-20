@@ -22,12 +22,6 @@ interface Props {
   taskDispatch?: React.Dispatch<TaskActionShape>;
   toggleModal: () => void;
   setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
-  setX: (
-    e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
-  ) => string | null;
-  setY: (
-    e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
-  ) => string | null;
 }
 
 const Priority = ({
@@ -42,8 +36,6 @@ const Priority = ({
   taskDispatch,
   toggleModal,
   setEditTask,
-  setX,
-  setY,
 }: Props) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -72,8 +64,6 @@ const Priority = ({
             toggleModal,
             setEditTask,
             task,
-            setX,
-            setY,
             setEditFormData,
           })
         }
@@ -82,8 +72,6 @@ const Priority = ({
             toggleModal,
             setEditTask,
             task,
-            setX,
-            setY,
             setEditFormData,
           })
         }

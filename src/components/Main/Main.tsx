@@ -19,13 +19,6 @@ interface Props {
   xPos?: string | null;
   yPos?: string | null;
   showMenu?: boolean;
-  tableRef: RefObject<HTMLTableElement>;
-  setX: (
-    e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
-  ) => string | null;
-  setY: (
-    e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
-  ) => string | null;
   outsideClickRef?: RefObject<HTMLTableSectionElement>;
   tasks: Task[];
   taskDispatch: React.Dispatch<TaskActionShape>;
@@ -59,7 +52,6 @@ const Main = ({
   yPos,
   showMenu,
   outsideClickRef,
-  tableRef,
   tasks,
   taskDispatch,
   handleEditTask,
@@ -73,8 +65,6 @@ const Main = ({
   handleMenuItemEvent,
   addFormData,
   setAddFormData,
-  setX,
-  setY,
 }: Props) => {
   const priorityInput = useRef<HTMLInputElement>(null);
   const letterPriority =
@@ -129,9 +119,6 @@ const Main = ({
           rowId={rowId}
           showMenu={showMenu}
           outsideClickRef={outsideClickRef}
-          tableRef={tableRef}
-          setX={setX}
-          setY={setY}
           tasks={tasks}
           taskDispatch={taskDispatch}
           handleEditTask={handleEditTask}

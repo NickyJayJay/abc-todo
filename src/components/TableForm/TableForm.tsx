@@ -11,6 +11,7 @@ import { EditTask, EditFormData } from '../../ts/interfaces';
 import { Task, TaskActionShape } from '../../ts/types';
 import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
 import { Options } from '../App/handlers';
+import useMenuCoords from '../../hooks/useMenuCoords';
 
 interface Props {
   handleFormSubmit?: (e: React.FormEvent, options?: Options) => void;
@@ -20,13 +21,6 @@ interface Props {
   rowId?: string | null;
   showMenu?: boolean;
   outsideClickRef?: RefObject<HTMLTableSectionElement>;
-  tableRef?: RefObject<HTMLTableElement>;
-  setX: (
-    e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
-  ) => string | null;
-  setY: (
-    e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
-  ) => string | null;
   tasks: Task[];
   taskDispatch?: React.Dispatch<TaskActionShape>;
   handleEditTask?: (
@@ -53,7 +47,6 @@ const TableForm = ({
   rowId,
   showMenu,
   outsideClickRef,
-  tableRef,
   tasks,
   taskDispatch,
   handleEditTask,
@@ -64,8 +57,6 @@ const TableForm = ({
   setEditFormData,
   handleMenuItemEvent,
   toggleModal,
-  setX,
-  setY,
 }: Props) => {
   useEffect(() => {
     const handleResize = () => {
@@ -78,6 +69,8 @@ const TableForm = ({
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  const [setX, setY, tableRef] = useMenuCoords();
 
   return (
     <form onSubmit={handleFormSubmit}>
@@ -143,8 +136,6 @@ const TableForm = ({
                 taskDispatch={taskDispatch}
                 toggleModal={toggleModal}
                 setEditTask={setEditTask}
-                setX={setX}
-                setY={setY}
               />
               {editTask!.inputType === 'description-cell' &&
               rowId === task.id ? (
@@ -167,8 +158,6 @@ const TableForm = ({
                   handleEditTask={handleEditTask!}
                   toggleModal={toggleModal}
                   setEditTask={setEditTask}
-                  setX={setX}
-                  setY={setY}
                   setEditFormData={setEditFormData}
                 />
               )}

@@ -2,7 +2,6 @@ import { useCallback, useRef } from 'react';
 
 const useMenuCoords = () => {
 	const tableRef = useRef<HTMLTableElement>(null);
-	const menuRef = useRef<HTMLDivElement>(null); // let's get get dynamic menu height value instead of hard-coding (if possible)
 
 	const setX = useCallback(
 		// gets x position for different events
@@ -34,7 +33,7 @@ const useMenuCoords = () => {
 			).getBoundingClientRect().bottom;
 			// compute y position of menu bottom for click and touch with pageY + menu height - scrollY
 			const menuBottom: number =
-				(e as React.MouseEvent).pageY + 224 - window.scrollY ||
+				(e as React.MouseEvent).pageY + 224 - window.scrollY || // let's get get dynamic menu height value instead of hard-coding (if possible)
 				((e as React.TouchEvent).touches &&
 					(e as React.TouchEvent).touches[0].pageY +
 					224 -
@@ -91,10 +90,10 @@ const useMenuCoords = () => {
 				return null;
 			}
 		},
-		[tableRef, menuRef]
+		[tableRef]
 	);
 
-	return [setX, setY, tableRef, menuRef] as const;
+	return [setX, setY, tableRef] as const;
 };
 
 export default useMenuCoords;

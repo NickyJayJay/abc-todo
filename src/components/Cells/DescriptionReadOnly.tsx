@@ -12,12 +12,6 @@ interface Props {
   task: Task;
   toggleModal: () => void;
   setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
-  setX: (
-    e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
-  ) => string | null;
-  setY: (
-    e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
-  ) => string | null;
   setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 }
 
@@ -26,8 +20,6 @@ const DescriptionReadOnly = ({
   toggleModal,
   setEditTask,
   task,
-  setX,
-  setY,
   setEditFormData,
 }: Props) => {
   return (
@@ -40,8 +32,6 @@ const DescriptionReadOnly = ({
       //       toggleModal,
       //       setEditTask,
       //       task,
-      //       setX,
-      //       setY,
       //       setEditFormData,
       //     })
       //   }
@@ -50,8 +40,6 @@ const DescriptionReadOnly = ({
           toggleModal,
           setEditTask,
           task,
-          setX,
-          setY,
           setEditFormData,
         })
       }
@@ -60,8 +48,6 @@ const DescriptionReadOnly = ({
           toggleModal,
           setEditTask,
           task,
-          setX,
-          setY,
           setEditFormData,
         })
       }
