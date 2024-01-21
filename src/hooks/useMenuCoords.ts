@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react';
 
-const useMenuCoords = (menuHeight: number) => {
+const useMenuCoords = () => {
 	const tableRef = useRef<HTMLTableElement>(null);
 
 	const setX = useCallback((e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => {
@@ -21,7 +21,7 @@ const useMenuCoords = (menuHeight: number) => {
 
 	const setY = useCallback((e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => {
 		// measurements
-		menuHeight = menuHeight || 224;
+		const menuHeight = 224; // should be able to get this dynamically
 		const tableBottom: number = (tableRef.current as HTMLTableElement).getBoundingClientRect().bottom;
 		const tableTop: number = (tableRef.current as HTMLTableElement).getBoundingClientRect().top;
 		const tableHeight: number = (tableRef.current as HTMLTableElement).getBoundingClientRect().height;

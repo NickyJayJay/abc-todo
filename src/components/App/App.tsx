@@ -54,8 +54,6 @@ const App = () => {
     inputType: null,
     xPos: '0px',
     yPos: '0px',
-    xPosTouch: '0px',
-    yPosTouch: '0px',
     showMenu: false,
   });
 
@@ -66,22 +64,15 @@ const App = () => {
         inputType: (e.target as HTMLElement).dataset.id || null,
         xPos: null,
         yPos: null,
-        xPosTouch: null,
-        yPosTouch: null,
         showMenu:
-          ((editTask.xPos && editTask.yPos) ||
-            (editTask.xPosTouch && editTask.yPosTouch)) &&
+          editTask.xPos &&
+          editTask.yPos &&
           (e.target as HTMLButtonElement).dataset.id === 'status-cell'
             ? true
             : false,
       });
     },
-    [
-      editTask.xPos,
-      editTask.xPosTouch,
-      editTask.yPos,
-      editTask.yPosTouch,
-    ]
+    [editTask.xPos, editTask.yPos]
   );
 
   const outsideClickRef = useOutsideClick((e) =>
