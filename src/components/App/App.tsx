@@ -91,11 +91,11 @@ const App = () => {
   const [, toggleModal, isModal] = useModal();
 
   useEffect(() => {
-    if (editTask.showMenu || isModal) {
+    if (isModal) {
       document.body.classList.add('lockScroll');
       document.body.style.top = `-${window.scrollY}px`;
     }
-    if (!editTask.showMenu && !isModal) {
+    if (!isModal) {
       document.body.classList.remove('lockScroll');
       document.body.style.top = '';
     }

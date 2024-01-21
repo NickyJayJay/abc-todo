@@ -1,95 +1,69 @@
 import { useCallback, useRef } from 'react';
 
-const useMenuCoords = () => {
+const useMenuCoords = (menuHeight: number) => {
 	const tableRef = useRef<HTMLTableElement>(null);
 
-	const setX = useCallback(
-		// gets x position for different events
-		(
-			e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
-		) => {
-			if (e.type === 'click') {
-				return `${(e as React.MouseEvent).pageX}px`;
-			} else if (e.type === 'touchstart') {
-				return `${(e as React.TouchEvent).touches[0].pageX}px`;
-			} else if (e.type === 'keydown') {
-				return `${(e.target as HTMLTableElement).getBoundingClientRect().x +
-					(e.target as HTMLTableElement).getBoundingClientRect().width
-					}px`;
-			} else {
-				return null;
-			}
-		},
+	const setX = useCallback((e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => {
+		if (e.type === 'click') {
+			return `${(e as React.MouseEvent).pageX}px`;
+		} else if (e.type === 'touchstart') {
+			return `${(e as React.TouchEvent).touches[0].pageX}px`;
+		} else if (e.type === 'keydown') {
+			return `${(e.target as HTMLTableElement).getBoundingClientRect().x +
+				(e.target as HTMLTableElement).getBoundingClientRect().width
+				}px`;
+		} else {
+			return null;
+		}
+	},
 		[]
 	);
 
-	const setY = useCallback(
-		(
-			e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
-		) => {
-			// get bottom of containing table
-			const containerBottom: number = (
-				tableRef.current as HTMLTableElement
-			).getBoundingClientRect().bottom;
-			// compute y position of menu bottom for click and touch with pageY + menu height - scrollY
-			const menuBottom: number =
-				(e as React.MouseEvent).pageY + 224 - window.scrollY || // let's get get dynamic menu height value instead of hard-coding (if possible)
-				((e as React.TouchEvent).touches &&
-					(e as React.TouchEvent).touches[0].pageY +
-					224 -
-					window.scrollY) ||
-				// no pageY available for keyboard events, so set menu bottom with y position of status button + menu height
-				(e.target as HTMLTableElement).getBoundingClientRect().y +
-				224;
-			// sets menu y position based on click event's pageY
-			if (e.type === 'click' && menuBottom <= containerBottom) {
-				return `${(e as React.MouseEvent).pageY}px`;
-				// prevent menu from intersecting bottom of table, sits menu at bottom of table
-			} else if (e.type === 'click' && menuBottom > containerBottom) {
-				return `${(e as React.MouseEvent).pageY -
-					(menuBottom - containerBottom)
-					}px`;
-				// sets menu y position based on touch event's pageY
-			} else if (
-				e.type === 'touchstart' &&
-				(e as React.TouchEvent).touches &&
-				(e as React.TouchEvent).touches[0].pageY &&
-				menuBottom <= containerBottom
-			) {
-				return `${(e as React.TouchEvent).touches[0].pageY}px`;
-				// prevent menu from intersecting bottom of table, sits menu at bottom of table
-			} else if (
-				e.type === 'touchstart' &&
-				(e as React.TouchEvent).touches &&
-				(e as React.TouchEvent).touches[0].pageY &&
-				menuBottom > containerBottom
-			) {
-				return `${(e as React.TouchEvent).touches[0].pageY -
-					(menuBottom - containerBottom)
-					}px`;
-				// set menu y position based on status button's y position + height (keyboard)
-			} else if (
-				e.type === 'keydown' &&
-				(e.target as HTMLTableElement).getBoundingClientRect() &&
-				menuBottom <= containerBottom
-			) {
-				return `${(e.target as HTMLTableElement).getBoundingClientRect().y +
-					(e.target as HTMLTableElement).getBoundingClientRect()
-						.height
-					}px`;
-				// prevent menu from intersecting bottom of table, sits menu at bottom of table (keyboard)
-			} else if (
-				e.type === 'keydown' &&
-				(e.target as HTMLTableElement).getBoundingClientRect() &&
-				menuBottom > containerBottom
-			) {
-				return `${(e.target as HTMLTableElement).getBoundingClientRect().y -
-					(menuBottom - containerBottom)
-					}px`;
-			} else {
-				return null;
-			}
-		},
+	const setY = useCallback((e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => {
+		// measurements
+		menuHeight = menuHeight || 224;
+		const tableBottom: number = (tableRef.current as HTMLTableElement).getBoundingClientRect().bottom;
+		const tableTop: number = (tableRef.current as HTMLTableElement).getBoundingClientRect().top;
+		const tableHeight: number = (tableRef.current as HTMLTableElement).getBoundingClientRect().height;
+		const menuBottom: number =
+			(e as React.MouseEvent).pageY + menuHeight - window.scrollY ||
+			((e as React.TouchEvent).touches && (e as React.TouchEvent).touches[0].pageY + menuHeight - window.scrollY) ||
+			(e.target as HTMLTableElement).getBoundingClientRect().y + menuHeight;
+		const menuTop: number =
+			(e as React.MouseEvent).pageY - window.scrollY - menuHeight ||
+			((e as React.TouchEvent).touches && (e as React.TouchEvent).touches[0].pageY - window.scrollY - menuHeight) ||
+			(e.target as HTMLTableElement).getBoundingClientRect().y - menuHeight;
+		// position logic
+		const noStopIntersect = menuBottom <= tableBottom;
+		const stopBottomIntersect = menuBottom > tableBottom && menuTop > tableTop || tableHeight > menuHeight;
+		const stopTopIntersect = menuBottom > tableBottom && menuTop < tableTop;
+		// events
+		const click = e.type === 'click';
+		const touchStart = e.type === 'touchstart' && (e as React.TouchEvent).touches && (e as React.TouchEvent).touches[0].pageY;
+		const keyDown = e.type === 'keydown' && (e.target as HTMLTableElement).getBoundingClientRect();
+
+		if (click && noStopIntersect) {
+			return `${(e as React.MouseEvent).pageY}px`;
+		} else if (click && stopBottomIntersect) {
+			return `${(e as React.MouseEvent).pageY - (menuBottom - tableBottom)}px`;
+		} else if (click && stopTopIntersect) {
+			return `${(e as React.MouseEvent).pageY}px`;
+		} else if (touchStart && noStopIntersect) {
+			return `${(e as React.TouchEvent).touches[0].pageY}px`;
+		} else if (touchStart && stopBottomIntersect) {
+			return `${(e as React.TouchEvent).touches[0].pageY - (menuBottom - tableBottom)}px`;
+		} else if (touchStart && stopTopIntersect) {
+			return `${(e as React.TouchEvent).touches[0].pageY}px`;
+		} else if (keyDown && noStopIntersect) {
+			return `${(e.target as HTMLTableElement).getBoundingClientRect().y + (e.target as HTMLTableElement).getBoundingClientRect().height}px`;
+		} else if (keyDown && stopBottomIntersect) {
+			return `${(e.target as HTMLTableElement).getBoundingClientRect().y - (menuBottom - tableBottom)}px`;
+		} else if (keyDown && stopTopIntersect) {
+			return `${(e.target as HTMLTableElement).getBoundingClientRect().y + (e.target as HTMLTableElement).getBoundingClientRect().height}px`;
+		} else {
+			return null;
+		}
+	},
 		[tableRef]
 	);
 
