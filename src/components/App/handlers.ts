@@ -124,10 +124,8 @@ export const handleEditTask = (
     setEditTask!({
         rowId: task!.id || null,
         inputType: (e.target as HTMLElement).dataset.id,
-        xPos: setX!(e),
-        yPos: setY!(e),
-        xPosTouch: setX!(e),
-        yPosTouch: setY!(e),
+        xPos: setX && setX(e),
+        yPos: setY && setY(e),
         showMenu:
             ((e as React.MouseEvent).pageX &&
                 (e as React.MouseEvent).pageY &&

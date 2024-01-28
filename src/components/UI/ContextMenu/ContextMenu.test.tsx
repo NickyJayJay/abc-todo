@@ -43,8 +43,6 @@ const mockEditTask = {
   inputType: null,
   xPos: '0px',
   yPos: '0px',
-  xPosTouch: '0px',
-  yPosTouch: '0px',
   showMenu: false,
 };
 

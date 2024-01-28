@@ -1,7 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import { nanoid } from 'nanoid';
 
-// import { url } from '../../firebaseConfig';
 import { EditFormData } from '../../ts/interfaces';
 import { TaskActionShape } from '../../ts/types';
 import { TaskActionType } from '../../ts/enums';
@@ -45,14 +44,6 @@ export const handleAddFormSubmit = (options: Options) => {
 			priority: addFormData.priority,
 			description: addFormData.description,
 		}));
-		// fetch(`${url}/tasks.json`, {
-		// 	method: 'POST',
-		// 	body: JSON.stringify({
-		// 		status: addFormData.status,
-		// 		priority: addFormData.priority,
-		// 		description: addFormData.description,
-		// 	}),
-		// });
 	};
 };
 

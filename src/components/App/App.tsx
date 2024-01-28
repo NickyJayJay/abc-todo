@@ -4,8 +4,7 @@ import React, {
   useEffect,
   useReducer,
 } from 'react';
-
-// import { url } from '../../firebaseConfig';
+import { nanoid } from 'nanoid';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import Main from '../Main/Main';
 import classes from './App.module.scss';
@@ -19,7 +18,6 @@ import { TaskActionType } from '../../ts/enums';
 import { taskReducer } from '../../reducers';
 import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
 import sortList from '../../utilities/sortList';
-import useCoordinates from '../../hooks/useCoordinates';
 import useModal from '../../hooks/useModal';
 import {
   handleFormSubmit,
@@ -56,12 +54,8 @@ const App = () => {
     inputType: null,
     xPos: '0px',
     yPos: '0px',
-    xPosTouch: '0px',
-    yPosTouch: '0px',
     showMenu: false,
   });
-
-  const [setX, setY, tableRef] = useCoordinates();
 
   const handleOutsideClick = useCallback(
     (e: MouseEvent | TouchEvent | KeyboardEvent) => {
@@ -70,22 +64,15 @@ const App = () => {
         inputType: (e.target as HTMLElement).dataset.id || null,
         xPos: null,
         yPos: null,
-        xPosTouch: null,
-        yPosTouch: null,
         showMenu:
-          ((editTask.xPos && editTask.yPos) ||
-            (editTask.xPosTouch && editTask.yPosTouch)) &&
+          editTask.xPos &&
+          editTask.yPos &&
           (e.target as HTMLButtonElement).dataset.id === 'status-cell'
             ? true
             : false,
       });
     },
-    [
-      editTask.xPos,
-      editTask.xPosTouch,
-      editTask.yPos,
-      editTask.yPosTouch,
-    ]
+    [editTask.xPos, editTask.yPos]
   );
 
   const outsideClickRef = useOutsideClick((e) =>
@@ -95,11 +82,11 @@ const App = () => {
   const [, toggleModal, isModal] = useModal();
 
   useEffect(() => {
-    if (editTask.showMenu || isModal) {
+    if (isModal) {
       document.body.classList.add('lockScroll');
       document.body.style.top = `-${window.scrollY}px`;
     }
-    if (!editTask.showMenu && !isModal) {
+    if (!isModal) {
       document.body.classList.remove('lockScroll');
       document.body.style.top = '';
     }
@@ -118,23 +105,7 @@ const App = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        // const response = await fetch(`${url}/tasks.json`);
-
-        // if (!response.ok) {
-        //   throw new Error('Something went wrong!');
-        // }
-
-        // const responseData = await response.json();
         const loadedTasks: Task[] = [];
-
-        // for (const key in responseData) {
-        // loadedTasks.push({
-        //   id: key,
-        //   status: responseData[key].status,
-        //   priority: responseData[key].priority,
-        //   description: responseData[key].description,
-        // });
-        // }
 
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i);
@@ -147,6 +118,48 @@ const App = () => {
               status: task.status,
               priority: task.priority,
               description: task.description,
+            });
+          }
+        }
+
+        if (localStorage.length === 0) {
+          const taskId = nanoid();
+
+          localStorage.setItem(
+            taskId,
+            JSON.stringify({
+              status: 'In Process',
+              priority: 'A1',
+              description: 'Planning and solitude',
+            })
+          );
+
+          loadedTasks.push({
+            id: taskId,
+            status: 'In Process',
+            priority: 'A1',
+            description: 'Planning and solitude',
+          });
+        }
+
+        if (localStorage.length < 16) {
+          while (localStorage.length < 16) {
+            const taskId = nanoid();
+
+            localStorage.setItem(
+              taskId,
+              JSON.stringify({
+                status: addFormData.status,
+                priority: addFormData.priority,
+                description: addFormData.description,
+              })
+            );
+
+            loadedTasks.push({
+              id: taskId,
+              status: '',
+              priority: '',
+              description: '',
             });
           }
         }
@@ -226,9 +239,6 @@ const App = () => {
         yPos={editTask.yPos}
         showMenu={editTask.showMenu}
         outsideClickRef={outsideClickRef}
-        tableRef={tableRef}
-        setX={setX}
-        setY={setY}
         tasks={tasks}
         taskDispatch={taskDispatch}
         handleEditTask={handleEditTask}
