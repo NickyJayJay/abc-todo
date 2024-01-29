@@ -1,9 +1,10 @@
 import React, { ChangeEvent } from 'react';
 import { nanoid } from 'nanoid';
 
-import { EditFormData } from '../../ts/interfaces';
+import { EditFormData, OptionType } from '../../ts/interfaces';
 import { TaskActionShape } from '../../ts/types';
 import { TaskActionType } from '../../ts/enums';
+import { SingleValue } from 'react-select';
 
 export interface Options {
 	addFormData: EditFormData;
@@ -47,7 +48,7 @@ export const handleAddFormSubmit = (options: Options) => {
 	};
 };
 
-export const handleAddFormKeydown = (options: Options) => {
+export const handleAddFormFocus = (options: Options) => {
 	const { inputType, toggleModal }: Options = options;
 
 	return (e: React.KeyboardEvent | ChangeEvent) => {
@@ -84,6 +85,8 @@ export const handleAddFormKeydown = (options: Options) => {
 			e.preventDefault();
 			(prevFocusableEl as HTMLElement).click();
 		}
+		console.log(document.activeElement);
+
 	};
 };
 
@@ -111,6 +114,17 @@ export const handleAddFormChange = (options: Options) => {
 		const newFormData = { ...addFormData };
 		newFormData[fieldName as keyof typeof newFormData] = fieldValue;
 
+		setAddFormData(newFormData);
+	};
+};
+
+export const handleSelectChange = (options: Options) => {
+	const { addFormData, setAddFormData }: Options = options;
+	return (option: SingleValue<OptionType>) => {
+
+		const fieldValue = (option!.value);
+
+		const newFormData = { ...addFormData, status: fieldValue };
 		setAddFormData(newFormData);
 	};
 };

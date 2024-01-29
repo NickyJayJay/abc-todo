@@ -1,13 +1,20 @@
-import React, { forwardRef, useRef, useEffect } from 'react';
-
+import React, {
+  forwardRef,
+  useRef,
+  useEffect,
+  useState,
+} from 'react';
+import Select from 'react-select';
 import ButtonGradient from '../UI/Button/ButtonGradient';
 import classes from '../App/App.module.scss';
 import { Options } from './handlers';
+import { OptionType } from '../../ts/interfaces';
 import {
   handleAddFormSubmit,
-  handleAddFormKeydown,
+  handleAddFormFocus,
   handlePriorityEvent,
   handleAddFormChange,
+  handleSelectChange,
 } from './handlers';
 
 const AddTaskForm = forwardRef<HTMLInputElement, Options>(
@@ -22,13 +29,14 @@ const AddTaskForm = forwardRef<HTMLInputElement, Options>(
     ref
   ) => {
     useEffect(() => {
-      inputType === 'status-input' && selectRef.current?.focus();
+      // inputType === 'status-input' && selectRef.current?.focus();
       inputType === 'description-input' &&
         descriptionRef.current?.focus();
     }, [inputType]);
 
-    const selectRef = useRef<HTMLSelectElement>(null);
+    // const selectRef = useRef<SelectInstance<OptionType> | null>(null);
     const descriptionRef = useRef<HTMLInputElement>(null);
+
     const options: Options = {
       addFormData,
       taskDispatch,
@@ -37,37 +45,37 @@ const AddTaskForm = forwardRef<HTMLInputElement, Options>(
       toggleModal,
     };
 
+    const selectOptions: OptionType[] = [
+      { label: 'In Process', value: 'In Process' },
+      { label: 'Completed', value: 'Completed' },
+      { label: 'Forwarded', value: 'Forwarded' },
+      { label: 'Delegated', value: 'Delegated' },
+    ];
+
     return (
       <div className={classes.addTask}>
         <form onSubmit={handleAddFormSubmit(options)}>
           <fieldset>
             <legend>Add a Task</legend>
-            <select
-              onChange={handleAddFormChange(options)}
-              onKeyDown={handleAddFormKeydown(options)}
+            <Select<OptionType>
+              onChange={handleSelectChange(options)}
+              onKeyDown={handleAddFormFocus(options)}
               name="status"
-              value={addFormData.status as string}
+              value={addFormData.status as OptionType | undefined}
               data-id="status-input"
-              aria-label="Select status"
-              ref={selectRef}
-            >
-              <option hidden>Select Status</option>
-              <option disabled defaultValue="">
-                Select Status
-              </option>
-              <option value="In Process">In Process</option>
-              <option value="Completed">Completed</option>
-              <option value="Forwarded">Forwarded</option>
-              <option value="Delegated">Delegated</option>
-            </select>
+              aria-label="select status"
+              // ref={selectRef}
+              placeholder={addFormData.status as React.ReactNode}
+              options={selectOptions}
+            ></Select>
             <input
               type="text"
               name="priority"
               data-id="priority-input"
               placeholder="ABC"
               value={addFormData.priority as string}
-              onChange={handleAddFormKeydown(options)}
-              onKeyDown={handleAddFormKeydown(options)}
+              onChange={handleAddFormFocus(options)}
+              onKeyDown={handleAddFormFocus(options)}
               onTouchEnd={handlePriorityEvent(options)}
               onClick={handlePriorityEvent(options)}
               aria-label="Enter task priority"
@@ -83,7 +91,7 @@ const AddTaskForm = forwardRef<HTMLInputElement, Options>(
               placeholder="Enter task description..."
               value={addFormData.description as string}
               onChange={handleAddFormChange(options)}
-              onKeyDown={handleAddFormKeydown(options)}
+              onKeyDown={handleAddFormFocus(options)}
               aria-label="Enter task description"
               maxLength={150}
               className={

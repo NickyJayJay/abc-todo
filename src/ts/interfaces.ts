@@ -1,4 +1,5 @@
 import { Task, TaskActionShape } from './types';
+
 export interface EditTask {
 	rowId: string | null;
 	inputType?: string | null;
@@ -14,10 +15,12 @@ export interface EditFormData {
 	priority?: string | null;
 	description?: string | null;
 }
+
 export interface ErrorsAndLoading {
 	isLoading?: boolean;
 	httpError?: string | null;
 }
+
 export interface Menu {
 	editTask: EditTask;
 	rowId?: string | null;
@@ -27,4 +30,9 @@ export interface Menu {
 	sortList: (a: Task[]) => void;
 	tasks: Task[];
 	taskDispatch: (a: TaskActionShape) => void;
+}
+
+export interface OptionType {
+	label: string;
+	value: string;
 }

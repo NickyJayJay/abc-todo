@@ -85,30 +85,26 @@ const Main = ({
   let modal = isModal ? (
     <Modal role="dialog" hideModalHandler={hideModalHandler}>
       {(inputType === 'priority-cell' ||
-        inputType === 'priority-input') && (
-        <PriorityContext.Provider
-          value={{
-            inputType: inputType,
-            editFormData: editFormData,
-            setEditFormData: setEditFormData,
-            addFormData: addFormData,
-            setAddFormData: setAddFormData,
-            letterPriority: letterPriority,
-            numberPriority: numberPriority,
-            toggleModal: toggleModal,
-            editTask: editTask,
-            tasks: tasks,
-            taskDispatch: taskDispatch,
-          }}
-        >
-          <UpdateTaskPriority />
-        </PriorityContext.Provider>
-      )}
+        inputType === 'priority-input') && <UpdateTaskPriority />}
     </Modal>
   ) : null;
 
   return (
-    <>
+    <PriorityContext.Provider
+      value={{
+        inputType: inputType,
+        editFormData: editFormData,
+        setEditFormData: setEditFormData,
+        addFormData: addFormData,
+        setAddFormData: setAddFormData,
+        letterPriority: letterPriority,
+        numberPriority: numberPriority,
+        toggleModal: toggleModal,
+        editTask: editTask,
+        tasks: tasks,
+        taskDispatch: taskDispatch,
+      }}
+    >
       {modal}
       <Card className={`${classes.card} card`}>
         <TableForm
@@ -139,7 +135,7 @@ const Main = ({
           toggleModal={toggleModal}
         />
       </Card>
-    </>
+    </PriorityContext.Provider>
   );
 };
 

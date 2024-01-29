@@ -34,7 +34,7 @@ const App = () => {
   });
 
   const [addFormData, setAddFormData] = useState<EditFormData>({
-    status: '',
+    status: 'Select Status',
     letterPriority: '',
     numberPriority: '',
     priority: '',
