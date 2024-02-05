@@ -1,6 +1,5 @@
-import React from 'react';
+import { useContext } from 'react';
 import FocusLock from 'react-focus-lock';
-
 import classes from './ContextMenu.module.scss';
 import checkmark from '../../../assets/SVG/checkmark-green.svg';
 import add from '../../../assets/SVG/add.svg';
@@ -8,37 +7,37 @@ import arrowRight from '../../../assets/SVG/arrow-right.svg';
 import dot from '../../../assets/SVG/dot.svg';
 import trash from '../../../assets/SVG/trash.svg';
 import close from '../../../assets/SVG/close-regular.svg';
-import { Task, TaskActionShape } from '../../../ts/types';
-import { EditTask, EditFormData } from '../../../ts/interfaces';
 import sortList from '../../../utilities/sortList';
 import { handleMenuItemEvent } from './handleMenuItemEvent';
-import Button from '../Button/Button';
+import { MainContext } from '../../../context/main-context';
+import MenuItem from './MenuItem';
 
-interface Props {
-  xPos?: string | null;
-  yPos?: string | null;
-  editTask: EditTask;
-  rowId?: string | null;
-  tasks: Task[];
-  taskDispatch: React.Dispatch<TaskActionShape>;
-  editFormData: EditFormData;
-  setEditTask: React.Dispatch<React.SetStateAction<EditTask>>;
-  setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
-  handleMenuItemEvent: typeof handleMenuItemEvent;
-}
+const ContextMenu = () => {
+  const {
+    xPos,
+    yPos,
+    editTask,
+    rowId,
+    tasks,
+    taskDispatch,
+    editFormData,
+    setEditTask,
+    setEditFormData,
+  } = useContext(MainContext);
 
-const ContextMenu = ({
-  xPos,
-  yPos,
-  editTask,
-  rowId,
-  tasks,
-  taskDispatch,
-  editFormData,
-  setEditTask,
-  setEditFormData,
-  handleMenuItemEvent,
-}: Props) => {
+  const dependencies = {
+    xPos,
+    yPos,
+    editTask,
+    rowId,
+    tasks,
+    taskDispatch,
+    editFormData,
+    setEditTask,
+    setEditFormData,
+    sortList,
+  };
+
   return (
     <FocusLock returnFocus>
       <div
@@ -50,108 +49,42 @@ const ContextMenu = ({
         }}
       >
         <ul onTouchStart={(event) => event.stopPropagation()}>
-          <li role="menuitem">
-            <Button
-              onClick={handleMenuItemEvent({
-                editTask,
-                rowId,
-                setEditTask,
-                editFormData,
-                setEditFormData,
-                sortList,
-                tasks,
-                taskDispatch,
-              })}
-            >
-              <span>In Process</span>
-              <img src={dot} alt="in process icon" />
-            </Button>
-          </li>
-          <li role="menuitem">
-            <Button
-              onClick={handleMenuItemEvent({
-                editTask,
-                rowId,
-                setEditTask,
-                editFormData,
-                setEditFormData,
-                sortList,
-                tasks,
-                taskDispatch,
-              })}
-            >
-              <span className={classes.completed}>Completed</span>
-              <img src={checkmark} alt="completed icon" />
-            </Button>
-          </li>
-          <li role="menuitem">
-            <Button
-              onClick={handleMenuItemEvent({
-                editTask,
-                rowId,
-                setEditTask,
-                editFormData,
-                setEditFormData,
-                sortList,
-                tasks,
-                taskDispatch,
-              })}
-            >
-              <span>Forwarded</span>
-              <img src={arrowRight} alt="forwarded icon" />
-            </Button>
-          </li>
-          <li role="menuitem">
-            <Button
-              onClick={handleMenuItemEvent({
-                editTask,
-                rowId,
-                setEditTask,
-                editFormData,
-                setEditFormData,
-                sortList,
-                tasks,
-                taskDispatch,
-              })}
-            >
-              <span>Delegated</span>
-              <img src={add} alt="delegated icon" />
-            </Button>
-          </li>
-          <li role="menuitem">
-            <Button
-              onClick={handleMenuItemEvent({
-                editTask,
-                rowId,
-                setEditTask,
-                editFormData,
-                setEditFormData,
-                sortList,
-                tasks,
-                taskDispatch,
-              })}
-            >
-              <span>Remove</span>
-              <img src={trash} alt="removed icon" />
-            </Button>
-          </li>
-          <li role="menuitem">
-            <Button
-              onClick={handleMenuItemEvent({
-                editTask,
-                rowId,
-                setEditTask,
-                editFormData,
-                setEditFormData,
-                sortList,
-                tasks,
-                taskDispatch,
-              })}
-            >
-              <span>Cancel</span>
-              <img src={close} alt="close icon" />
-            </Button>
-          </li>
+          <MenuItem
+            status="In Process"
+            src={dot}
+            alt="in process icon"
+            onClick={handleMenuItemEvent(dependencies)}
+          />
+          <MenuItem
+            status="Completed"
+            src={checkmark}
+            alt="completed icon"
+            onClick={handleMenuItemEvent(dependencies)}
+          />
+          <MenuItem
+            status="Forwarded"
+            src={arrowRight}
+            alt="forwarded icon"
+            onClick={handleMenuItemEvent(dependencies)}
+          />
+          <MenuItem
+            status="Delegated"
+            src={add}
+            alt="delegated icon"
+            onClick={handleMenuItemEvent(dependencies)}
+          />
+          <MenuItem
+            status="Remove"
+            src={trash}
+            alt="removed icon"
+            onClick={handleMenuItemEvent(dependencies)}
+          />
+          <MenuItem
+            status="Cancel"
+            src={close}
+            alt="close icon"
+            onClick={handleMenuItemEvent(dependencies)}
+          />
         </ul>
       </div>
     </FocusLock>

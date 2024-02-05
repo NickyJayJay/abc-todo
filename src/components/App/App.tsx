@@ -16,14 +16,8 @@ import {
 } from '../../ts/interfaces';
 import { TaskActionType } from '../../ts/enums';
 import { taskReducer } from '../../reducers';
-import { handleMenuItemEvent } from '../UI/ContextMenu/handleMenuItemEvent';
 import sortList from '../../utilities/sortList';
 import useModal from '../../hooks/useModal';
-import {
-  handleFormSubmit,
-  handleEditFormKeyboard,
-  handleEditTask,
-} from './handlers';
 
 const App = () => {
   const [tasks, taskDispatch] = useReducer(taskReducer, []);
@@ -231,7 +225,6 @@ const App = () => {
   return (
     <div className={classes.appContainer}>
       <Main
-        handleFormSubmit={handleFormSubmit}
         editTask={editTask}
         rowId={editTask.rowId}
         inputType={editTask.inputType}
@@ -241,15 +234,12 @@ const App = () => {
         outsideClickRef={outsideClickRef}
         tasks={tasks}
         taskDispatch={taskDispatch}
-        handleEditTask={handleEditTask}
         editFormData={editFormData}
         setEditTask={setEditTask}
-        handleEditFormKeyboard={handleEditFormKeyboard}
         isModal={isModal}
         toggleModal={toggleModal}
         hideModalHandler={hideModalHandler}
         setEditFormData={setEditFormData}
-        handleMenuItemEvent={handleMenuItemEvent}
         addFormData={addFormData}
         setAddFormData={setAddFormData}
       />

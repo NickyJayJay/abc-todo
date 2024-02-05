@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
 
 import classes from '../App/App.module.scss';
 import checkmark from '../../assets/SVG/checkmark.svg';
@@ -6,36 +6,32 @@ import add from '../../assets/SVG/add-gray.svg';
 import arrowRight from '../../assets/SVG/arrow-right-gray.svg';
 import dot from '../../assets/SVG/dot.svg';
 import { Task } from '../../ts/types';
-import { EditFormData, EditTask } from '../../ts/interfaces';
-import { Options } from '../App/handlers';
+import { handleEditTask } from '../App/handlers';
+import { MainContext } from '../../context/main-context';
+
 interface Props {
-  handleEditTask: (
-    e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent,
-    options?: Options
-  ) => void;
   task: Task;
-  editTask: EditTask;
-  toggleModal: () => void;
-  setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
   setX: (
     e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
   ) => string | null;
   setY: (
     e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent
   ) => string | null;
-  setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
 }
 
-const Status = ({
-  handleEditTask,
-  task,
-  editTask,
-  toggleModal,
-  setEditTask,
-  setX,
-  setY,
-  setEditFormData,
-}: Props) => {
+const Status = ({ task, setX, setY }: Props) => {
+  const { editTask, toggleModal, setEditTask, setEditFormData } =
+    useContext(MainContext);
+
+  const dependencies = {
+    toggleModal,
+    setEditTask,
+    task,
+    setX,
+    setY,
+    setEditFormData,
+  };
+
   const cellRef = useRef<HTMLTableCellElement>(null);
 
   useEffect(() => {
@@ -59,26 +55,8 @@ const Status = ({
       <button
         data-id="status-cell"
         aria-label="status"
-        onClick={(event) =>
-          handleEditTask(event, {
-            toggleModal,
-            setEditTask,
-            task,
-            setX,
-            setY,
-            setEditFormData,
-          })
-        }
-        onKeyDown={(event) =>
-          handleEditTask(event, {
-            toggleModal,
-            setEditTask,
-            task,
-            setX,
-            setY,
-            setEditFormData,
-          })
-        }
+        onClick={(event) => handleEditTask(event, dependencies)}
+        onKeyDown={(event) => handleEditTask(event, dependencies)}
       >
         {task.status === 'In Process' && (
           <img

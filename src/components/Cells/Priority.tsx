@@ -1,42 +1,37 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect, useContext } from 'react';
 
 import classes from '../App/App.module.scss';
-import { Task, TaskActionShape } from '../../ts/types';
-import { EditFormData, EditTask } from '../../ts/interfaces';
-import { Options } from '../App/handlers';
-interface Props {
-  handleEditTask: (
-    e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent,
-    options?: Options
-  ) => void;
-  handleEditFormKeyboard: (
-    e: React.KeyboardEvent,
-    options?: Options
-  ) => void;
-  task: Task;
-  isModal: boolean;
-  setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
-  editFormData: EditFormData;
-  editTask: EditTask;
-  tasks?: Task[];
-  taskDispatch?: React.Dispatch<TaskActionShape>;
-  toggleModal: () => void;
-  setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
-}
-
-const Priority = ({
+import { Task } from '../../ts/types';
+import {
   handleEditTask,
-  task,
-  isModal,
-  editTask,
   handleEditFormKeyboard,
-  editFormData,
-  setEditFormData,
-  tasks,
-  taskDispatch,
-  toggleModal,
-  setEditTask,
-}: Props) => {
+} from '../App/handlers';
+import { MainContext } from '../../context/main-context';
+
+const Priority = ({ task }: { task: Task }) => {
+  const {
+    isModal,
+    editTask,
+    editFormData,
+    setEditFormData,
+    tasks,
+    taskDispatch,
+    toggleModal,
+    setEditTask,
+  } = useContext(MainContext);
+
+  const dependencies = {
+    isModal,
+    editTask,
+    editFormData,
+    setEditFormData,
+    task,
+    tasks,
+    taskDispatch,
+    toggleModal,
+    setEditTask,
+  };
+
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -59,30 +54,10 @@ const Priority = ({
       <button
         data-id="priority-cell"
         aria-label="priority"
-        onClick={(event) =>
-          handleEditTask(event, {
-            toggleModal,
-            setEditTask,
-            task,
-            setEditFormData,
-          })
-        }
-        onKeyUp={(event) =>
-          handleEditTask(event, {
-            toggleModal,
-            setEditTask,
-            task,
-            setEditFormData,
-          })
-        }
+        onClick={(event) => handleEditTask(event, dependencies)}
+        onKeyUp={(event) => handleEditTask(event, dependencies)}
         onKeyDown={(event) =>
-          handleEditFormKeyboard(event, {
-            editTask,
-            editFormData,
-            tasks,
-            taskDispatch,
-            setEditFormData,
-          })
+          handleEditFormKeyboard(event, dependencies)
         }
         ref={buttonRef}
         className={

@@ -6,11 +6,11 @@ import { TaskActionShape } from '../../ts/types';
 import { TaskActionType } from '../../ts/enums';
 
 export interface Options {
-	addFormData: EditFormData;
-	taskDispatch: React.Dispatch<TaskActionShape>;
-	setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
+	addFormData?: EditFormData;
+	taskDispatch?: React.Dispatch<TaskActionShape>;
+	setAddFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
 	inputType?: string | null;
-	toggleModal: () => void;
+	toggleModal?: () => void;
 }
 
 export const handleAddFormSubmit = (options: Options) => {
@@ -21,17 +21,17 @@ export const handleAddFormSubmit = (options: Options) => {
 
 		const taskId = nanoid();
 
-		taskDispatch({
+		taskDispatch && taskDispatch({
 			type: TaskActionType.ADD,
 			payload: {
 				id: taskId,
-				status: addFormData.status,
-				priority: addFormData.priority,
-				description: addFormData.description,
+				status: addFormData!.status,
+				priority: addFormData!.priority,
+				description: addFormData!.description,
 			},
 		});
 
-		setAddFormData({
+		setAddFormData && setAddFormData({
 			status: 'Select Status',
 			letterPriority: '',
 			numberPriority: '',
@@ -40,9 +40,9 @@ export const handleAddFormSubmit = (options: Options) => {
 		});
 
 		localStorage.setItem(taskId, JSON.stringify({
-			status: addFormData.status,
-			priority: addFormData.priority,
-			description: addFormData.description,
+			status: addFormData!.status,
+			priority: addFormData!.priority,
+			description: addFormData!.description,
 		}));
 	};
 };
@@ -68,7 +68,7 @@ export const handleAddFormKeydown = (options: Options) => {
 			!(e as React.KeyboardEvent).shiftKey
 		) {
 			e.preventDefault();
-			toggleModal();
+			toggleModal && toggleModal();
 		} else if (
 			((inputType === 'priority-input' || inputType === 'status-input') &&
 				(e as React.KeyboardEvent).key) === 'Tab' &&
@@ -94,7 +94,7 @@ export const handlePriorityEvent = (options: Options) => {
 		e.preventDefault();
 		(e as React.MouseEvent).clientX !== 0 &&
 			(e as React.MouseEvent).clientY !== 0 &&
-			toggleModal();
+			toggleModal && toggleModal();
 	};
 };
 
@@ -111,6 +111,6 @@ export const handleAddFormChange = (options: Options) => {
 		const newFormData = { ...addFormData };
 		newFormData[fieldName as keyof typeof newFormData] = fieldValue;
 
-		setAddFormData(newFormData);
+		setAddFormData && setAddFormData(newFormData);
 	};
 };

@@ -1,5 +1,5 @@
-import React, { forwardRef, useRef, useEffect } from 'react';
-
+import { forwardRef, useRef, useEffect, useContext } from 'react';
+import { MainContext } from '../../context/main-context';
 import ButtonGradient from '../UI/Button/ButtonGradient';
 import classes from '../App/App.module.scss';
 import { Options } from './handlers';
@@ -11,16 +11,15 @@ import {
 } from './handlers';
 
 const AddTaskForm = forwardRef<HTMLInputElement, Options>(
-  (
-    {
-      addFormData,
-      taskDispatch,
-      setAddFormData,
+  ({}, ref) => {
+    const {
       inputType,
+      taskDispatch,
       toggleModal,
-    },
-    ref
-  ) => {
+      addFormData,
+      setAddFormData,
+    } = useContext(MainContext);
+
     useEffect(() => {
       inputType === 'status-input' && selectRef.current?.focus();
       inputType === 'description-input' &&
