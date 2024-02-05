@@ -1,4 +1,4 @@
-@import "../../../variables.module";
+@import '../../../variables.module';
 
 .button {
   font-family: $serifFont2;
@@ -11,8 +11,8 @@
   padding: 15px 30px;
 
   &:focus-visible {
-      outline: 3px solid $accentColor;
-    }
+    outline: 3px solid $accentColor;
+  }
 }
 
 .button:hover,
@@ -33,7 +33,7 @@
   border: 1px solid #18ab29;
   cursor: pointer;
   padding: 0;
-  transition: .35s all ease-in-out;
+  transition: 0.35s all ease-in-out;
   box-sizing: border-box;
   white-space: nowrap;
   color: #000;
@@ -44,6 +44,7 @@
   position: relative;
   height: 40px;
   line-height: 40px;
+  z-index: 0;
 
   &:focus-visible {
     outline: 3px solid $accentColor;
@@ -56,7 +57,11 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: linear-gradient(to top, #89b189 5%, #d0e1d0 100%);
+    background-image: linear-gradient(
+      to top,
+      #89b189 5%,
+      #d0e1d0 100%
+    );
     transition: opacity 0.35s ease-out;
     z-index: 2;
     opacity: 0;
