@@ -6,7 +6,7 @@
   font-family: $serifFont1;
   font-size: 1rem;
   padding: 10px;
-  height: calc(100vh + 100px);
+  height: 100vh;
 
   .card {
     padding: 50px 10px;
@@ -71,8 +71,6 @@
 
               &:focus-visible {
                 background-color: $highlightColor;
-                outline: 1px solid #008002;
-                border: 1px solid #008002;
               }
 
               &.completed,
@@ -174,8 +172,7 @@
 
               &:focus-visible {
                 background-color: $highlightColor;
-                outline: 1px solid #008002;
-                border: 1px solid #008002;
+                outline: 0;
               }
             }
           }
@@ -268,8 +265,6 @@
 
         &:focus-visible {
           background-color: $highlightColor;
-          outline: 1px solid #008002;
-          border: 1px solid #008002;
         }
 
         &.active {
@@ -295,8 +290,6 @@
 
         &:focus-visible {
           background-color: $highlightColor;
-          outline: 1px solid #008002;
-          border: 1px solid #008002;
         }
       }
 
