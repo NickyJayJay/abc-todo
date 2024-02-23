@@ -55,9 +55,7 @@ const TableForm = () => {
             <tr
               key={task.id}
               className={
-                task.status === 'Delegated'
-                  ? classes.delegated
-                  : '' || task.status === 'Completed'
+                task.status === 'Completed'
                   ? classes.completed
                   : '' || task.status === 'Forwarded'
                   ? classes.forwarded

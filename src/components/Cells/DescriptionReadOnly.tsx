@@ -27,9 +27,7 @@ const DescriptionReadOnly = ({ task }: { task: Task }) => {
         data-id="description-cell"
         aria-label="description"
         className={
-          task.status === 'Delegated'
-            ? classes.delegated
-            : '' || task.status === 'Completed'
+          task.status === 'Completed'
             ? classes.completed
             : '' || task.status === 'Forwarded'
             ? classes.forwarded

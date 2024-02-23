@@ -34,7 +34,6 @@
           cursor: pointer;
 
           &.completed,
-          &.delegated,
           &.forwarded {
             td {
               background-clip: padding-box;
@@ -74,7 +73,6 @@
               }
 
               &.completed,
-              &.delegated,
               &.forwarded {
                 color: #6e6e6e;
               }

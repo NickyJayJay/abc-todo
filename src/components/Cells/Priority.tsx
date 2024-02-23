@@ -61,9 +61,7 @@ const Priority = ({ task }: { task: Task }) => {
         }
         ref={buttonRef}
         className={
-          task.status === 'Delegated'
-            ? classes.delegated
-            : '' || task.status === 'Completed'
+          task.status === 'Completed'
             ? classes.completed
             : '' || task.status === 'Forwarded'
             ? classes.forwarded
@@ -71,7 +69,6 @@ const Priority = ({ task }: { task: Task }) => {
         }
       >
         {task.status !== 'Completed' &&
-          task.status !== 'Delegated' &&
           task.status !== 'Forwarded' &&
           task.priority}
       </button>
