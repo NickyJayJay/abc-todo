@@ -65,6 +65,8 @@ const TableForm = () => {
               <Status task={task} setX={setX} setY={setY} />
               <Priority task={task} />
               {editTask!.inputType === 'description-cell' &&
+              task.status !== 'Completed' &&
+              task.status !== 'Forwarded' &&
               rowId === task.id ? (
                 <DescriptionEditable task={task} />
               ) : (

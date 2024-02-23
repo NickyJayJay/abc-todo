@@ -20,6 +20,9 @@ const sortList = (loadedTasks: Task[]) => {
     if (priorityA === '' && priorityB !== '') return 1;
     if (priorityB === '' && priorityA !== '') return -1;
 
+    if (statusA === 'In Progress' && statusB !== 'In Progress') return 1;
+    if (statusA !== 'In Progress' && statusB === 'In Progress') return -1;
+
     if (letterA > letterB) return 1;
     if (letterA < letterB) return -1;
 

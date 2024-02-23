@@ -46,6 +46,8 @@ const Priority = ({ task }: { task: Task }) => {
       data-id="priority-cell"
       className={
         task.id === editTask.rowId &&
+        task.status !== 'Completed' &&
+        task.status !== 'Forwarded' &&
         editTask.inputType === 'priority-cell'
           ? `${classes.priority} ${classes.active}`
           : classes.priority
