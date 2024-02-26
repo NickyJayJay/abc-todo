@@ -14,28 +14,16 @@ export const handleMenuItemEvent = (options: Menu) => {
     taskDispatch,
   }: Menu = options;
 
-  return (
-    e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent
-  ) => {
+  return (e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent) => {
     e.stopPropagation();
-    if (
-      (e as React.KeyboardEvent).key === 'Tab' ||
-      (e as React.KeyboardEvent).key === 'Shift'
-    )
+    if ((e as React.KeyboardEvent).key === 'Tab' || (e as React.KeyboardEvent).key === 'Shift')
       return;
     let menuValue;
 
-    if (
-      e.type === 'click' &&
-      (e.target as HTMLElement).tagName === 'SPAN'
-    ) {
+    if (e.type === 'click' && (e.target as HTMLElement).tagName === 'SPAN') {
       menuValue = (e.target as HTMLElement).textContent;
-    } else if (
-      e.type === 'click' &&
-      (e.target as HTMLElement).tagName === 'IMG'
-    ) {
-      menuValue = (e.target as HTMLElement).previousElementSibling
-        ?.textContent;
+    } else if (e.type === 'click' && (e.target as HTMLElement).tagName === 'IMG') {
+      menuValue = (e.target as HTMLElement).previousElementSibling?.textContent;
     } else {
       menuValue = (e.target as HTMLElement).childNodes[0].textContent;
     }
@@ -58,15 +46,11 @@ export const handleMenuItemEvent = (options: Menu) => {
       return;
     }
 
-    if (menuValue === 'Completed') {
-      setEditFormData({ ...editFormData, priority: '' });
-    }
-
     const editedTask: Task = {
       id: rowId,
       status: menuValue || null,
       priority:
-        menuValue !== 'Completed' ? editFormData.priority! : '',
+        menuValue !== 'Completed' && menuValue !== 'Forwarded' ? editFormData.priority! : '',
       description: editFormData.description,
     };
 
@@ -78,10 +62,7 @@ export const handleMenuItemEvent = (options: Menu) => {
       data: newTasks,
     });
 
-    localStorage.setItem(
-      rowId!.toString(),
-      JSON.stringify(editedTask as string)
-    );
+    localStorage.setItem(rowId!.toString(), JSON.stringify(editedTask as string));
     setEditTask({ ...editTask, showMenu: false });
     sortList(newTasks);
   };
