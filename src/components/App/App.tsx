@@ -1,19 +1,10 @@
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  useReducer,
-} from 'react';
+import React, { useState, useCallback, useEffect, useReducer } from 'react';
 import { nanoid } from 'nanoid';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import Main from '../Main/Main';
 import classes from './App.module.scss';
 import { Task } from '../../ts/types';
-import {
-  EditTask,
-  EditFormData,
-  ErrorsAndLoading,
-} from '../../ts/interfaces';
+import { EditTask, EditFormData, ErrorsAndLoading } from '../../ts/interfaces';
 import { TaskActionType } from '../../ts/enums';
 import { taskReducer } from '../../reducers';
 import sortList from '../../utilities/sortList';
@@ -69,9 +60,7 @@ const App = () => {
     [editTask.xPos, editTask.yPos]
   );
 
-  const outsideClickRef = useOutsideClick((e) =>
-    handleOutsideClick(e)
-  );
+  const outsideClickRef = useOutsideClick((e) => handleOutsideClick(e));
 
   const [, toggleModal, isModal] = useModal();
 
@@ -88,8 +77,7 @@ const App = () => {
     const close = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         isModal && hideModalHandler(e);
-        editTask.showMenu &&
-          setEditTask({ ...editTask, showMenu: false });
+        editTask.showMenu && setEditTask({ ...editTask, showMenu: false });
       }
     };
     window.addEventListener('keydown', close);
@@ -97,86 +85,76 @@ const App = () => {
   });
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const loadedTasks: Task[] = [];
+    try {
+      const loadedTasks: Task[] = [];
 
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          const stringValue =
-            key !== null ? localStorage.getItem(key) : null;
-          if (stringValue !== null) {
-            const task: Task = JSON.parse(stringValue);
-            loadedTasks.push({
-              id: key,
-              status: task.status,
-              priority: task.priority,
-              description: task.description,
-            });
-          }
-        }
-
-        if (localStorage.length === 0) {
-          const taskId = nanoid();
-
-          localStorage.setItem(
-            taskId,
-            JSON.stringify({
-              status: 'In Process',
-              priority: 'A1',
-              description: 'Planning and solitude',
-            })
-          );
-
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const stringValue = key !== null ? localStorage.getItem(key) : null;
+        if (stringValue !== null) {
+          const task: Task = JSON.parse(stringValue);
           loadedTasks.push({
-            id: taskId,
-            status: 'In Process',
-            priority: 'A1',
-            description: 'Planning and solitude',
+            id: key,
+            status: task.status,
+            priority: task.priority,
+            description: task.description,
           });
-        }
-
-        if (localStorage.length < 16) {
-          while (localStorage.length < 16) {
-            const taskId = nanoid();
-
-            localStorage.setItem(
-              taskId,
-              JSON.stringify({
-                status: addFormData.status,
-                priority: addFormData.priority,
-                description: addFormData.description,
-              })
-            );
-
-            loadedTasks.push({
-              id: taskId,
-              status: '',
-              priority: '',
-              description: '',
-            });
-          }
-        }
-
-        sortList(loadedTasks);
-
-        taskDispatch({
-          type: TaskActionType.SET,
-          data: loadedTasks,
-        });
-        setState({ isLoading: false, httpError: null });
-      } catch (error) {
-        if (error instanceof Error) {
-          setState({
-            isLoading: false,
-            httpError: error.message,
-          });
-        } else {
-          console.log('Unexpected error: ', error);
         }
       }
-    };
-    fetchTasks();
+
+      if (localStorage.length === 0) {
+        const taskId = nanoid();
+        const initialTask = {
+          status: 'In Process',
+          priority: 'A1',
+          description: 'Planning and solitude',
+        };
+
+        localStorage.setItem(taskId, JSON.stringify(initialTask));
+
+        loadedTasks.push({
+          id: taskId,
+          ...initialTask,
+        });
+      }
+
+      while (localStorage.length < 16) {
+        const taskId = nanoid();
+
+        localStorage.setItem(
+          taskId,
+          JSON.stringify({
+            status: editFormData.status,
+            priority: editFormData.priority,
+            description: editFormData.description,
+          })
+        );
+
+        loadedTasks.push({
+          id: taskId,
+          status: null,
+          priority: null,
+          description: null,
+        });
+      }
+
+      sortList(loadedTasks);
+
+      taskDispatch({
+        type: TaskActionType.SET,
+        data: loadedTasks,
+      });
+      setState({ isLoading: false, httpError: null });
+    } catch (error) {
+      if (error instanceof Error) {
+        setState({
+          isLoading: false,
+          httpError: error.message,
+        });
+      } else {
+        console.log('Unexpected error: ', error);
+      }
+    }
   }, []);
 
   const hideModalHandler = useCallback(
