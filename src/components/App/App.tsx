@@ -167,6 +167,7 @@ const App = () => {
           ...editFormData,
           letterPriority: '',
           numberPriority: '',
+          priority: '',
         };
         setEditFormData(newFormData);
       } else {
@@ -174,6 +175,7 @@ const App = () => {
           ...addFormData,
           letterPriority: '',
           numberPriority: '',
+          priority: '',
         };
         setAddFormData(newFormData);
       }
