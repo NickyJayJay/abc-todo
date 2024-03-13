@@ -9,17 +9,10 @@ import ContextMenu from '../UI/ContextMenu/ContextMenu';
 import checkBox from '../../assets/SVG/checkBox.svg';
 import classes from '../App/App.module.scss';
 import useMenuCoords from '../../hooks/useMenuCoords';
-import { handleFormSubmit } from '../App/handlers';
 
 const TableForm = () => {
-  const {
-    editTask,
-    tasks,
-    rowId,
-    showMenu,
-    outsideClickRef,
-    setEditTask,
-  } = useContext(MainContext);
+  const { editTask, tasks, rowId, showMenu, outsideClickRef, setEditTask } =
+    useContext(MainContext);
 
   useEffect(() => {
     const handleResize = () => {
@@ -36,18 +29,16 @@ const TableForm = () => {
   const [setX, setY, tableRef] = useMenuCoords();
 
   return (
-    <form onSubmit={handleFormSubmit}>
+    <form>
       {showMenu && <ContextMenu />}
       <table ref={tableRef}>
         <thead>
           <tr>
             <th className={classes.statusTitle}>
-              <img src={checkBox} alt="status icon" />
+              <img src={checkBox} alt='status icon' />
             </th>
             <th className={classes.priorityTitle}>ABC</th>
-            <th className={classes.descriptionTitle}>
-              Prioritized Task List
-            </th>
+            <th className={classes.descriptionTitle}>Prioritized Task List</th>
           </tr>
         </thead>
         <tbody ref={outsideClickRef}>

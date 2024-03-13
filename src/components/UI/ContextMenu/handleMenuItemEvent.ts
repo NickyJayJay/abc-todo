@@ -3,16 +3,8 @@ import { Menu } from '../../../ts/interfaces';
 import { TaskActionType } from '../../../ts/enums';
 
 export const handleMenuItemEvent = (options: Menu) => {
-  const {
-    editTask,
-    rowId,
-    setEditTask,
-    editFormData,
-    setEditFormData,
-    sortList,
-    tasks,
-    taskDispatch,
-  }: Menu = options;
+  const { editTask, rowId, setEditTask, editFormData, sortList, tasks, taskDispatch }: Menu =
+    options;
 
   return (e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent) => {
     e.stopPropagation();
