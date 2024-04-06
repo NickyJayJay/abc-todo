@@ -25,6 +25,8 @@ html {
 
 body {
   margin: 0;
+  background-color: #e2f5e2;
+  background-image: url(/src/assets/images/background-aquamarine.jpg);
 }
 
 /**
