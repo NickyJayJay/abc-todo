@@ -384,6 +384,7 @@ template {
 *:focus-visible {
   outline: 1px solid #008002;
   border: 1px solid #008002;
+  box-sizing: border-box;
 }
 
 *:hover,

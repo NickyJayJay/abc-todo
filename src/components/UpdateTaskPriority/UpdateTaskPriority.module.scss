@@ -38,14 +38,14 @@
         box-sizing: content-box;
         opacity: 0;
 
-        &:focus,
-        &:focus-visible {
-          color: #000;
+        &:focus + label,
+        &:focus-visible + label {
+          &:before {
+            outline: 1px solid #008002;
+          }
         }
 
         &:checked + label {
-          color: #000;
-
           &::before {
             background: radial-gradient(0.75em circle at center, $accentColor 50%, transparent 55%);
             box-shadow: 0 0 1em 0 rgba(0, 128, 2, 0.75);
@@ -89,11 +89,8 @@
     input[type='number'] {
       font-size: 24px;
       width: 60px;
-
-      &:focus-visible {
-        background-color: $highlightColor;
-        outline: 3px solid $accentColor;
-      }
+      height: 32px;
+      box-sizing: border-box;
     }
   }
 
@@ -106,11 +103,12 @@
   button {
     margin: 10px auto;
     display: block;
-    width: 50%;
+    width: 327px;
+    box-sizing: border-box;
     font-size: 21px;
 
     &:focus-visible {
-      outline: 3px solid $accentColor;
+      outline: 1px solid $accentColor;
     }
   }
 }
