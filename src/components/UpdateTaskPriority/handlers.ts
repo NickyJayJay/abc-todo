@@ -1,6 +1,7 @@
 import { EditFormData, EditTask } from '../../ts/interfaces';
 import { Task, TaskActionShape } from '../../ts/types';
 import { handleFormSubmit, Options as AppOptions } from '../App/handlers';
+import { ALLOWED_NUMBER_INPUT_KEYS } from '../../utilities/constants';
 
 interface Options {
   inputType?: string | null;
@@ -59,13 +60,15 @@ export const numberPriorityHandler = (options: Options) => {
     setAddFormData,
   }: Options = options;
 
-  return (e: React.FormEvent<HTMLInputElement>) => {
-    const numberPriority = Math.abs(
+  return (e: React.FormEvent | React.KeyboardEvent<HTMLInputElement>) => {
+    let numberPriority = Math.abs(
       Number((e.target as HTMLInputElement).value.slice(0, 2))
     ).toString();
 
-    const priority =
-      (letterPriority as string) + parseInt((e.target as HTMLInputElement).value.slice(0, 2), 10);
+    if (numberPriority === '0') numberPriority = '';
+    if (!ALLOWED_NUMBER_INPUT_KEYS.includes((e as React.KeyboardEvent).key)) e.preventDefault();
+
+    const priority = letterPriority + numberPriority;
 
     if (inputType === 'priority-cell') {
       const newFormData: EditFormData = {

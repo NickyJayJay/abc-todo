@@ -89,9 +89,8 @@ const UpdateTaskPriority = () => {
         <legend>Then enter a priority number (1 - 99)</legend>
         <input
           type='number'
-          min='1'
-          max='99'
           onChange={numberPriorityHandler(options)}
+          onKeyDown={numberPriorityHandler(options)}
           name='priority'
           value={
             inputType === 'priority-cell'
