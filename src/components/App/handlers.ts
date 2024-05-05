@@ -40,7 +40,7 @@ export const handleFormSubmit = (e: React.FormEvent, options: Options = {} as Op
   });
 
   sortList(newTasks);
-  localStorage.setItem(editTask!.rowId!.toString(), JSON.stringify(editedTask as string));
+  localStorage.setItem('tasks', JSON.stringify(newTasks));
 };
 
 export const handleEditFormKeyboard = (

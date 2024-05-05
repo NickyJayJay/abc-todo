@@ -87,55 +87,41 @@ const App = () => {
   useEffect(() => {
     try {
       const loadedTasks: Task[] = [];
+      const localStorageTasks: Task[] = JSON.parse(localStorage.getItem('tasks') as string) || [];
 
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        const stringValue = key !== null ? localStorage.getItem(key) : null;
-        if (stringValue !== null) {
-          const task: Task = JSON.parse(stringValue);
+      if (localStorageTasks) {
+        localStorageTasks.forEach((task: Task) => {
           loadedTasks.push({
-            id: key,
+            id: task.id,
             status: task.status,
             priority: task.priority,
             description: task.description,
           });
-        }
+        });
       }
 
-      if (localStorage.length === 0) {
-        const taskId = nanoid();
+      if (localStorageTasks.length === 0) {
         const initialTask = {
+          id: nanoid(),
           status: 'In Process',
           priority: 'A1',
           description: 'Planning and solitude',
         };
 
-        localStorage.setItem(taskId, JSON.stringify(initialTask));
-
         loadedTasks.push({
-          id: taskId,
           ...initialTask,
         });
-      }
 
-      while (localStorage.length < 16) {
-        const taskId = nanoid();
+        while (loadedTasks.length < 16) {
+          loadedTasks.push({
+            id: nanoid(),
+            status: '',
+            priority: '',
+            description: '',
+          });
+        }
 
-        localStorage.setItem(
-          taskId,
-          JSON.stringify({
-            status: editFormData.status,
-            priority: editFormData.priority,
-            description: editFormData.description,
-          })
-        );
-
-        loadedTasks.push({
-          id: taskId,
-          status: null,
-          priority: null,
-          description: null,
-        });
+        localStorage.setItem('tasks', JSON.stringify(loadedTasks));
       }
 
       sortList(loadedTasks);
