@@ -19,6 +19,8 @@ export const handleAddFormSubmit = (options: Options) => {
   return (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    localStorage.removeItem('addTaskPriority');
+
     taskDispatch &&
       taskDispatch({
         type: TaskActionType.ADD,
@@ -47,17 +49,27 @@ export const handleAddFormKeydown = (options: Options) => {
   return (e: React.KeyboardEvent | ChangeEvent) => {
     (e as React.KeyboardEvent).key === 'Enter' && e.preventDefault();
 
-    const focusableElements = document.querySelectorAll('a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]');
+    const focusableElements = document.querySelectorAll(
+      'a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]'
+    );
     const i = Array.from(focusableElements).indexOf(e.target as HTMLElement);
     const nextFocusableEl = focusableElements[i + 1];
     const prevFocusableEl = focusableElements[i - 1];
 
     if (!nextFocusableEl || !prevFocusableEl) return;
 
-    if (inputType === 'priority-input' && (e as React.KeyboardEvent).key !== 'Tab' && !(e as React.KeyboardEvent).shiftKey) {
+    if (
+      inputType === 'priority-input' &&
+      (e as React.KeyboardEvent).key !== 'Tab' &&
+      !(e as React.KeyboardEvent).shiftKey
+    ) {
       e.preventDefault();
       toggleModal && toggleModal();
-    } else if (((inputType === 'priority-input' || inputType === 'status-input') && (e as React.KeyboardEvent).key) === 'Tab' && !(e as React.KeyboardEvent).shiftKey) {
+    } else if (
+      ((inputType === 'priority-input' || inputType === 'status-input') &&
+        (e as React.KeyboardEvent).key) === 'Tab' &&
+      !(e as React.KeyboardEvent).shiftKey
+    ) {
       e.preventDefault();
       (nextFocusableEl as HTMLElement).click();
       (nextFocusableEl as HTMLElement).focus();
@@ -73,7 +85,11 @@ export const handlePriorityEvent = (options: Options) => {
 
   return (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
-    (e as React.MouseEvent).clientX !== 0 && (e as React.MouseEvent).clientY !== 0 && toggleModal && toggleModal();
+    localStorage.setItem('addTaskPriority', (e.target as HTMLInputElement).value);
+    (e as React.MouseEvent).clientX !== 0 &&
+      (e as React.MouseEvent).clientY !== 0 &&
+      toggleModal &&
+      toggleModal();
   };
 };
 

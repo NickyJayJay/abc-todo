@@ -161,7 +161,7 @@ const App = () => {
           ...addFormData,
           letterPriority: '',
           numberPriority: '',
-          priority: '',
+          priority: localStorage.getItem('addTaskPriority'),
         };
         setAddFormData(newFormData);
       }
