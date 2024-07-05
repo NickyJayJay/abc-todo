@@ -39,12 +39,28 @@ const Priority = ({ task }: { task: Task }) => {
   const isForwarded = task.status === 'Forwarded';
   const isPriorityCell = inputType === 'priority-cell';
   const isActiveTask = task.id === rowId;
-  const togglePreview =
-    !isModal ||
-    !isActiveTask ||
-    (isPriorityCell && isModal && isActiveTask && !letterPriority && !numberPriority)
-      ? task.priority
-      : `${letterPriority}${numberPriority}`;
+
+  let togglePreview;
+
+  if (isPriorityCell && isModal && isActiveTask && (letterPriority || numberPriority)) {
+    togglePreview = `${letterPriority}${numberPriority}`;
+  } else if (
+    (isPriorityCell &&
+      isModal &&
+      isActiveTask &&
+      !letterPriority &&
+      !numberPriority &&
+      !task.priority) ||
+    (isPriorityCell && !isModal && isActiveTask && !task.priority)
+  ) {
+    togglePreview = (
+      <span data-id='priority-cell' style={{ color: '#808080', fontWeight: '400' }}>
+        ABC
+      </span>
+    );
+  } else {
+    togglePreview = task.priority;
+  }
 
   useEffect(() => {
     isActiveTask && isPriorityCell && !isModal && buttonRef.current?.focus();
