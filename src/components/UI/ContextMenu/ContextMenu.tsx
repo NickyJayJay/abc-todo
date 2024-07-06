@@ -41,7 +41,7 @@ const ContextMenu = () => {
   return (
     <FocusLock returnFocus>
       <div
-        role="menu"
+        role='menu'
         className={`${classes.contextMenu} card`}
         style={{
           top: yPos as string,
@@ -50,41 +50,41 @@ const ContextMenu = () => {
       >
         <ul onTouchStart={(event) => event.stopPropagation()}>
           <MenuItem
-            status="In Process"
+            status='In Process'
             src={dot}
-            alt="in process icon"
+            alt='in process icon'
             onClick={handleMenuItemEvent(dependencies)}
           />
           <MenuItem
-            status="Completed"
+            status='Completed'
             src={checkmark}
-            alt="completed icon"
+            alt='completed icon'
             onClick={handleMenuItemEvent(dependencies)}
           />
           <MenuItem
-            status="Forwarded"
+            status='Forwarded'
             src={arrowRight}
-            alt="forwarded icon"
+            alt='forwarded icon'
             onClick={handleMenuItemEvent(dependencies)}
           />
           <MenuItem
-            status="Delegated"
+            status='Delegated'
             src={add}
-            alt="delegated icon"
+            alt='delegated icon'
             onClick={handleMenuItemEvent(dependencies)}
           />
           <MenuItem
-            status="Remove"
+            status='Remove'
             src={trash}
-            alt="removed icon"
+            alt='removed icon'
             onClick={handleMenuItemEvent(dependencies)}
           />
-          <MenuItem
+          {/* <MenuItem
             status="Cancel"
             src={close}
             alt="close icon"
             onClick={handleMenuItemEvent(dependencies)}
-          />
+          /> */}
         </ul>
       </div>
     </FocusLock>
