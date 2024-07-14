@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { MainContext } from '../../context/main-context';
 import Button from '../UI/Button/Button';
 import classes from './UpdateTaskPriority.module.scss';
@@ -32,6 +32,20 @@ const UpdateTaskPriority = () => {
     tasks,
     taskDispatch,
   };
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'Enter' && letterPriority) {
+        updatePriorityHandler(options);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [letterPriority]);
 
   return (
     <form

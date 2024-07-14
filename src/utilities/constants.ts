@@ -14,4 +14,5 @@ export const ALLOWED_NUMBER_INPUT_KEYS = [
   'ArrowLeft',
   'ArrowRight',
   'Delete',
+  'Enter',
 ];
