@@ -84,7 +84,7 @@ const useMenuCoords = () => {
     [tableRef]
   );
 
-  return [setX, setY, tableRef] as const;
+  return { setX, setY, tableRef };
 };
 
 export default useMenuCoords;

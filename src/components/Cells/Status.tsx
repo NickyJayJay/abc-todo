@@ -17,10 +17,9 @@ interface Props {
 }
 
 const Status = ({ task, setX, setY }: Props) => {
-  const { editTask, toggleModal, setEditTask, setEditFormData } = useContext(MainContext);
+  const { editTask, setEditTask, setEditFormData } = useContext(MainContext);
 
   const dependencies = {
-    toggleModal,
     setEditTask,
     task,
     setX,

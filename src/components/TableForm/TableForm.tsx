@@ -26,7 +26,7 @@ const TableForm = () => {
     };
   }, [editTask]);
 
-  const [setX, setY, tableRef] = useMenuCoords();
+  const { setX, setY, tableRef } = useMenuCoords();
 
   return (
     <form>

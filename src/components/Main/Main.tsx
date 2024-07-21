@@ -24,9 +24,6 @@ interface Props {
   setEditTask: React.Dispatch<React.SetStateAction<EditTask>>;
   isModal?: boolean;
   toggleModal: () => void;
-  hideModalHandler: (
-    e: React.MouseEvent | React.TouchEvent | KeyboardEvent
-  ) => void;
   setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
   addFormData: EditFormData;
   setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
@@ -46,31 +43,25 @@ const Main = ({
   setEditTask,
   isModal,
   toggleModal,
-  hideModalHandler,
   setEditFormData,
   addFormData,
   setAddFormData,
 }: Props) => {
   const priorityInput = useRef<HTMLInputElement>(null);
   const letterPriority =
-    inputType === 'priority-cell'
-      ? editFormData.letterPriority
-      : addFormData.letterPriority;
+    inputType === 'priority-cell' ? editFormData.letterPriority : addFormData.letterPriority;
   const numberPriority =
-    inputType === 'priority-cell'
-      ? editFormData.numberPriority
-      : addFormData.numberPriority;
+    inputType === 'priority-cell' ? editFormData.numberPriority : addFormData.numberPriority;
 
   useEffect(() => {
     inputType === 'priority-input' && priorityInput.current?.focus();
   }, [inputType, priorityInput]);
 
-  const [Modal, ,] = useModal();
+  const { Modal } = useModal();
 
   let modal = isModal ? (
-    <Modal role="dialog" hideModalHandler={hideModalHandler}>
-      {(inputType === 'priority-cell' ||
-        inputType === 'priority-input') && <UpdateTaskPriority />}
+    <Modal role='dialog' callback={toggleModal}>
+      {(inputType === 'priority-cell' || inputType === 'priority-input') && <UpdateTaskPriority />}
     </Modal>
   ) : null;
 

@@ -62,21 +62,12 @@ const App = () => {
 
   const outsideClickRef = useOutsideClick((e) => handleOutsideClick(e));
 
-  const [, toggleModal, isModal] = useModal();
+  const { toggleModal, isModal } = useModal();
 
   useEffect(() => {
-    if (isModal) {
-      document.body.classList.add('lockScroll');
-      document.body.style.top = `-${window.scrollY}px`;
-    }
-    if (!isModal) {
-      document.body.classList.remove('lockScroll');
-      document.body.style.top = '';
-    }
-
     const close = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        isModal && hideModalHandler(e);
+        isModal && toggleModal();
         editTask.showMenu && setEditTask({ ...editTask, showMenu: false });
       }
     };
@@ -143,35 +134,6 @@ const App = () => {
     }
   }, []);
 
-  const hideModalHandler = useCallback(
-    (e: React.MouseEvent | React.TouchEvent | KeyboardEvent) => {
-      e.stopPropagation();
-      if ((e as KeyboardEvent).key === 'Tab') return;
-
-      if (editTask.inputType === 'priority-cell') {
-        const newFormData = {
-          ...editFormData,
-          letterPriority: '',
-          numberPriority: '',
-          priority: '',
-        };
-        setEditFormData(newFormData);
-      } else {
-        const newFormData = {
-          ...addFormData,
-          letterPriority: '',
-          numberPriority: '',
-          priority: localStorage.getItem('addTaskPriority'),
-        };
-        setAddFormData(newFormData);
-      }
-      setTimeout(() => {
-        toggleModal();
-      }, 250);
-    },
-    [toggleModal, editFormData, addFormData, editTask.inputType]
-  );
-
   if (state.httpError) {
     return (
       <section className={classes.tasksError}>
@@ -204,7 +166,6 @@ const App = () => {
         setEditTask={setEditTask}
         isModal={isModal}
         toggleModal={toggleModal}
-        hideModalHandler={hideModalHandler}
         setEditFormData={setEditFormData}
         addFormData={addFormData}
         setAddFormData={setAddFormData}
