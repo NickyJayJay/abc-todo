@@ -10,7 +10,7 @@ export interface Options {
   taskDispatch?: React.Dispatch<TaskActionShape>;
   setAddFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
   inputType?: string | null;
-  toggleModal?: () => void;
+  showModal?: () => void;
 }
 
 export const handleAddFormSubmit = (options: Options) => {
@@ -44,7 +44,7 @@ export const handleAddFormSubmit = (options: Options) => {
 };
 
 export const handleAddFormKeydown = (options: Options) => {
-  const { inputType, toggleModal }: Options = options;
+  const { inputType, showModal }: Options = options;
 
   return (e: React.KeyboardEvent | ChangeEvent) => {
     (e as React.KeyboardEvent).key === 'Enter' && e.preventDefault();
@@ -64,7 +64,7 @@ export const handleAddFormKeydown = (options: Options) => {
       !(e as React.KeyboardEvent).shiftKey
     ) {
       e.preventDefault();
-      toggleModal && toggleModal();
+      showModal && showModal();
     } else if (
       ((inputType === 'priority-input' || inputType === 'status-input') &&
         (e as React.KeyboardEvent).key) === 'Tab' &&
@@ -81,15 +81,15 @@ export const handleAddFormKeydown = (options: Options) => {
 };
 
 export const handlePriorityEvent = (options: Options) => {
-  const { toggleModal }: Options = options;
+  const { showModal }: Options = options;
 
   return (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
     localStorage.setItem('addTaskPriority', (e.target as HTMLInputElement).value);
     (e as React.MouseEvent).clientX !== 0 &&
       (e as React.MouseEvent).clientY !== 0 &&
-      toggleModal &&
-      toggleModal();
+      showModal &&
+      showModal();
   };
 };
 

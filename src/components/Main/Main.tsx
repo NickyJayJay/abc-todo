@@ -22,8 +22,11 @@ interface Props {
   taskDispatch: React.Dispatch<TaskActionShape>;
   editFormData: EditFormData;
   setEditTask: React.Dispatch<React.SetStateAction<EditTask>>;
-  isModal?: boolean;
-  toggleModal: () => void;
+  showModal: () => void;
+  hideModal: (e?: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => void;
+  hidePriorityModal: (e?: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => void;
+  isModalVisible: boolean;
+  isModalRendered: boolean;
   setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
   addFormData: EditFormData;
   setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
@@ -41,8 +44,11 @@ const Main = ({
   taskDispatch,
   editFormData,
   setEditTask,
-  isModal,
-  toggleModal,
+  hideModal,
+  hidePriorityModal,
+  showModal,
+  isModalVisible,
+  isModalRendered,
   setEditFormData,
   addFormData,
   setAddFormData,
@@ -59,11 +65,12 @@ const Main = ({
 
   const { Modal } = useModal();
 
-  let modal = isModal ? (
-    <Modal role='dialog' callback={toggleModal}>
-      {(inputType === 'priority-cell' || inputType === 'priority-input') && <UpdateTaskPriority />}
-    </Modal>
-  ) : null;
+  let priorityModal =
+    isModalRendered && (inputType === 'priority-cell' || inputType === 'priority-input') ? (
+      <Modal role='dialog' callback={hidePriorityModal} isVisible={isModalVisible}>
+        <UpdateTaskPriority />
+      </Modal>
+    ) : null;
 
   return (
     <MainContext.Provider
@@ -75,7 +82,10 @@ const Main = ({
         setAddFormData,
         letterPriority,
         numberPriority,
-        toggleModal,
+        showModal,
+        hideModal,
+        isModalVisible,
+        isModalRendered,
         editTask,
         tasks,
         taskDispatch,
@@ -85,10 +95,9 @@ const Main = ({
         showMenu,
         outsideClickRef,
         setEditTask,
-        isModal,
       }}
     >
-      {modal}
+      {priorityModal}
       <Card className={`${classes.card} card`}>
         <TableForm />
         <AddTaskForm ref={priorityInput} />

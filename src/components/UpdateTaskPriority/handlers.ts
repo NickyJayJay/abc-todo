@@ -11,7 +11,7 @@ interface Options {
   numberPriority?: string | null;
   setEditFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
   setAddFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
-  toggleModal: () => void;
+  hideModal: () => void;
   editTask?: EditTask;
   tasks?: Task[];
   taskDispatch?: React.Dispatch<TaskActionShape>;
@@ -110,7 +110,7 @@ export const updatePriorityHandler = (options: Options) => {
     addFormData,
     setAddFormData,
     setEditFormData,
-    toggleModal,
+    hideModal,
     editTask,
     editFormData,
     tasks,
@@ -143,8 +143,7 @@ export const updatePriorityHandler = (options: Options) => {
         ? setAddFormData(newFormData)
         : alert("Priority input's integer value is invalid.");
     }
-    setTimeout(() => {
-      toggleModal();
-    }, 250);
+
+    hideModal();
   };
 };

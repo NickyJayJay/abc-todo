@@ -62,12 +62,34 @@ const App = () => {
 
   const outsideClickRef = useOutsideClick((e) => handleOutsideClick(e));
 
-  const { toggleModal, isModal } = useModal();
+  const { showModal, hideModal, isModalVisible, isModalRendered } = useModal();
+
+  const hidePriorityModal = (e?: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => {
+    if (editTask.inputType === 'priority-cell') {
+      const newFormData = {
+        ...editFormData,
+        letterPriority: '',
+        numberPriority: '',
+        priority: '',
+      };
+      setEditFormData(newFormData);
+    } else {
+      const newFormData = {
+        ...addFormData,
+        letterPriority: '',
+        numberPriority: '',
+        priority: localStorage.getItem('addTaskPriority'),
+      };
+      setAddFormData(newFormData);
+    }
+
+    hideModal(e);
+  };
 
   useEffect(() => {
     const close = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        isModal && toggleModal();
+        isModalRendered && hidePriorityModal();
         editTask.showMenu && setEditTask({ ...editTask, showMenu: false });
       }
     };
@@ -129,7 +151,7 @@ const App = () => {
           httpError: error.message,
         });
       } else {
-        console.log('Unexpected error: ', error);
+        console.error('Unexpected error: ', error);
       }
     }
   }, []);
@@ -164,8 +186,11 @@ const App = () => {
         taskDispatch={taskDispatch}
         editFormData={editFormData}
         setEditTask={setEditTask}
-        isModal={isModal}
-        toggleModal={toggleModal}
+        showModal={showModal}
+        hideModal={hideModal}
+        hidePriorityModal={hidePriorityModal}
+        isModalVisible={isModalVisible}
+        isModalRendered={isModalRendered}
         setEditFormData={setEditFormData}
         addFormData={addFormData}
         setAddFormData={setAddFormData}
