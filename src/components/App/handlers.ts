@@ -12,7 +12,7 @@ export interface Options {
   tasks?: Task[];
   taskDispatch?: React.Dispatch<TaskActionShape>;
   setEditFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
-  toggleModal?: () => void;
+  showModal?: () => void;
   setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
   setX?: (e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => string | null;
   setY?: (e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => string | null;
@@ -40,7 +40,7 @@ export const handleFormSubmit = (e: React.FormEvent, options: Options = {} as Op
   });
 
   sortList(newTasks);
-  localStorage.setItem(editTask!.rowId!.toString(), JSON.stringify(editedTask as string));
+  localStorage.setItem('tasks', JSON.stringify(newTasks));
 };
 
 export const handleEditFormKeyboard = (
@@ -99,7 +99,7 @@ export const handleEditTask = (
   e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent,
   options: Options = {} as Options
 ) => {
-  const { toggleModal, setEditTask, task, setX, setY, setEditFormData }: Options = options;
+  const { showModal, setEditTask, task, setX, setY, setEditFormData }: Options = options;
 
   let statusCell = (e.target as HTMLElement).dataset.id === 'status-cell',
     priorityCell = (e.target as HTMLElement).dataset.id === 'priority-cell';
@@ -123,7 +123,7 @@ export const handleEditTask = (
     task!.status !== 'Forwarded' &&
     priorityCell
   ) {
-    toggleModal!();
+    showModal!();
   }
 
   e.stopPropagation();

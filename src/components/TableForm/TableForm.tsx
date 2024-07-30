@@ -24,9 +24,9 @@ const TableForm = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [editTask]);
 
-  const [setX, setY, tableRef] = useMenuCoords();
+  const { setX, setY, tableRef } = useMenuCoords();
 
   return (
     <form>

@@ -8,7 +8,6 @@ interface MainContextShape {
   editTask: EditTask;
   handleFormSubmit?: (e: React.FormEvent) => void;
   inputType?: string | null;
-  isModal?: boolean;
   letterPriority?: string;
   numberPriority?: string;
   outsideClickRef?: RefObject<HTMLTableSectionElement>;
@@ -19,7 +18,10 @@ interface MainContextShape {
   showMenu?: boolean;
   taskDispatch: React.Dispatch<TaskActionShape>;
   tasks: Task[];
-  toggleModal: () => void;
+  showModal: () => void;
+  hideModal: (e?: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => void;
+  isModalVisible: boolean;
+  isModalRendered: boolean;
   xPos?: string | null;
   yPos?: string | null;
 }

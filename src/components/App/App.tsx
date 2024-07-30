@@ -62,21 +62,34 @@ const App = () => {
 
   const outsideClickRef = useOutsideClick((e) => handleOutsideClick(e));
 
-  const [, toggleModal, isModal] = useModal();
+  const { showModal, hideModal, isModalVisible, isModalRendered } = useModal();
+
+  const hidePriorityModal = (e?: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => {
+    if (editTask.inputType === 'priority-cell') {
+      const newFormData = {
+        ...editFormData,
+        letterPriority: '',
+        numberPriority: '',
+        priority: '',
+      };
+      setEditFormData(newFormData);
+    } else {
+      const newFormData = {
+        ...addFormData,
+        letterPriority: '',
+        numberPriority: '',
+        priority: localStorage.getItem('addTaskPriority'),
+      };
+      setAddFormData(newFormData);
+    }
+
+    hideModal(e);
+  };
 
   useEffect(() => {
-    if (isModal) {
-      document.body.classList.add('lockScroll');
-      document.body.style.top = `-${window.scrollY}px`;
-    }
-    if (!isModal) {
-      document.body.classList.remove('lockScroll');
-      document.body.style.top = '';
-    }
-
     const close = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        isModal && hideModalHandler(e);
+        isModalRendered && hidePriorityModal();
         editTask.showMenu && setEditTask({ ...editTask, showMenu: false });
       }
     };
@@ -87,55 +100,41 @@ const App = () => {
   useEffect(() => {
     try {
       const loadedTasks: Task[] = [];
+      const localStorageTasks: Task[] = JSON.parse(localStorage.getItem('tasks') as string) || [];
 
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        const stringValue = key !== null ? localStorage.getItem(key) : null;
-        if (stringValue !== null) {
-          const task: Task = JSON.parse(stringValue);
+      if (localStorageTasks) {
+        localStorageTasks.forEach((task: Task) => {
           loadedTasks.push({
-            id: key,
+            id: task.id,
             status: task.status,
             priority: task.priority,
             description: task.description,
           });
-        }
+        });
       }
 
-      if (localStorage.length === 0) {
-        const taskId = nanoid();
+      if (localStorageTasks.length === 0) {
         const initialTask = {
+          id: nanoid(),
           status: 'In Process',
           priority: 'A1',
           description: 'Planning and solitude',
         };
 
-        localStorage.setItem(taskId, JSON.stringify(initialTask));
-
         loadedTasks.push({
-          id: taskId,
           ...initialTask,
         });
-      }
 
-      while (localStorage.length < 16) {
-        const taskId = nanoid();
+        while (loadedTasks.length < 16) {
+          loadedTasks.push({
+            id: nanoid(),
+            status: '',
+            priority: '',
+            description: '',
+          });
+        }
 
-        localStorage.setItem(
-          taskId,
-          JSON.stringify({
-            status: editFormData.status,
-            priority: editFormData.priority,
-            description: editFormData.description,
-          })
-        );
-
-        loadedTasks.push({
-          id: taskId,
-          status: null,
-          priority: null,
-          description: null,
-        });
+        localStorage.setItem('tasks', JSON.stringify(loadedTasks));
       }
 
       sortList(loadedTasks);
@@ -152,39 +151,10 @@ const App = () => {
           httpError: error.message,
         });
       } else {
-        console.log('Unexpected error: ', error);
+        console.error('Unexpected error: ', error);
       }
     }
   }, []);
-
-  const hideModalHandler = useCallback(
-    (e: React.MouseEvent | React.TouchEvent | KeyboardEvent) => {
-      e.stopPropagation();
-      if ((e as KeyboardEvent).key === 'Tab') return;
-
-      if (editTask.inputType === 'priority-cell') {
-        const newFormData = {
-          ...editFormData,
-          letterPriority: '',
-          numberPriority: '',
-          priority: '',
-        };
-        setEditFormData(newFormData);
-      } else {
-        const newFormData = {
-          ...addFormData,
-          letterPriority: '',
-          numberPriority: '',
-          priority: '',
-        };
-        setAddFormData(newFormData);
-      }
-      setTimeout(() => {
-        toggleModal();
-      }, 250);
-    },
-    [toggleModal, editFormData, addFormData, editTask.inputType]
-  );
 
   if (state.httpError) {
     return (
@@ -216,9 +186,11 @@ const App = () => {
         taskDispatch={taskDispatch}
         editFormData={editFormData}
         setEditTask={setEditTask}
-        isModal={isModal}
-        toggleModal={toggleModal}
-        hideModalHandler={hideModalHandler}
+        showModal={showModal}
+        hideModal={hideModal}
+        hidePriorityModal={hidePriorityModal}
+        isModalVisible={isModalVisible}
+        isModalRendered={isModalRendered}
         setEditFormData={setEditFormData}
         addFormData={addFormData}
         setAddFormData={setAddFormData}

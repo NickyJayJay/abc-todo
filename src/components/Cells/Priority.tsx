@@ -10,7 +10,7 @@ const Priority = ({ task }: { task: Task }) => {
     editFormData,
     editTask,
     inputType,
-    isModal,
+    isModalRendered,
     letterPriority,
     numberPriority,
     rowId,
@@ -18,19 +18,19 @@ const Priority = ({ task }: { task: Task }) => {
     setEditTask,
     taskDispatch,
     tasks,
-    toggleModal,
+    showModal,
   } = useContext(MainContext);
 
   const dependencies = {
     editFormData,
     editTask,
-    isModal,
+    isModalRendered,
     setEditFormData,
     setEditTask,
     task,
     taskDispatch,
     tasks,
-    toggleModal,
+    showModal,
   };
 
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -39,16 +39,32 @@ const Priority = ({ task }: { task: Task }) => {
   const isForwarded = task.status === 'Forwarded';
   const isPriorityCell = inputType === 'priority-cell';
   const isActiveTask = task.id === rowId;
-  const togglePreview =
-    !isModal ||
-    !isActiveTask ||
-    (isPriorityCell && isModal && isActiveTask && !letterPriority && !numberPriority)
-      ? task.priority
-      : `${letterPriority}${numberPriority}`;
+
+  let togglePreview;
+
+  if (isPriorityCell && isModalRendered && isActiveTask && (letterPriority || numberPriority)) {
+    togglePreview = `${letterPriority}${numberPriority}`;
+  } else if (
+    (isPriorityCell &&
+      isModalRendered &&
+      isActiveTask &&
+      !letterPriority &&
+      !numberPriority &&
+      !task.priority) ||
+    (isPriorityCell && !isModalRendered && isActiveTask && !task.priority)
+  ) {
+    togglePreview = (
+      <span data-id='priority-cell' style={{ color: '#808080', fontWeight: '400' }}>
+        ABC
+      </span>
+    );
+  } else {
+    togglePreview = task.priority;
+  }
 
   useEffect(() => {
-    isActiveTask && isPriorityCell && !isModal && buttonRef.current?.focus();
-  }, [editTask, task.id, isModal]);
+    isActiveTask && isPriorityCell && !isModalRendered && buttonRef.current?.focus();
+  }, [editTask, task.id, isModalRendered]);
 
   return (
     <td

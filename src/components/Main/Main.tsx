@@ -22,11 +22,11 @@ interface Props {
   taskDispatch: React.Dispatch<TaskActionShape>;
   editFormData: EditFormData;
   setEditTask: React.Dispatch<React.SetStateAction<EditTask>>;
-  isModal?: boolean;
-  toggleModal: () => void;
-  hideModalHandler: (
-    e: React.MouseEvent | React.TouchEvent | KeyboardEvent
-  ) => void;
+  showModal: () => void;
+  hideModal: (e?: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => void;
+  hidePriorityModal: (e?: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => void;
+  isModalVisible: boolean;
+  isModalRendered: boolean;
   setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
   addFormData: EditFormData;
   setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
@@ -44,35 +44,33 @@ const Main = ({
   taskDispatch,
   editFormData,
   setEditTask,
-  isModal,
-  toggleModal,
-  hideModalHandler,
+  hideModal,
+  hidePriorityModal,
+  showModal,
+  isModalVisible,
+  isModalRendered,
   setEditFormData,
   addFormData,
   setAddFormData,
 }: Props) => {
   const priorityInput = useRef<HTMLInputElement>(null);
   const letterPriority =
-    inputType === 'priority-cell'
-      ? editFormData.letterPriority
-      : addFormData.letterPriority;
+    inputType === 'priority-cell' ? editFormData.letterPriority : addFormData.letterPriority;
   const numberPriority =
-    inputType === 'priority-cell'
-      ? editFormData.numberPriority
-      : addFormData.numberPriority;
+    inputType === 'priority-cell' ? editFormData.numberPriority : addFormData.numberPriority;
 
   useEffect(() => {
     inputType === 'priority-input' && priorityInput.current?.focus();
   }, [inputType, priorityInput]);
 
-  const [Modal, ,] = useModal();
+  const { Modal } = useModal();
 
-  let modal = isModal ? (
-    <Modal role="dialog" hideModalHandler={hideModalHandler}>
-      {(inputType === 'priority-cell' ||
-        inputType === 'priority-input') && <UpdateTaskPriority />}
-    </Modal>
-  ) : null;
+  let priorityModal =
+    isModalRendered && (inputType === 'priority-cell' || inputType === 'priority-input') ? (
+      <Modal role='dialog' callback={hidePriorityModal} isVisible={isModalVisible}>
+        <UpdateTaskPriority />
+      </Modal>
+    ) : null;
 
   return (
     <MainContext.Provider
@@ -84,7 +82,10 @@ const Main = ({
         setAddFormData,
         letterPriority,
         numberPriority,
-        toggleModal,
+        showModal,
+        hideModal,
+        isModalVisible,
+        isModalRendered,
         editTask,
         tasks,
         taskDispatch,
@@ -94,10 +95,9 @@ const Main = ({
         showMenu,
         outsideClickRef,
         setEditTask,
-        isModal,
       }}
     >
-      {modal}
+      {priorityModal}
       <Card className={`${classes.card} card`}>
         <TableForm />
         <AddTaskForm ref={priorityInput} />

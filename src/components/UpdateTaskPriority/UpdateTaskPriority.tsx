@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { MainContext } from '../../context/main-context';
 import Button from '../UI/Button/Button';
 import classes from './UpdateTaskPriority.module.scss';
@@ -13,7 +13,7 @@ const UpdateTaskPriority = () => {
     setAddFormData,
     letterPriority,
     numberPriority,
-    toggleModal,
+    hideModal,
     editTask,
     tasks,
     taskDispatch,
@@ -27,11 +27,25 @@ const UpdateTaskPriority = () => {
     numberPriority,
     setEditFormData,
     setAddFormData,
-    toggleModal,
+    hideModal,
     editTask,
     tasks,
     taskDispatch,
   };
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'Enter' && letterPriority) {
+        updatePriorityHandler(options);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [letterPriority]);
 
   return (
     <form
@@ -89,9 +103,8 @@ const UpdateTaskPriority = () => {
         <legend>Then enter a priority number (1 - 99)</legend>
         <input
           type='number'
-          min='1'
-          max='99'
           onChange={numberPriorityHandler(options)}
+          onKeyDown={numberPriorityHandler(options)}
           name='priority'
           value={
             inputType === 'priority-cell'

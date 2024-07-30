@@ -28,7 +28,7 @@ export const handleMenuItemEvent = (options: Menu) => {
         index: index,
       });
 
-      localStorage.removeItem(rowId!.toString());
+      localStorage.setItem('tasks', JSON.stringify(tasks));
       setEditTask({ ...editTask, showMenu: false });
       return;
     }
@@ -54,7 +54,7 @@ export const handleMenuItemEvent = (options: Menu) => {
       data: newTasks,
     });
 
-    localStorage.setItem(rowId!.toString(), JSON.stringify(editedTask as string));
+    localStorage.setItem('tasks', JSON.stringify(newTasks));
     setEditTask({ ...editTask, showMenu: false });
     sortList(newTasks);
   };
