@@ -42,29 +42,33 @@ const TableForm = () => {
           </tr>
         </thead>
         <tbody ref={outsideClickRef}>
-          {tasks!.map((task) => (
-            <tr
-              key={task.id}
-              className={
-                task.status === 'Completed'
-                  ? classes.completed
-                  : '' || task.status === 'Forwarded'
-                  ? classes.forwarded
-                  : ''
-              }
-            >
-              <Status task={task} setX={setX} setY={setY} />
-              <Priority task={task} />
-              {editTask!.inputType === 'description-cell' &&
-              task.status !== 'Completed' &&
-              task.status !== 'Forwarded' &&
-              rowId === task.id ? (
-                <DescriptionEditable task={task} />
-              ) : (
-                <DescriptionReadOnly task={task} />
-              )}
-            </tr>
-          ))}
+          {tasks!.map((task) => {
+            if (!showMenu) {
+              task.previewStatus = '';
+            }
+
+            return (
+              <tr
+                key={task.id}
+                className={`
+                ${task.previewStatus === 'Remove' ? classes.remove : ''}
+                ${(task.status === 'Completed' && !task.previewStatus) || task.previewStatus === 'Completed' ? classes.completed : ''}
+                ${(task.status === 'Forwarded' && !task.previewStatus) || task.previewStatus === 'Forwarded' ? classes.forwarded : ''}
+              `}
+              >
+                <Status task={task} setX={setX} setY={setY} />
+                <Priority task={task} />
+                {editTask!.inputType === 'description-cell' &&
+                  task.status !== 'Completed' &&
+                  task.status !== 'Forwarded' &&
+                  rowId === task.id ? (
+                  <DescriptionEditable task={task} />
+                ) : (
+                  <DescriptionReadOnly task={task} />
+                )}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
     </form>
