@@ -40,6 +40,17 @@
             }
           }
 
+          &.remove {
+            td {
+              background-color: #fc7e7e;
+
+              button {
+                background-color: #fc7e7e;
+                border: none;
+              }
+            }
+          }
+
           td {
             padding: 0;
             position: relative;
@@ -68,7 +79,11 @@
               overflow: scroll;
 
               &:focus-visible {
-                background-color: $highlightColor;
+                &:not(.completed, .forwarded) {
+                  background-color: $highlightColor;
+                }
+                border: 2px solid #008002;
+                box-sizing: content-box;
               }
 
               &.completed,

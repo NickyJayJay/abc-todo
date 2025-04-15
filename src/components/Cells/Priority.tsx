@@ -37,6 +37,7 @@ const Priority = ({ task }: { task: Task }) => {
 
   const isCompleted = task.status === 'Completed';
   const isForwarded = task.status === 'Forwarded';
+  const isCompletedOrForwardedPreview = task.previewStatus === 'Completed' || task.previewStatus === 'Forwarded';
   const isPriorityCell = inputType === 'priority-cell';
   const isActiveTask = task.id === rowId;
 
@@ -50,14 +51,18 @@ const Priority = ({ task }: { task: Task }) => {
       isActiveTask &&
       !letterPriority &&
       !numberPriority &&
+      !isCompleted &&
+      !isForwarded &&
       !task.priority) ||
-    (isPriorityCell && !isModalRendered && isActiveTask && !task.priority)
+    (isPriorityCell && !isModalRendered && isActiveTask && !task.priority && !isCompleted && !isForwarded)
   ) {
     togglePreview = (
       <span data-id='priority-cell' style={{ color: '#808080', fontWeight: '400' }}>
         ABC
       </span>
     );
+  } else if (isCompletedOrForwardedPreview) {
+    togglePreview = '';
   } else {
     togglePreview = task.priority;
   }

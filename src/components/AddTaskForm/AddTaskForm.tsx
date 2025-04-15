@@ -10,17 +10,15 @@ import {
   handleAddFormChange,
 } from './handlers';
 
-const AddTaskForm = forwardRef<HTMLInputElement, Options>(({}, ref) => {
+const AddTaskForm = forwardRef<HTMLInputElement, Options>(({ }, ref) => {
   const { inputType, taskDispatch, showModal, addFormData, setAddFormData } =
     useContext(MainContext);
 
   useEffect(() => {
     inputType === 'status-input' && selectRef.current?.focus();
-    inputType === 'description-input' && descriptionRef.current?.focus();
   }, [inputType]);
 
   const selectRef = useRef<HTMLSelectElement>(null);
-  const descriptionRef = useRef<HTMLInputElement>(null);
   const options: Options = {
     addFormData,
     taskDispatch,
@@ -77,7 +75,6 @@ const AddTaskForm = forwardRef<HTMLInputElement, Options>(({}, ref) => {
             aria-label='Enter task description'
             maxLength={150}
             className={inputType === 'description-input' ? classes.active : ''}
-            ref={descriptionRef}
           />
           <ButtonGradient type='submit'>
             <span>Add Task</span>
