@@ -82,7 +82,7 @@ const Status = ({ task, setX, setY }: Props) => {
 
         {task.previewStatus === 'Remove'
           && (
-            <img src={trash} alt='remove icon' data-id='status-cell' />
+            <img width="20" height="20" src={trash} alt='remove icon' data-id='status-cell' />
           )}
         {task.id === editTask.rowId && editTask.inputType === 'status-cell' && !task.previewStatus && !task.status && (
           <img
