@@ -1,16 +1,11 @@
-import { forwardRef, useRef, useEffect, useContext } from 'react';
+import { forwardRef, useRef, useEffect, useContext, ChangeEvent } from 'react';
+import { nanoid } from 'nanoid';
 import { MainContext } from '../../context/main-context';
 import ButtonGradient from '../UI/Button/ButtonGradient';
 import classes from '../App/App.module.scss';
-import { Options } from './handlers';
-import {
-  handleAddFormSubmit,
-  handleAddFormKeydown,
-  handlePriorityEvent,
-  handleAddFormChange,
-} from './handlers';
+import { TaskActionType } from '../../ts/enums';
 
-const AddTaskForm = forwardRef<HTMLInputElement, Options>(({ }, ref) => {
+const AddTaskForm = forwardRef<HTMLInputElement, {}>(({ }, ref) => {
   const { inputType, taskDispatch, showModal, addFormData, setAddFormData } =
     useContext(MainContext);
 
@@ -19,22 +14,96 @@ const AddTaskForm = forwardRef<HTMLInputElement, Options>(({ }, ref) => {
   }, [inputType]);
 
   const selectRef = useRef<HTMLSelectElement>(null);
-  const options: Options = {
-    addFormData,
-    taskDispatch,
-    setAddFormData,
-    inputType,
-    showModal,
+
+  const handlePriorityEvent = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    localStorage.setItem('addTaskPriority', (e.target as HTMLInputElement).value);
+    (e as React.MouseEvent).clientX !== 0 &&
+      (e as React.MouseEvent).clientY !== 0 &&
+      showModal &&
+      showModal();
+  };
+
+  const handleAddFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    localStorage.removeItem('addTaskPriority');
+
+    taskDispatch &&
+      taskDispatch({
+        type: TaskActionType.ADD,
+        payload: {
+          id: nanoid(),
+          status: addFormData!.status,
+          priority: addFormData!.priority,
+          description: addFormData!.description,
+        },
+      });
+
+    setAddFormData &&
+      setAddFormData({
+        status: 'Select Status',
+        letterPriority: '',
+        numberPriority: '',
+        priority: '',
+        description: '',
+      });
+  };
+
+  const handleAddFormKeydown = (e: React.KeyboardEvent | ChangeEvent) => {
+    (e as React.KeyboardEvent).key === 'Enter' && e.preventDefault();
+
+    const focusableElements = document.querySelectorAll(
+      'a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]'
+    );
+    const i = Array.from(focusableElements).indexOf(e.target as HTMLElement);
+    const nextFocusableEl = focusableElements[i + 1];
+    const prevFocusableEl = focusableElements[i - 1];
+
+    if (!nextFocusableEl || !prevFocusableEl) return;
+
+    if (
+      inputType === 'priority-input' &&
+      (e as React.KeyboardEvent).key !== 'Tab' &&
+      !(e as React.KeyboardEvent).shiftKey
+    ) {
+      e.preventDefault();
+      showModal && showModal();
+    } else if (
+      ((inputType === 'priority-input' || inputType === 'status-input') &&
+        (e as React.KeyboardEvent).key) === 'Tab' &&
+      !(e as React.KeyboardEvent).shiftKey
+    ) {
+      e.preventDefault();
+      (nextFocusableEl as HTMLElement).click();
+      (nextFocusableEl as HTMLElement).focus();
+    } else if ((e as React.KeyboardEvent).key === 'Tab' && (e as React.KeyboardEvent).shiftKey) {
+      e.preventDefault();
+      (prevFocusableEl as HTMLElement).click();
+    }
+  };
+
+  const handleAddFormChange = (e: ChangeEvent<Element> | React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const fieldName = (e.target as HTMLInputElement).getAttribute('name');
+    if (!fieldName) return;
+    const fieldValue = (e.target as HTMLInputElement).value;
+
+    const newFormData = { ...addFormData };
+    newFormData[fieldName as keyof typeof newFormData] = fieldValue;
+
+    setAddFormData && setAddFormData(newFormData);
+
   };
 
   return (
     <div className={classes.addTask}>
-      <form onSubmit={handleAddFormSubmit(options)}>
+      <form onSubmit={handleAddFormSubmit}>
         <fieldset>
           <legend>Add a Task</legend>
           <select
-            onChange={handleAddFormChange(options)}
-            onKeyDown={handleAddFormKeydown(options)}
+            onChange={handleAddFormChange}
+            onKeyDown={handleAddFormKeydown}
             name='status'
             value={addFormData.status as string}
             data-id='status-input'
@@ -56,10 +125,10 @@ const AddTaskForm = forwardRef<HTMLInputElement, Options>(({ }, ref) => {
             data-id='priority-input'
             placeholder='ABC'
             value={addFormData.priority as string}
-            onChange={handleAddFormKeydown(options)}
-            onKeyDown={handleAddFormKeydown(options)}
-            onTouchEnd={handlePriorityEvent(options)}
-            onClick={handlePriorityEvent(options)}
+            onChange={handleAddFormKeydown}
+            onKeyDown={handleAddFormKeydown}
+            onTouchEnd={handlePriorityEvent}
+            onClick={handlePriorityEvent}
             aria-label='Enter task priority'
             ref={ref}
             className={inputType === 'priority-input' ? classes.active : ''}
@@ -70,8 +139,8 @@ const AddTaskForm = forwardRef<HTMLInputElement, Options>(({ }, ref) => {
             data-id='description-input'
             placeholder='Enter task description...'
             value={addFormData.description as string}
-            onChange={handleAddFormChange(options)}
-            onKeyDown={handleAddFormKeydown(options)}
+            onChange={handleAddFormChange}
+            onKeyDown={handleAddFormKeydown}
             aria-label='Enter task description'
             maxLength={150}
             className={inputType === 'description-input' ? classes.active : ''}
