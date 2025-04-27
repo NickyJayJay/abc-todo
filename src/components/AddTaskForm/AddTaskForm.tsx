@@ -4,6 +4,7 @@ import { MainContext } from '../../context/main-context';
 import ButtonGradient from '../UI/Button/ButtonGradient';
 import classes from '../App/App.module.scss';
 import { TaskActionType } from '../../ts/enums';
+import Dropdown from '../UI/Dropdown/Dropdown';
 
 const AddTaskForm = forwardRef<HTMLInputElement, {}>(({ }, ref) => {
   const { inputType, taskDispatch, showModal, addFormData, setAddFormData } =
@@ -96,13 +97,20 @@ const AddTaskForm = forwardRef<HTMLInputElement, {}>(({ }, ref) => {
 
   };
 
+  const options = [
+    { value: 'In Process', label: 'In Process' },
+    { value: 'Completed', label: 'Completed' },
+    { value: 'Forwarded', label: 'Forwarded' },
+    { value: 'Delegated', label: 'Delegated' },
+  ];
+
   return (
     <div className={classes.addTask}>
       <form onSubmit={handleAddFormSubmit}>
         <fieldset>
           <legend>Add a Task</legend>
-          <select
-            onChange={handleAddFormChange}
+          {/* <select
+            onChange={handleDropdownChange}
             onKeyDown={handleAddFormKeydown}
             name='status'
             value={addFormData.status as string}
@@ -118,7 +126,24 @@ const AddTaskForm = forwardRef<HTMLInputElement, {}>(({ }, ref) => {
             <option value='Completed'>Completed</option>
             <option value='Forwarded'>Forwarded</option>
             <option value='Delegated'>Delegated</option>
-          </select>
+          </select> */}
+          <Dropdown
+            options={options}
+            defaultOption={options[0]}
+            onChange={(e, selected) => {
+              const fieldName = (e.target as HTMLSpanElement).getAttribute('name');
+              if (!fieldName) return;
+              const optionValue = selected.value;
+
+              const newFormData = { ...addFormData };
+              newFormData[fieldName as keyof typeof newFormData] = optionValue;
+
+              setAddFormData && setAddFormData(newFormData);
+              console.log(fieldName);
+              console.log('Selected:', selected)
+            }}
+            placeholder="Select Status"
+          />
           <input
             type='text'
             name='priority'
