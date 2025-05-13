@@ -9,6 +9,7 @@ import { TaskActionType } from '../../ts/enums';
 import { taskReducer } from '../../reducers';
 import sortList from '../../utilities/sortList';
 import useModal from '../../hooks/useModal';
+import axios from 'axios';
 
 const App = () => {
   const [tasks, taskDispatch] = useReducer(taskReducer, []);
@@ -51,8 +52,8 @@ const App = () => {
         yPos: null,
         showMenu:
           editTask.xPos &&
-          editTask.yPos &&
-          (e.target as HTMLButtonElement).dataset.id === 'status-cell'
+            editTask.yPos &&
+            (e.target as HTMLButtonElement).dataset.id === 'status-cell'
             ? true
             : false,
       });
@@ -98,61 +99,127 @@ const App = () => {
   });
 
   useEffect(() => {
-    try {
-      const loadedTasks: Task[] = [];
-      const localStorageTasks: Task[] = JSON.parse(localStorage.getItem('tasks') as string) || [];
+    // temporary until login is working
+    const isUserLoggedIn = true;
 
-      if (localStorageTasks) {
-        localStorageTasks.forEach((task: Task) => {
-          loadedTasks.push({
-            id: task.id,
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get('api/v1/tasks');
+
+        let loadedTasks: Task[] = [];
+
+        if (response.data && response.data.tasks) {
+          loadedTasks = response.data.tasks.map((task: any) => ({
+            id: task.id || task._id,
             status: task.status,
             priority: task.priority,
             description: task.description,
-          });
-        });
-      }
+          }));
+        }
 
-      if (localStorageTasks.length === 0) {
-        const initialTask = {
-          id: nanoid(),
-          status: 'In Process',
-          priority: 'A1',
-          description: 'Planning and solitude',
-        };
-
-        loadedTasks.push({
-          ...initialTask,
-        });
-
-        while (loadedTasks.length < 16) {
-          loadedTasks.push({
+        if (response.data.tasks.length === 0) {
+          const initialTask = {
             id: nanoid(),
-            status: '',
-            priority: '',
-            description: '',
+            status: 'In Process',
+            priority: 'A1',
+            description: 'Planning and solitude',
+          };
+
+          loadedTasks.push({
+            ...initialTask,
+          });
+
+          while (loadedTasks.length < 16) {
+            loadedTasks.push({
+              id: nanoid(),
+              status: '',
+              priority: '',
+              description: '',
+            });
+          }
+
+          await axios.post('api/v1/tasks', loadedTasks);
+        }
+
+        sortList(loadedTasks);
+
+        taskDispatch({
+          type: TaskActionType.SET,
+          data: loadedTasks,
+        });
+        setState({ isLoading: false, httpError: null });
+        return;
+      } catch (error) {
+        if (error instanceof Error) {
+          setState({
+            isLoading: false,
+            httpError: error.message,
+          });
+        } else {
+          console.error('Unexpected error: ', error);
+        }
+      }
+    };
+
+    if (!isUserLoggedIn) {
+      try {
+        const loadedTasks: Task[] = [];
+        const localStorageTasks: Task[] = JSON.parse(localStorage.getItem('tasks') as string) || [];
+
+        if (localStorageTasks) {
+          localStorageTasks.forEach((task: Task) => {
+            loadedTasks.push({
+              id: task.id,
+              status: task.status,
+              priority: task.priority,
+              description: task.description,
+            });
           });
         }
 
-        localStorage.setItem('tasks', JSON.stringify(loadedTasks));
-      }
+        if (localStorageTasks.length === 0) {
+          const initialTask = {
+            id: nanoid(),
+            status: 'In Process',
+            priority: 'A1',
+            description: 'Planning and solitude',
+          };
 
-      sortList(loadedTasks);
+          loadedTasks.push({
+            ...initialTask,
+          });
 
-      taskDispatch({
-        type: TaskActionType.SET,
-        data: loadedTasks,
-      });
-      setState({ isLoading: false, httpError: null });
-    } catch (error) {
-      if (error instanceof Error) {
-        setState({
-          isLoading: false,
-          httpError: error.message,
+          while (loadedTasks.length < 16) {
+            loadedTasks.push({
+              id: nanoid(),
+              status: '',
+              priority: '',
+              description: '',
+            });
+          }
+
+          localStorage.setItem('tasks', JSON.stringify(loadedTasks));
+        }
+
+        sortList(loadedTasks);
+
+        taskDispatch({
+          type: TaskActionType.SET,
+          data: loadedTasks,
         });
-      } else {
-        console.error('Unexpected error: ', error);
+        setState({ isLoading: false, httpError: null });
+      } catch (error) {
+        if (error instanceof Error) {
+          setState({
+            isLoading: false,
+            httpError: error.message,
+          });
+        } else {
+          console.error('Unexpected error: ', error);
+        }
       }
+    } else {
+      fetchTasks();
     }
   }, []);
 

@@ -1,15 +1,22 @@
 const mongoose = require('mongoose');
 
 const TaskSchema = new mongoose.Schema({
-    name: {
+    status: {
         type: String,
-        required: [true, 'must provide name'],
-        trim: true,
-        maxLength: [20, 'name can not be more than 20 characters']
+        default: ""
     },
-    completed: {
-        type: Boolean,
-        default: false
+    priority: {
+        type: String,
+        default: ""
+    },
+    description: {
+        type: String,
+        trim: true,
+        maxLength: [120, 'description can not be more than 120 characters']
+    },
+    id: {
+        type: String,
+        default: null
     }
 });
 

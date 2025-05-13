@@ -2,12 +2,15 @@
     "name": "abc-todo",
     "version": "1.0.0",
     "scripts": {
-        "dev": "nodemon server.js",
+        "client-dev": "cd client && npm run start",
+        "server-dev": "nodemon server.js",
+        "dev": "concurrently \"npm run server-dev\" \"npm run client-dev\"",
         "build": "cd client && npm run build",
-        "start": "cd client && npm run preview"
+        "start": "node server.js"
     },
     "devDependencies": {
-        "nodemon": "^3.1.10"
+        "nodemon": "^3.1.10",
+        "concurrently": "^9.1.2"
     },
     "dependencies": {
         "dotenv": "^16.5.0",
