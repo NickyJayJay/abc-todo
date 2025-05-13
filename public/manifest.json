@@ -1,7 +1,0 @@
-{
-  "name": "ABC To-Do",
-  "version": "1.0.0",
-  "description": "To-do app that helps you prioritize your daily tasks by assigning each task a letter (i.e. A, B, C) and a corresponding number",
-  "start_url": "https://abctodo.net",
-  "lang": "English"
-}
