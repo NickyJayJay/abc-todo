@@ -1,0 +1,153 @@
+@import '../../variables.module';
+
+.UpdateTaskPriority {
+  background: rgb(226, 245, 226);
+  padding: 0 20px 20px 20px;
+  font-family: $serifFont2;
+
+  h2 {
+    font-family: $serifFont1;
+    font-size: 37px;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  fieldset {
+    margin: 0 auto;
+    margin-bottom: 20px;
+    border-color: #e2f5e2;
+
+    legend {
+      font-size: 19px;
+      padding: 0 5px;
+      font-style: italic;
+    }
+
+    .inputWrap {
+      margin: 10px;
+      display: flex;
+      align-items: center;
+
+      input[type='radio'] {
+        cursor: pointer;
+        position: absolute;
+        height: 32px;
+        width: 32px;
+        border: solid 1px #ccc;
+        box-sizing: content-box;
+        opacity: 0;
+
+        &:focus + label,
+        &:focus-visible + label {
+          &:before {
+            outline: 1px solid #008002;
+          }
+        }
+
+        &:checked + label {
+          &::before {
+            background: radial-gradient(0.75em circle at center, $accentColor 50%, transparent 55%);
+            box-shadow: 0 0 1em 0 rgba(0, 128, 2, 0.75);
+            border-color: $accentColor;
+          }
+        }
+      }
+
+      label {
+        font-size: 24px;
+        display: inline-flex;
+        align-items: center;
+        font-weight: bold;
+        line-height: 1;
+
+        &:before {
+          content: '';
+          display: block;
+          height: 1.25em;
+          width: 1.25em;
+          border: solid 1px #8b8a8a;
+          background: #fff;
+          border-radius: 50%;
+          margin-right: 0.5em;
+          transition: border ease-in 150ms, box-shadow ease-in 150ms;
+        }
+
+        span {
+          font-size: 19px;
+          margin-left: 10px;
+          font-weight: 400;
+        }
+
+        img {
+          margin-left: 10px;
+          position: absolute;
+          right: 0;
+        }
+      }
+    }
+    input[type='number'] {
+      font-size: 24px;
+      width: 60px;
+      height: 32px;
+      box-sizing: border-box;
+    }
+  }
+
+  .preview {
+    text-align: center;
+    font-size: 45px;
+    height: 52px;
+  }
+
+  button {
+    margin: 10px auto;
+    display: block;
+    width: 327px;
+    box-sizing: border-box;
+    font-size: 21px;
+
+    &:focus-visible {
+      outline: 1px solid $accentColor;
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .UpdateTaskPriority {
+    padding: 0 10px 10px 10px;
+
+    h2 {
+      font-size: 21px;
+      margin-top: 30px;
+    }
+
+    fieldset {
+      display: block;
+      grid-template-columns: initial;
+      padding: 0.35em 0.35em 0.625em;
+
+      .inputWrap {
+        label {
+          font-size: 21px;
+
+          span {
+            font-size: 16px;
+          }
+        }
+      }
+      input[type='number'] {
+        font-size: 21px;
+      }
+    }
+    .preview {
+      font-size: 30px;
+      height: 37px;
+    }
+    button {
+      width: 100%;
+      max-width: 220px;
+      white-space: nowrap;
+    }
+  }
+}

@@ -1,0 +1,112 @@
+@import '../../../variables.module';
+
+.contextMenu {
+  width: 137px;
+  position: absolute;
+  z-index: 2;
+  background: $primaryColor;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 26%);
+  padding: 0;
+  margin: 0 auto;
+  font-family: $serifFont2;
+  border: 1px solid $accentColor;
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 auto;
+
+    li {
+      position: relative;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      color: #000;
+      height: 37px;
+      box-sizing: border-box;
+
+      &:hover {
+        background-color: $highlightColor;
+        border: 1px solid $accentColor;
+        border-right: none;
+        border-left: none;
+
+        > button {
+          background-color: $highlightColor;
+        }
+      }
+
+      &:focus-visible {
+        background-color: $highlightColor;
+        outline: 1px solid $accentColor;
+        border-radius: 0;
+      }
+
+      > button {
+        color: #000;
+        text-decoration: none;
+        padding: 10px;
+        width: 100%;
+        position: relative;
+        margin: 0 auto;
+        touch-action: none;
+        appearance: none;
+        display: flex;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        height: 31px;
+        align-items: center;
+        background: $primaryColor;
+
+        &:focus-visible {
+          background-color: $highlightColor;
+          outline: 1px solid $accentColor;
+          border-radius: 0;
+        }
+
+        &:hover {
+          background-color: $highlightColor;
+        }
+
+        span {
+          position: absolute;
+          left: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+
+          &.completed {
+            color: $accentColor;
+          }
+        }
+
+        img {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+
+    li:first-child {
+      &:hover {
+        border-top: none;
+        padding-top: 1px;
+      }
+    }
+
+    li:last-child {
+      > button {
+        border-bottom: none;
+      }
+
+      &:hover {
+        border-bottom: none;
+        padding-bottom: 1px;
+      }
+    }
+  }
+}
