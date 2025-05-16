@@ -30,6 +30,7 @@ interface Props {
   setEditFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
   addFormData: EditFormData;
   setAddFormData: React.Dispatch<React.SetStateAction<EditFormData>>;
+  isLoggedIn: boolean;
 }
 
 const Main = ({
@@ -52,6 +53,7 @@ const Main = ({
   setEditFormData,
   addFormData,
   setAddFormData,
+  isLoggedIn
 }: Props) => {
   const priorityInput = useRef<HTMLInputElement>(null);
   const letterPriority =
@@ -95,6 +97,7 @@ const Main = ({
         showMenu,
         outsideClickRef,
         setEditTask,
+        isLoggedIn
       }}
     >
       {priorityModal}

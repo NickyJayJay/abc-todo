@@ -1,10 +1,26 @@
 import { Task } from '../../../ts/types';
 import { Menu } from '../../../ts/interfaces';
 import { TaskActionType } from '../../../ts/enums';
+import { TaskService } from '../../../reducers';
 
 export const handleMenuItemEvent = (options: Menu) => {
-  const { editTask, rowId, setEditTask, editFormData, sortList, tasks, taskDispatch }: Menu =
+  const { editTask, rowId, setEditTask, editFormData, sortList, tasks, taskDispatch, isLoggedIn }: Menu =
     options;
+
+  const handleRemoveTask = async (id: string, index: number) => {
+    try {
+      if (isLoggedIn) {
+        await TaskService.deleteTask(id);
+        taskDispatch({ type: TaskActionType.REMOVE, index, id });
+      } else {
+        taskDispatch({ type: TaskActionType.REMOVE, index, id });
+        const newTasks = tasks.filter((_, i) => i !== index);
+        localStorage.setItem('tasks', JSON.stringify(newTasks));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent) => {
     e.stopPropagation();
@@ -23,12 +39,8 @@ export const handleMenuItemEvent = (options: Menu) => {
     if (menuValue === 'Remove') {
       const index = tasks.findIndex((task) => task.id === rowId);
 
-      taskDispatch({
-        type: TaskActionType.REMOVE,
-        index: index,
-      });
+      handleRemoveTask(rowId, index);
 
-      localStorage.setItem('tasks', JSON.stringify(tasks));
       setEditTask({ ...editTask, showMenu: false });
       return;
     }

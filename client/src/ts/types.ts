@@ -20,7 +20,8 @@ export type AddTaskAction = {
 
 export type RemoveTaskAction = {
   type: TaskActionType.REMOVE;
-  index: number | null;
+  index?: number | null;
+  id?: string;
 };
 
 export type TaskActionShape =

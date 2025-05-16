@@ -20,11 +20,12 @@ export interface ErrorsAndLoading {
 }
 export interface Menu {
 	editTask: EditTask;
-	rowId?: string | null;
+	rowId: string;
 	setEditTask: (a: React.SetStateAction<EditTask>) => void;
 	editFormData: EditFormData;
 	setEditFormData: (a: React.SetStateAction<EditFormData>) => void;
 	sortList: (a: Task[]) => void;
 	tasks: Task[];
 	taskDispatch: (a: TaskActionShape) => void;
+	isLoggedIn: boolean;
 }

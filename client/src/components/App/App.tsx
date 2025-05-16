@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useReducer } from 'react';
+import React, { useState, useCallback, useEffect, useReducer, useRef } from 'react';
 import { nanoid } from 'nanoid';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import Main from '../Main/Main';
@@ -12,6 +12,9 @@ import useModal from '../../hooks/useModal';
 import axios from 'axios';
 
 const App = () => {
+  // temporary until login is working
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
   const [tasks, taskDispatch] = useReducer(taskReducer, []);
 
   const [state, setState] = useState<ErrorsAndLoading>({
@@ -98,11 +101,14 @@ const App = () => {
     return () => window.removeEventListener('keydown', close);
   });
 
-  useEffect(() => {
-    // temporary until login is working
-    const isUserLoggedIn = true;
+  const isApiCallMade = useRef(false);
 
+  useEffect(() => {
     const fetchTasks = async () => {
+      if (isApiCallMade.current) return;
+
+      isApiCallMade.current = true;
+
       try {
         const response = await axios.get('api/v1/tasks');
 
@@ -148,7 +154,6 @@ const App = () => {
           data: loadedTasks,
         });
         setState({ isLoading: false, httpError: null });
-        return;
       } catch (error) {
         if (error instanceof Error) {
           setState({
@@ -161,7 +166,7 @@ const App = () => {
       }
     };
 
-    if (!isUserLoggedIn) {
+    if (!isLoggedIn) {
       try {
         const loadedTasks: Task[] = [];
         const localStorageTasks: Task[] = JSON.parse(localStorage.getItem('tasks') as string) || [];
@@ -242,6 +247,7 @@ const App = () => {
   return (
     <div className={classes.appContainer}>
       <Main
+        isLoggedIn={isLoggedIn}
         editTask={editTask}
         rowId={editTask.rowId}
         inputType={editTask.inputType}

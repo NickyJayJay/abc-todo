@@ -22,6 +22,7 @@ const ContextMenu = () => {
     editFormData,
     setEditTask,
     setEditFormData,
+    isLoggedIn
   } = useContext(MainContext);
 
   const dependencies = {
@@ -35,6 +36,7 @@ const ContextMenu = () => {
     setEditTask,
     setEditFormData,
     sortList,
+    isLoggedIn
   };
 
   return (
