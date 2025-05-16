@@ -15,7 +15,7 @@ export const TaskService = {
     }));
   },
 
-  async addTask(task: Omit<Task, 'id'>) {
+  async addTask(task: Task) {
     const response = await axios.post('/api/v1/tasks', task);
     return {
       id: response.data.task._id,
@@ -58,7 +58,6 @@ export const taskReducer: Reducer<Task[], TaskActionShape> = (state = [], action
       ];
 
       sortList(sortedTasks);
-      localStorage.setItem('tasks', JSON.stringify(sortedTasks));
       return sortedTasks;
     case TaskActionType.REMOVE:
       return state.filter((_, index) => index !== action.index);

@@ -11,12 +11,11 @@ export const handleMenuItemEvent = (options: Menu) => {
     try {
       if (isLoggedIn) {
         await TaskService.deleteTask(id);
-        taskDispatch({ type: TaskActionType.REMOVE, index, id });
       } else {
-        taskDispatch({ type: TaskActionType.REMOVE, index, id });
         const newTasks = tasks.filter((_, i) => i !== index);
         localStorage.setItem('tasks', JSON.stringify(newTasks));
       }
+      taskDispatch({ type: TaskActionType.REMOVE, index, id });
     } catch (err) {
       console.error(err);
     }

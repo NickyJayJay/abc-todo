@@ -166,7 +166,9 @@ const App = () => {
       }
     };
 
-    if (!isLoggedIn) {
+    if (isLoggedIn) {
+      fetchTasks();
+    } else {
       try {
         const loadedTasks: Task[] = [];
         const localStorageTasks: Task[] = JSON.parse(localStorage.getItem('tasks') as string) || [];
@@ -223,8 +225,6 @@ const App = () => {
           console.error('Unexpected error: ', error);
         }
       }
-    } else {
-      fetchTasks();
     }
   }, []);
 

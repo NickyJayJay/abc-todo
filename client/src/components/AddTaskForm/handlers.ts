@@ -1,45 +1,58 @@
 import React, { ChangeEvent } from 'react';
 import { nanoid } from 'nanoid';
-
 import { EditFormData } from '../../ts/interfaces';
-import { TaskActionShape } from '../../ts/types';
+import { TaskActionShape, Task } from '../../ts/types';
 import { TaskActionType } from '../../ts/enums';
+import { TaskService } from '../../reducers';
 
 export interface Options {
-  addFormData?: EditFormData;
-  taskDispatch?: React.Dispatch<TaskActionShape>;
+  addFormData: EditFormData;
+  taskDispatch: React.Dispatch<TaskActionShape>;
   setAddFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
   inputType?: string | null;
   showModal?: () => void;
+  isLoggedIn?: boolean;
+  tasks: Task[];
 }
 
 export const handleAddFormSubmit = (options: Options) => {
-  const { taskDispatch, addFormData, setAddFormData }: Options = options;
+  const { taskDispatch, addFormData, setAddFormData, isLoggedIn, tasks }: Options = options;
 
-  return (e: React.FormEvent<HTMLFormElement>) => {
+  return async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    localStorage.removeItem('addTaskPriority');
+    let newTask = {
+      id: nanoid(),
+      status: addFormData!.status,
+      priority: addFormData!.priority,
+      description: addFormData!.description,
+    }
 
-    taskDispatch &&
-      taskDispatch({
-        type: TaskActionType.ADD,
-        payload: {
-          id: nanoid(),
-          status: addFormData!.status,
-          priority: addFormData!.priority,
-          description: addFormData!.description,
-        },
-      });
+    taskDispatch({
+      type: TaskActionType.ADD,
+      payload: newTask,
+    });
 
-    setAddFormData &&
-      setAddFormData({
+    try {
+      if (isLoggedIn) {
+        await TaskService.addTask(newTask);
+      } else {
+        let newTasks = [...tasks, newTask];
+        localStorage.setItem('tasks', JSON.stringify(newTasks));
+      }
+
+      localStorage.removeItem('addTaskPriority');
+
+      setAddFormData && setAddFormData({
         status: 'Select Status',
         letterPriority: '',
         numberPriority: '',
         priority: '',
         description: '',
       });
+    } catch (err) {
+      console.error(err);
+    }
   };
 };
 
