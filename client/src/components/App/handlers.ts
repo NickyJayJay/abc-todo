@@ -3,10 +3,11 @@ import React from 'react';
 import { TaskActionType } from '../../ts/enums';
 import { EditFormData, EditTask } from '../../ts/interfaces';
 import { Task, TaskActionShape } from '../../ts/types';
+import { TaskService } from '../../reducers';
 import sortList from '../../utilities/sortList';
 
 export interface Options {
-  editTask?: EditTask;
+  editTask: EditTask;
   editFormData?: EditFormData;
   task?: Task;
   tasks?: Task[];
@@ -19,7 +20,7 @@ export interface Options {
   enableDB: boolean;
 }
 
-export const handleFormSubmit = (e: React.FormEvent, options: Options = {} as Options) => {
+export const handleFormSubmit = async (e: React.FormEvent, options: Options = {} as Options) => {
   const { editTask, editFormData, tasks, taskDispatch, enableDB }: Options = options;
 
   e.preventDefault();
@@ -31,25 +32,24 @@ export const handleFormSubmit = (e: React.FormEvent, options: Options = {} as Op
     description: editFormData!.description,
   };
 
-  const newTasks = [...tasks!];
-  const index = tasks!.findIndex((task) => task.id === editTask!.rowId);
-  newTasks[index] = editedTask;
-
   if (enableDB) {
     taskDispatch({
       type: TaskActionType.UPDATE,
-      data: editedTask
+      payload: editedTask
     });
 
-
+    await TaskService.updateTask(editTask.rowId, editedTask);
   } else {
+    const newTasks = [...tasks!];
+    const index = tasks!.findIndex((task) => task.id === editTask!.rowId);
+    newTasks[index] = editedTask;
+
     taskDispatch({
       type: TaskActionType.SET,
       data: newTasks,
     });
-
-    sortList(newTasks);
     localStorage.setItem('tasks', JSON.stringify(newTasks));
+    sortList(newTasks);
   }
 };
 
@@ -57,7 +57,7 @@ export const handleEditFormKeyboard = (
   e: React.KeyboardEvent,
   options: Options = {} as Options
 ) => {
-  const { editTask, editFormData, tasks, taskDispatch, setEditFormData }: Options = options;
+  const { editTask, editFormData, tasks, taskDispatch, setEditFormData, enableDB }: Options = options;
 
   const form = (e.target as HTMLInputElement).form;
   const focusableElements = document.querySelectorAll(
@@ -81,6 +81,7 @@ export const handleEditFormKeyboard = (
       editFormData,
       tasks,
       taskDispatch,
+      enableDB
     });
     (nextFocusableEl as HTMLElement).click();
   } else if (

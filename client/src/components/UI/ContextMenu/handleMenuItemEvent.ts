@@ -1,5 +1,5 @@
 import { Task } from '../../../ts/types';
-import { Menu } from '../../../ts/interfaces';
+import { Menu, EditTask } from '../../../ts/interfaces';
 import { TaskActionType } from '../../../ts/enums';
 import { TaskService } from '../../../reducers';
 
@@ -7,7 +7,7 @@ export const handleMenuItemEvent = (options: Menu) => {
   const { editTask, rowId, setEditTask, editFormData, sortList, tasks, taskDispatch, enableDB }: Menu =
     options;
 
-  const handleRemoveTask = async (id: string, index: number) => {
+  const handleRemoveTask = async (id: Task["id"], index: number) => {
     try {
       if (enableDB) {
         await TaskService.deleteTask(id);
@@ -20,6 +20,35 @@ export const handleMenuItemEvent = (options: Menu) => {
       console.error(err);
     }
   };
+
+  const handleUpdateStatus = async (editedTask: Task, editTask: EditTask) => {
+    try {
+      if (enableDB) {
+        taskDispatch({
+          type: TaskActionType.UPDATE,
+          payload: editedTask
+        });
+
+        await TaskService.updateTask(editTask.rowId, editedTask);
+
+      } else {
+        const newTasks = [...tasks];
+        const index = tasks.findIndex((task) => task.id === rowId);
+        newTasks[index] = editedTask;
+        taskDispatch({
+          type: TaskActionType.SET,
+          data: newTasks,
+        });
+
+        localStorage.setItem('tasks', JSON.stringify(newTasks));
+        setEditTask({ ...editTask, showMenu: false });
+        sortList(newTasks);
+      }
+      setEditTask({ ...editTask, showMenu: false });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (e: React.MouseEvent | React.KeyboardEvent | React.TouchEvent) => {
     e.stopPropagation();
@@ -57,16 +86,8 @@ export const handleMenuItemEvent = (options: Menu) => {
       description: editFormData.description,
     };
 
-    const newTasks = [...tasks];
-    const index = tasks.findIndex((task) => task.id === rowId);
-    newTasks[index] = editedTask;
-    taskDispatch({
-      type: TaskActionType.SET,
-      data: newTasks,
-    });
-
-    localStorage.setItem('tasks', JSON.stringify(newTasks));
-    setEditTask({ ...editTask, showMenu: false });
-    sortList(newTasks);
+    if (menuValue !== 'Remove' && menuValue !== 'Cancel') {
+      handleUpdateStatus(editedTask, editTask);
+    }
   };
 };

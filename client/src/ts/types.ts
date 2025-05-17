@@ -21,13 +21,12 @@ export type AddTaskAction = {
 export type RemoveTaskAction = {
   type: TaskActionType.REMOVE;
   index?: number | null;
-  id: string;
+  id?: string | null;
 };
 
 export type UpdateTaskAction = {
   type: TaskActionType.UPDATE;
-  id: string;
-  payload: Partial<Task>
+  payload: Task;
 }
 
 export type TaskActionShape =

@@ -1,6 +1,6 @@
 import { Task, TaskActionShape } from './types';
 export interface EditTask {
-	rowId: string | null;
+	rowId?: string | null;
 	inputType?: string | null;
 	xPos?: string | null;
 	yPos?: string | null;
@@ -20,7 +20,7 @@ export interface ErrorsAndLoading {
 }
 export interface Menu {
 	editTask: EditTask;
-	rowId: string;
+	rowId?: string | null;
 	setEditTask: (a: React.SetStateAction<EditTask>) => void;
 	editFormData: EditFormData;
 	setEditFormData: (a: React.SetStateAction<EditFormData>) => void;
