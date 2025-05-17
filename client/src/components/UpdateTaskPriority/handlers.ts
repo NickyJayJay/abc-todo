@@ -14,7 +14,8 @@ interface Options {
   hideModal: () => void;
   editTask?: EditTask;
   tasks?: Task[];
-  taskDispatch?: React.Dispatch<TaskActionShape>;
+  taskDispatch: React.Dispatch<TaskActionShape>;
+  enableDB: boolean;
 }
 
 export const letterPriorityHandler = (options: Options) => {
@@ -115,6 +116,7 @@ export const updatePriorityHandler = (options: Options) => {
     editFormData,
     tasks,
     taskDispatch,
+    enableDB
   }: Options = options;
 
   return (e: React.MouseEvent<Element> | React.TouchEvent<Element>) => {
@@ -122,7 +124,7 @@ export const updatePriorityHandler = (options: Options) => {
 
     if (inputType === 'priority-cell') {
       isFormValid(e) && handleFormSubmit
-        ? handleFormSubmit(e, { editTask, editFormData, tasks, taskDispatch } as AppOptions)
+        ? handleFormSubmit(e, { editTask, editFormData, tasks, taskDispatch, enableDB } as AppOptions)
         : alert("Priority input's integer value is invalid.");
 
       const newFormData = {

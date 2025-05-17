@@ -6,48 +6,34 @@ import axios from 'axios';
 
 export const TaskService = {
   async fetchTasks() {
-    const response = await axios.get('/api/v1/tasks');
-    return response.data.tasks.map((task: any) => ({
-      id: task._id,
-      status: task.status,
-      priority: task.priority,
-      description: task.description,
-    }));
+    return await axios.get('/api/v1/tasks');
   },
 
   async addTask(task: Task) {
-    const response = await axios.post('/api/v1/tasks', task);
-    return {
-      id: response.data.task._id,
-      status: response.data.task.status,
-      priority: response.data.task.priority,
-      description: response.data.task.description,
-    };
+    return await axios.post('/api/v1/tasks', task);
+  },
+
+  async addTasks(tasks: Task[]) {
+    return await axios.post('/api/v1/tasks', tasks);
   },
 
   async updateTask(id: string, taskData: Partial<Task>) {
-    const response = await axios.put(`/api/v1/tasks/${id}`, taskData);
-    return {
-      id: response.data.task._id,
-      status: response.data.task.status,
-      priority: response.data.task.priority,
-      description: response.data.task.description,
-    };
+    return await axios.patch(`/api/v1/tasks/${id}`, taskData);
   },
 
   async deleteTask(id: string) {
-    await axios.delete(`/api/v1/tasks/${id}`);
-    return id;
+    return await axios.delete(`/api/v1/tasks/${id}`);
   }
 };
 
-
 export const taskReducer: Reducer<Task[], TaskActionShape> = (state = [], action) => {
+  let sortedTasks = [];
+
   switch (action.type) {
     case TaskActionType.SET:
       return action.data;
     case TaskActionType.ADD:
-      let sortedTasks = [
+      sortedTasks = [
         ...state,
         {
           id: action.payload.id,
@@ -61,6 +47,19 @@ export const taskReducer: Reducer<Task[], TaskActionShape> = (state = [], action
       return sortedTasks;
     case TaskActionType.REMOVE:
       return state.filter((_, index) => index !== action.index);
+    case TaskActionType.UPDATE:
+      sortedTasks = [
+        ...state,
+        {
+          id: action.payload.id,
+          status: action.payload.status,
+          priority: action.payload.priority,
+          description: action.payload.description,
+        },
+      ];
+
+      sortList(sortedTasks);
+      return sortedTasks;
     default:
       return state;
   }

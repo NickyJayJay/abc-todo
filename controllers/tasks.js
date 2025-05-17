@@ -6,11 +6,13 @@ const getAllTasks = asyncWrapper(async (req, res) => {
     const tasks = await Task.find({});
     res.status(200).json({ tasks });
 
-})
+});
+
 const createTask = asyncWrapper(async (req, res) => {
     const task = await Task.create(req.body)
     res.status(201).json({ task });
-})
+});
+
 const getTask = asyncWrapper(async (req, res, next) => {
     const { id: taskID } = req.params;
     const task = await Task.findOne({ id: taskID });
@@ -18,7 +20,7 @@ const getTask = asyncWrapper(async (req, res, next) => {
         return next(createCustomError(`No task with id: ${taskID}`, 404));
     }
     res.status(200).json({ id: task });
-})
+});
 
 const deleteTask = asyncWrapper(async (req, res) => {
     const { id: taskID } = req.params;
@@ -27,7 +29,7 @@ const deleteTask = asyncWrapper(async (req, res) => {
         return next(createCustomError(`No task with id: ${taskID}`, 404));
     }
     res.status(200).json({ task });
-})
+});
 
 const updateTask = asyncWrapper(async (req, res) => {
     const { id: taskID } = req.params;
@@ -40,7 +42,7 @@ const updateTask = asyncWrapper(async (req, res) => {
         return next(createCustomError(`No task with id: ${taskID}`, 404));
     }
     res.status(200).json({ task });
-})
+});
 
 module.exports = {
     getAllTasks,

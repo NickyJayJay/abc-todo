@@ -11,7 +11,7 @@ import {
 } from './handlers';
 
 const AddTaskForm = forwardRef<HTMLInputElement, Options>(({ }, ref) => {
-  const { inputType, taskDispatch, showModal, addFormData, setAddFormData, isLoggedIn, tasks } =
+  const { inputType, taskDispatch, showModal, addFormData, setAddFormData, enableDB, tasks } =
     useContext(MainContext);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const AddTaskForm = forwardRef<HTMLInputElement, Options>(({ }, ref) => {
     setAddFormData,
     inputType,
     showModal,
-    isLoggedIn,
+    enableDB,
     tasks
   };
 

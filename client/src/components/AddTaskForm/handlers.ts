@@ -11,12 +11,12 @@ export interface Options {
   setAddFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
   inputType?: string | null;
   showModal?: () => void;
-  isLoggedIn?: boolean;
+  enableDB?: boolean;
   tasks: Task[];
 }
 
 export const handleAddFormSubmit = (options: Options) => {
-  const { taskDispatch, addFormData, setAddFormData, isLoggedIn, tasks }: Options = options;
+  const { taskDispatch, addFormData, setAddFormData, enableDB, tasks }: Options = options;
 
   return async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,7 +34,7 @@ export const handleAddFormSubmit = (options: Options) => {
     });
 
     try {
-      if (isLoggedIn) {
+      if (enableDB) {
         await TaskService.addTask(newTask);
       } else {
         let newTasks = [...tasks, newTask];

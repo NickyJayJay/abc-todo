@@ -7,7 +7,8 @@ const TaskSchema = new mongoose.Schema({
     },
     priority: {
         type: String,
-        default: ""
+        default: "",
+        maxLength: [3, "priority can not be more than 3 characters"]
     },
     description: {
         type: String,

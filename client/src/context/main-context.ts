@@ -24,7 +24,7 @@ interface MainContextShape {
   isModalRendered: boolean;
   xPos?: string | null;
   yPos?: string | null;
-  isLoggedIn: boolean;
+  enableDB: boolean;
 }
 
 export const MainContext = createContext({} as MainContextShape);

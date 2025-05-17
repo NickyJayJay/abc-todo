@@ -4,12 +4,12 @@ import { TaskActionType } from '../../../ts/enums';
 import { TaskService } from '../../../reducers';
 
 export const handleMenuItemEvent = (options: Menu) => {
-  const { editTask, rowId, setEditTask, editFormData, sortList, tasks, taskDispatch, isLoggedIn }: Menu =
+  const { editTask, rowId, setEditTask, editFormData, sortList, tasks, taskDispatch, enableDB }: Menu =
     options;
 
   const handleRemoveTask = async (id: string, index: number) => {
     try {
-      if (isLoggedIn) {
+      if (enableDB) {
         await TaskService.deleteTask(id);
       } else {
         const newTasks = tasks.filter((_, i) => i !== index);

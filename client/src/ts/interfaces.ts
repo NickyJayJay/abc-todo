@@ -27,5 +27,5 @@ export interface Menu {
 	sortList: (a: Task[]) => void;
 	tasks: Task[];
 	taskDispatch: (a: TaskActionShape) => void;
-	isLoggedIn: boolean;
+	enableDB: boolean;
 }

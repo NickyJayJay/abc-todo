@@ -18,6 +18,7 @@ const DescriptionEditable = ({ task }: { task: Task }) => {
     editTask,
     tasks,
     taskDispatch,
+    enableDB
   } = useContext(MainContext);
 
   const dependencies = {
@@ -29,6 +30,7 @@ const DescriptionEditable = ({ task }: { task: Task }) => {
     tasks,
     task,
     taskDispatch,
+    enableDB
   };
 
   const inputRef = useRef<HTMLInputElement>(null);

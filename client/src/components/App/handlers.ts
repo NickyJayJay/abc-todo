@@ -10,16 +10,17 @@ export interface Options {
   editFormData?: EditFormData;
   task?: Task;
   tasks?: Task[];
-  taskDispatch?: React.Dispatch<TaskActionShape>;
+  taskDispatch: React.Dispatch<TaskActionShape>;
   setEditFormData?: React.Dispatch<React.SetStateAction<EditFormData>>;
   showModal?: () => void;
   setEditTask?: React.Dispatch<React.SetStateAction<EditTask>>;
   setX?: (e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => string | null;
   setY?: (e: React.MouseEvent | React.TouchEvent | React.KeyboardEvent) => string | null;
+  enableDB: boolean;
 }
 
 export const handleFormSubmit = (e: React.FormEvent, options: Options = {} as Options) => {
-  const { editTask, editFormData, tasks, taskDispatch }: Options = options;
+  const { editTask, editFormData, tasks, taskDispatch, enableDB }: Options = options;
 
   e.preventDefault();
 
@@ -34,13 +35,22 @@ export const handleFormSubmit = (e: React.FormEvent, options: Options = {} as Op
   const index = tasks!.findIndex((task) => task.id === editTask!.rowId);
   newTasks[index] = editedTask;
 
-  taskDispatch!({
-    type: TaskActionType.SET,
-    data: newTasks,
-  });
+  if (enableDB) {
+    taskDispatch({
+      type: TaskActionType.UPDATE,
+      data: editedTask
+    });
 
-  sortList(newTasks);
-  localStorage.setItem('tasks', JSON.stringify(newTasks));
+
+  } else {
+    taskDispatch({
+      type: TaskActionType.SET,
+      data: newTasks,
+    });
+
+    sortList(newTasks);
+    localStorage.setItem('tasks', JSON.stringify(newTasks));
+  }
 };
 
 export const handleEditFormKeyboard = (
@@ -138,7 +148,7 @@ export const handleEditTask = (
     yPos: setY && setY(e),
     showMenu:
       ((e as React.MouseEvent).pageX && (e as React.MouseEvent).pageY && statusCell) ||
-      ((e as React.KeyboardEvent).key === 'Enter' && statusCell)
+        ((e as React.KeyboardEvent).key === 'Enter' && statusCell)
         ? true
         : false,
   });

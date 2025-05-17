@@ -9,11 +9,11 @@ import { TaskActionType } from '../../ts/enums';
 import { taskReducer } from '../../reducers';
 import sortList from '../../utilities/sortList';
 import useModal from '../../hooks/useModal';
-import axios from 'axios';
+import { TaskService } from '../../reducers';
 
 const App = () => {
   // temporary until login is working
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [enableDB, setenableDB] = useState(true);
 
   const [tasks, taskDispatch] = useReducer(taskReducer, []);
 
@@ -110,7 +110,7 @@ const App = () => {
       isApiCallMade.current = true;
 
       try {
-        const response = await axios.get('api/v1/tasks');
+        const response = await TaskService.fetchTasks();
 
         let loadedTasks: Task[] = [];
 
@@ -144,7 +144,7 @@ const App = () => {
             });
           }
 
-          await axios.post('api/v1/tasks', loadedTasks);
+          await TaskService.addTasks(loadedTasks);
         }
 
         sortList(loadedTasks);
@@ -166,7 +166,7 @@ const App = () => {
       }
     };
 
-    if (isLoggedIn) {
+    if (enableDB) {
       fetchTasks();
     } else {
       try {
@@ -247,7 +247,7 @@ const App = () => {
   return (
     <div className={classes.appContainer}>
       <Main
-        isLoggedIn={isLoggedIn}
+        enableDB={enableDB}
         editTask={editTask}
         rowId={editTask.rowId}
         inputType={editTask.inputType}

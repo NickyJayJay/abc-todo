@@ -17,6 +17,7 @@ const UpdateTaskPriority = () => {
     editTask,
     tasks,
     taskDispatch,
+    enableDB
   } = useContext(MainContext);
 
   const options = {
@@ -31,6 +32,7 @@ const UpdateTaskPriority = () => {
     editTask,
     tasks,
     taskDispatch,
+    enableDB
   };
 
   useEffect(() => {
